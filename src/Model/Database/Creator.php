@@ -20,16 +20,16 @@ class Creator extends Connection
     public function createUser(
         string  $email,
         string  $password = null,
-        string  $type = null,
+                $type = 'user',
         string  $registeredAt = null
     ) {
         if ($password == null) {
             $password = password_hash(BATCH_USER_PASSWORD, PASSWORD_DEFAULT);
         }
 
-        // if ($createdAt == null) {
-        //     $createdAt = date("Y-m-d H:i:s");
-        // }
+        if ($registeredAt == null) {
+            $registeredAt = date("Y-m-d H:i:s");
+        }
 
         $sql = "INSERT INTO
             users(email, password, type, registeredAt)

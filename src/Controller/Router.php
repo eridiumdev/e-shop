@@ -10,9 +10,12 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
  */
 class Router
 {
+    public static $route;
+
     public static $get;
     public static $post;
     public static $files;
+
     public static $cookies = [];
 
     /**
@@ -33,6 +36,7 @@ class Router
         self::$files = $files;
 
         $route = self::getRoute();
+        self::$route = $route;
 
         switch ($route['base']) {
             case '' :
@@ -43,24 +47,7 @@ class Router
 
             case 'account' :
 
-                $controller = new AccountController();
-
-                if (empty($post)) {
-                    $controller->showLoginPage();
-                } else {
-                    $controller->login($post);
-                }
-                break;
-
-            case 'registration' :
-
-                $controller = new AuthController();
-
-                if (empty($post)) {
-                    $controller->showRegistrationPage();
-                } else {
-                    $controller->register($post);
-                }
+                self::routeAccount();
                 break;
 
             case 'logout' :
@@ -199,6 +186,41 @@ class Router
         );
     }
 
+    public static function routeAccount()
+    {
+        $route = self::$route;
+        $get = self::$get;
+        $post = self::$post;
+        $files = self::$files;
+
+        $controller = new AccountController();
+
+        switch ($route['section']) {
+            case '' :
+                $controller->showAccountPage();
+                break;
+
+            case 'login' :
+                if (empty($post)) {
+                    $controller->showAccountPage();
+                } else {
+                    $controller->login($post);
+                }
+                break;
+
+            case 'register' :
+                if (empty($post)) {
+                    $controller->showRegisterPage();
+                } else {
+                    $controller->register($post);
+                }
+                break;
+
+            default :
+                $controller->showAccountPage();
+        }
+    }
+
     /**
      * Handles routing inside Admin Dashboard
      * @param  array  $route
@@ -209,6 +231,7 @@ class Router
      */
     public static function routeAdmin()
     {
+        $route = self::$route;
         $get = self::$get;
         $post = self::$post;
         $files = self::$files;

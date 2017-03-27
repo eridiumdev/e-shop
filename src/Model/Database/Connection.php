@@ -35,8 +35,8 @@ class Connection
 
     protected static function createConnection()
     {
-        $dsn = "mysql:host=localhost;dbname=vvc";
-        $username = "vvc_admin";
+        $dsn = "mysql:host=localhost;dbname=eshop";
+        $username = "admin";
         $password = "123";
 
         self::$instance = new \PDO($dsn, $username, $password);

@@ -1,4 +1,4 @@
-<nav class="navbar navbar-default navbar-fixed-top">
+<nav id="navbar" class="navbar navbar-default navbar-fixed-top" >
   <div class="container">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
@@ -7,7 +7,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="/">Online Store</a>
+      <a class="navbar-brand" href="/"><em>Ergo</em>Store</a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
@@ -47,13 +47,13 @@
         </div>
       </form>
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="#"><span class="glyphicon glyphicon-user"></span> My Account</a></li>
+        <li><a href="/account"><span class="glyphicon glyphicon-user"></span> <span class="hidden-sm">My Account</span></a></li>
         <li><a href="#"><span class="glyphicon glyphicon-shopping-cart"></span>
         {% if cart is not empty %}
           <span style="margin-left:5px">¥130</span>
           <span style="margin-left:5px" class="badge">2</span>
         {% else %}
-          Shopping cart
+          <span class="hidden-sm">Shopping Cart</span>
           <span style="margin-left:5px" class="badge">0</span>
         {% endif %}
         </a></li>

@@ -1,3 +1,8 @@
+#banner {
+    margin-top: -30px;
+    background-image: url('/img/bg1.jpg');
+}
+
 /* Hide the carousel text when the screen is less than 600 pixels wide */
 @media (max-width: 600px) {
   .carousel-caption {

@@ -2,13 +2,12 @@
 
 {% block title %}{{parent()}} | Homepage{% endblock %}
 
-{% block stylesheets %}
-<link rel="stylesheet" href="/css/home.css">
-{% endblock %}
+{% block stylesheets %}<link rel="stylesheet" href="/css/home.css">{% endblock %}
+
+{% block header %}{% include 'inc/banner.twig' %}{% endblock %}
 
 {% block content %}
 {% include "inc/flashes.twig" %}
-
 <div class="container">
     {% include "inc/home/carousel.twig" %}
     {% include "inc/home/tabs.twig" %}

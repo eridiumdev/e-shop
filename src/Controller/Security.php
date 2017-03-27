@@ -190,7 +190,7 @@ class Security
         $token = self::killToken('auth_token');
         $session->getFlashBag()->add('success', 'Logged out successfully');
 
-        return Router::redirect('/login', $token);
+        return Router::redirect('/account', $token);
     }
 
     public static function getUserId()
