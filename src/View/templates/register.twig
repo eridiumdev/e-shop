@@ -1,0 +1,12 @@
+<div class="well col-sm-5">
+    <form class="form-signin" method="post" action="/registration">
+        <h2 class="form-signin-heading">Not registered?</h2>
+        <input type="text" name="email" class="form-control" placeholder="E-mail address"{% if email %} value="{{ email }}"{% endif %} required autofocus>
+        <br>
+        <input type="password" name="password" class="form-control" placeholder="Password" required>
+        <br>
+        <input type="password" name="confirm_password" class="form-control" placeholder="Confirm Password" required>
+        <br>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
+    </form>
+</div>

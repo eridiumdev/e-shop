@@ -45,3 +45,19 @@ $RECYCLE.BIN/
 Network Trash Folder
 Temporary Items
 .apdisk
+
+# Composer
+composer.json
+composer.lock
+composer.phar
+vendor
+
+# SQL and configs
+db.sql
+web/.htaccess
+web/.env
+
+# Debug and test dummies
+debug
+web/yml
+web/uploads

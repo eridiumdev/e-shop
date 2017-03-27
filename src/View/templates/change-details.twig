@@ -1,0 +1,29 @@
+{% extends 'base.twig' %}
+
+{% block title %}{{parent()}} | Change Details{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="well col-sm-6 col-sm-offset-3">
+        <form class="form-signin" method="post" action="/account">
+            <h2 class="form-signin-heading">My Account</h2>
+
+            {% include "inc/flashes.twig" %}
+
+            <br>
+            <h4>Change Password</h4>
+            <input type="password" id="cur_password" name="cur_password"
+                class="form-control" placeholder="Current Password" required autofocus>
+            <br>
+            <input type="password" id="input_password" name="new_password"
+                class="form-control" placeholder="New Password" required>
+            <br>
+            <input type="password" id="input_password" name="confirm_password"
+                class="form-control" placeholder="Confirm New Password" required>
+            <br>
+            <button class="btn btn-lg btn-primary btn-block"
+                type="submit">Change Password</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

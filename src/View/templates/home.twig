@@ -1,0 +1,16 @@
+{% extends 'base.twig' %}
+
+{% block title %}{{parent()}} | Homepage{% endblock %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="/css/home.css">
+{% endblock %}
+
+{% block content %}
+{% include "inc/flashes.twig" %}
+
+<div class="container">
+    {% include "inc/home/carousel.twig" %}
+    {% include "inc/home/tabs.twig" %}
+</div>
+{% endblock %}

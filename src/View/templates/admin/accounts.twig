@@ -1,0 +1,71 @@
+{% extends 'base.twig' %}
+
+{% block title %}Manage accounts{% endblock %}
+
+{% block footer %}
+    {{ parent() }}
+    <script src="/js/dialogues.js"></script>
+    <script src="/js/check_all.js"></script>
+    {% if filename is not empty %}
+        <script src="/js/rewrite_file.js"></script>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+
+{# Dialogues #}
+{% include 'inc/dlg/delete_user.twig' %}
+{% include 'inc/dlg/delete_users.twig' %}
+
+<div class="container">
+    <div class="well">
+        <h2>用户管理</h2>
+
+        {% include "inc/flash_messages.twig" %}
+
+        <form id="batch_add" class="form-inline" action="/admin/accounts/add-many"
+            method="post" enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="input_file">Select batch file</label>
+                <input type="file" class="form-control" id="input_file"
+                    name="batch_file">
+                <input type="submit" class="btn btn-primary"
+                    value="Add">
+            </div>
+        </form>
+
+        <a class="btn btn-primary" role="button"
+            href="/admin/accounts/add-single">Add new</a>
+    </div>
+    <div class="media well">
+        <div class="media-body">
+            <form action="/admin/accounts/delete" method="post">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Registered at</th>
+                        <th>Privileges</th>
+                        <th></th>
+                        <th></th>
+                        <th class="col-sm-1 checkable" style="text-align:center">
+                            <input type="checkbox" id="checkAll">
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                        {% include "inc/admin_account.twig" %}
+                    {% endfor %}
+                    <td colspan="7" style="text-align:right">
+                        <input class="btn btn-sm btn-danger" type="submit"
+                            name="delete_selected" value="Delete selected">
+                    </td>
+                </tbody>
+            </table>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends 'base.twig' %}
+
+{% block title %}Change Account{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="well col-sm-6 col-sm-offset-3">
+        <form method="post" action="/admin/accounts/change/{{ user.id }}">
+            <h2>Change Account</h2>
+            {# display error message if could not change password #}
+            {% include "inc/flash_messages.twig" %}
+            <div class="form-group">
+                <label for="input_username">Username</label>
+                <input type="text" class="form-control" id="input_username"
+                    name="username" value="{{ user.username }}">
+            </div>
+            <div class="form-group">
+                <label for="input_password">New Password</label>
+                <input type="password" class="form-control" id="input_password"
+                    name="password" placeholder="Leave blank for no changes">
+            </div>
+            <label>Privileges</label>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="role_id" id="radio_role2"
+                        value="2" {{ (user.roleId == 2) ? 'checked' : '' }}>
+                        User
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="role_id" id="radio_role1"
+                        value="1" {{ (user.roleId == 1) ? 'checked' : '' }}>
+                        Admin
+                </label>
+            </div>
+            <br>
+            <button class="btn btn-lg btn-primary btn-block"
+                type="submit">Apply changes</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,8 @@
+{% extends 'inc/dlg/modal_base.twig' %}
+
+{% block modal_id %}overwrite_yml{% endblock %}
+{% block modal_title %}{{ file }} already exists{% endblock %}
+{% block modal_body %}Do you want to overwrite existing file?{% endblock %}
+
+{% block yes_color %}danger{% endblock %}
+{% block yes_text %}Yes, overwrite{% endblock %}

@@ -1,0 +1,24 @@
+{% extends 'base.twig' %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="well">
+        <h2>Admin Dashboard</h2>
+
+        {% include "inc/flashes.twig" %}
+
+        <p>From this dashboard you can manage:</p>
+        <table class="table">
+        <tr>
+            <td><a class="btn btn-lg btn-primary btn-block" role="button"
+                href="/admin/accounts">User Accounts</a></td>
+
+            <td><a class="btn btn-lg btn-primary btn-block" role="button"
+                href="/admin/uploads" disabled>Uploads</a></td>
+        </tr>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,17 @@
+<tr>
+    <td>{{ user.id }}</td>
+    <td>{{ user.username }}</td>
+    <td>{{ user.createdAt }}</td>
+    <td>{{ (user.roleId == 1) ? 'admin' : 'user' }}</td>
+    <td class="col-sm-1">
+        <a class="btn btn-sm btn-primary" role="button"
+            href="/admin/accounts/change/{{user.id}}">Change</a>
+    </td>
+    <td class="col-sm-1">
+        <input class="btn btn-sm btn-danger" type="submit"
+            name="delete" value="Delete">
+    </td>
+    <td class="col-sm-1 checkable" style="text-align:center">
+        <input type="checkbox" name="id[]" value="{{ user.id }}">
+    </td>
+</tr>

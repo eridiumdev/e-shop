@@ -1,0 +1,16 @@
+{% extends 'base.twig' %}
+
+{% block title %}{{parent()}} | My Account{% endblock %}
+
+{% block content %}
+{% if not authenticated %}
+<div class="container">
+    <div class="row">
+    {% include 'account/login.twig' %}
+    {% include 'account/register.twig' %}
+    </div>
+</div>
+{% else %}
+<h1>Welcome</h1>
+{% endif %}
+{% endblock %}

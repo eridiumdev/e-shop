@@ -1,0 +1,9 @@
+{% for messageType, messages in messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{messageType}} alert-dismissable" role="alert">
+            <button type="button" class="close" data-dismiss="alert"
+                aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            {{ message|raw|nl2br }}
+        </div>
+    {% endfor %}
+{% endfor %}

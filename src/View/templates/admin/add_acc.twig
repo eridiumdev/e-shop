@@ -1,0 +1,48 @@
+{% extends 'base.twig' %}
+
+{% block title %}Add Account{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="well col-sm-6 col-sm-offset-3">
+        <form method="post" action="/admin/accounts/add-single">
+            <h2>Add Account</h2>
+
+            {% include "inc/flash_messages.twig" %}
+
+            <div class="form-group">
+                <label for="input_username">Username</label>
+                <input type="text" class="form-control" id="input_username"
+                    name="username" placeholder="Username"
+                    {% if username %}
+                        value="{{ username }}"
+                    {% endif %}
+                    required autofocus>
+            </div>
+            <div class="form-group">
+                <label for="input_password">Password</label>
+                <input type="password" class="form-control" id="input_password"
+                    name="password" placeholder="Password">
+            </div>
+            <label>Privileges</label>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="role_id" id="radio_role2" value="2"
+                        checked>User
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="role_id" id="radio_role1" value="1"
+                        {% if role == 1 %}
+                            checked
+                        {% endif %}>Admin
+                </label>
+            </div>
+            <br>
+            <button class="btn btn-lg btn-primary btn-block"
+                type="submit">Create new user</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
