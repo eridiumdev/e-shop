@@ -250,9 +250,10 @@ class Router
                 $controller = new AccountManager();
 
                 // Check if user id in uri is valid
-                if (in_array($route['action'], ['change'])
-                    && (empty($route['page'])
-                    || !is_numeric($route['page']))) {
+                if (in_array($route['action'], ['change']) && (
+                    empty($route['page']) ||
+                    !is_numeric($route['page'])
+                )) {
                     self::redirect('/admin/accounts');
                 }
 
@@ -267,9 +268,12 @@ class Router
                         } else {
                             $controller->addAccount($post);
                         }
+                        break;
 
                     case 'add-many' :
-                        $accs = Uploader::readAccountsFromYml($controller, $files);
+                        $accs = Uploader::readYml(
+                            $controller, $post['yml'], '/admin/accounts'
+                        );
                         $controller->batchAddAccounts($accs);
                         break;
 
@@ -282,7 +286,6 @@ class Router
                         break;
 
                     case 'delete' :
-                        // print_r($post);exit;
                         if (empty($post['id'])) {
                             $controller->showAccountListPage();
                         } elseif (count($post['id']) == 1){
@@ -297,68 +300,105 @@ class Router
                 }
                 break;
 
-            case 'products' :
+            case 'uploads' :
 
-                $controller = new IllnessManager();
+                $controller = new UploadManager();
 
-                // Check if illness id in uri is valid
-                if (in_array($route['action'], ['view', 'change'])
-                    && (empty($route['page'])
-                    || !is_numeric($route['page']))) {
-                    self::redirect('/admin/products');
+                // Check if tab in uri is valid
+                if (!in_array($route['action'], ['', 'pictures', 'drugs'])) {
+                    self::redirect('/admin/uploads');
                 }
 
                 switch ($route['action']) {
                     case '' :
-                        $controller->showIllnessListPage();
-                        break;
+                    case 'pictures' :
+                        switch ($route['page']) {
+                            case 'add' :
+                                if (!empty($post)) {
+                                    $controller->addPicturesToIllness($post);
+                                } else {
+                                    $controller->showUploadsPage();
+                                }
+                                break;
 
-                    case 'view' :
-                        $controller->showIllnessPage($route['page']);
-                        break;
+                            case 'delete' :
+                                if (!empty($post['pics'])) {
+                                    $controller->deletePictures(
+                                        PIC_DIRECTORY,
+                                        $post['pics'],
+                                        '/admin/uploads/pictures'
+                                    );
+                                } else {
+                                    $controller->showUploadsPage();
+                                }
+                                break;
 
-                    case 'add-single' :
-                        // TODO
-                        Router::redirect('/admin/products');
-                        break;
+                            case 'upload' :
+                                if (!empty($files['uploads'])) {
+                                    Uploader::uploadPictures(
+                                        PIC_DIRECTORY,
+                                        $controller,
+                                        $files['uploads'],
+                                        '/admin/uploads/pictures'
+                                    );
+                                } else {
+                                    $controller->showUploadsPage();
+                                }
+                                break;
 
-                    case 'add-many' :
-                        $ills = Uploader::readIllnessesFromYml($controller, $files);
-                        $controller->batchAddIllnesses($ills);
-                        break;
-
-                    case 'change' :
-                        // TODO
-                        Router::redirect('/admin/products');
-                        break;
-
-                    case 'delete' :
-                        // pe($post);
-                        if (empty($post['id'])) {
-                            $controller->showIllnessListPage();
-                        } elseif (count($post['id']) == 1){
-                            $controller->deleteIllness($post['id'][0]);
-                        } else {
-                            $controller->deleteIllnesses($post['id']);
+                            default :
+                                if (!empty($post['pics_per_page'])) {
+                                    $controller->showUploadsPage(
+                                        $route['action'],
+                                        $post['pics_per_page']
+                                    );
+                                } else {
+                                    $controller->showUploadsPage();
+                                }
                         }
                         break;
 
-                    default :
-                        self::redirect('/admin/products');
+                    case 'drugs' :
+                        switch ($route['page']) {
+                            case 'delete' :
+                                if (!empty($post['drugPics'])) {
+                                    $controller->deletePictures(
+                                        DRUG_DIRECTORY,
+                                        $post['drugPics'],
+                                        '/admin/uploads/drugs'
+                                    );
+                                } else {
+                                    $controller->showUploadsPage('drugs');
+                                }
+                                break;
+
+                            case 'upload' :
+                                if (!empty($files['drugUploads'])) {
+                                    Uploader::uploadPictures(
+                                        DRUG_DIRECTORY,
+                                        $controller,
+                                        $files['drugUploads'],
+                                        '/admin/uploads/drugs'
+                                    );
+                                } else {
+                                    $controller->showUploadsPage('drugs');
+                                }
+                                break;
+
+                            default :
+                                if (!empty($post['pics_per_page'])) {
+                                    $controller->showUploadsPage(
+                                        $route['action'],
+                                        $post['pics_per_page']
+                                    );
+                                } else {
+                                    $controller->showUploadsPage('drugs');
+                                }
+                        }
+                        break;
+
                 }
                 break;
-
-            case 'drugs' :
-
-            case 'hospitalization' :
-
-            case 'payments' :
-
-            case 'uploads' :
-
-                // $controller = new UploadManager();
-                // $controller->showUploadsPage();
-                // break;
 
             default :
                 self::redirect('/admin');

@@ -9,7 +9,6 @@
       </button>
       <a class="navbar-brand" href="/"><em>Ergo</em>Store</a>
     </div>
-
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="mainNav">
       <ul class="nav navbar-nav">
@@ -47,7 +46,11 @@
         </div>
       </form>
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="/account"><span class="glyphicon glyphicon-user"></span> <span class="hidden-sm">My Account</span></a></li>
+        {% if admin() %}
+          <li><a href="/admin"><span class="glyphicon glyphicon-wrench"></span><span class="hidden-sm"> Back to Dashboard</span></a></li>
+        {% else %}
+          <li><a href="/account"><span class="glyphicon glyphicon-user"></span><span class="hidden-sm"> My Account</span></a></li>
+        {% endif %}
         <li><a href="#"><span class="glyphicon glyphicon-shopping-cart"></span>
         {% if cart is not empty %}
           <span style="margin-left:5px">¥130</span>
@@ -59,5 +62,5 @@
         </a></li>
       </ul>
     </div><!-- /.navbar-collapse -->
-  </div><!-- /.container-fluid -->
+  </div><!-- /.container -->
 </nav>

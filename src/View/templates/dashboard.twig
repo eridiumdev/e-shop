@@ -1,24 +1,34 @@
-{% extends 'base.twig' %}
-
-{% block title %}Admin Dashboard{% endblock %}
+{% extends 'base-admin.twig' %}
 
 {% block content %}
-<div class="container">
+<div class="col-sm-9">
     <div class="well">
-        <h2>Admin Dashboard</h2>
-
+        <h2>管理仪表板</h2>
+        {# display error message if login failed #}
         {% include "inc/flashes.twig" %}
-
         <p>From this dashboard you can manage:</p>
-        <table class="table">
-        <tr>
-            <td><a class="btn btn-lg btn-primary btn-block" role="button"
-                href="/admin/accounts">User Accounts</a></td>
+        <div class="row">
 
-            <td><a class="btn btn-lg btn-primary btn-block" role="button"
-                href="/admin/uploads" disabled>Uploads</a></td>
-        </tr>
-        </table>
+        <div class="dashboard-block col-sm-4 col-xs-12"><a class="btn btn-lg btn-primary btn-block" role="button"
+            href="/admin/accounts">User Accounts</a></div>
+
+        <div class="dashboard-block col-sm-4 col-xs-12"><a class="btn btn-lg btn-primary btn-block" role="button"
+            href="/admin/illnesses">Illness Records</a></div>
+
+        <div class="dashboard-block col-sm-4 col-xs-12"><a class="btn btn-lg btn-primary btn-block" role="button"
+            href="/admin/drugs">Drug Details</a></div>
+        </div>
+        <div class="row">
+        <div class="dashboard-block col-sm-4 col-xs-12"><a class="btn btn-lg btn-primary btn-block" role="button"
+            href="/admin/payments">Payments</a></div>
+
+        <div class="dashboard-block col-sm-4 col-xs-12"><a class="btn btn-lg btn-primary btn-block" role="button"
+            href="/admin/uploads">Uploads</a></div>
+
+        <div class="dashboard-block col-sm-4 col-xs-12"><a class="btn btn-lg btn-primary btn-block" role="button"
+            href="/admin/hospitalization" disabled>Hospitalization</a></div>
+        </div>
+
     </div>
 </div>
 {% endblock %}

@@ -47,9 +47,11 @@ class BaseController
 
         $this->addTwigFunc('authenticated', 'isAuthenticated', 'App\Controller\Security');
         $this->addTwigFunc('admin', 'isAdmin', 'App\Controller\Security');
+        $this->addTwigFunc('short', 'short', $this);
+        $this->addTwigFunc('active', 'active', $this);
 
         $this->twig->addFilter(new \Twig_Filter(
-            'short', [$this, 'short']
+            'name', [$this, 'name']
         ));
     }
 
@@ -112,7 +114,7 @@ class BaseController
     /**
      * Shortcut for adding flash messages to
      * the session's flashBag
-     * @param string $msgType   - 'success', 'danger'
+     * @param string $msgType   - 'success', 'fail'
      * @param string $msg
      */
     public function flash(string $msgType, string $msg)
@@ -154,17 +156,13 @@ class BaseController
 
     public function cleanupVars(array &$vars)
     {
-        foreach ($vars as $key => $val) {
+        foreach ($vars as $key => &$val) {
             if (is_array($val)) {
                 // p($val);
                 $this->cleanupVars($val);
             } else {
                 // p($val); n();
                 switch (strtolower($key)) {
-                    case 'email' :
-                        $val = trim(filter_var($val, FILTER_SANITIZE_EMAIL));
-                        $vars[$key] = str_replace(' ', '', $val);
-                        break;
                     case 'password' :
                         $val = trim(filter_var($val, FILTER_SANITIZE_STRING));
                         $vars[$key] = str_replace(' ', '', $val);
@@ -173,10 +171,16 @@ class BaseController
                         $val = trim(filter_var($val, FILTER_SANITIZE_STRING));
                         $vars[$key] = str_replace(' ', '', $val);
                         break;
-                    case 'roleid'  :
-                    case 'role_id' :
+                    case 'text' :
+                    case 'description' :
+                    // case 'name' :
+                        $val = trim(filter_var($val, FILTER_SANITIZE_STRING));
+                        break;
+                    case 'number' :
                         $val = trim(filter_var($val, FILTER_SANITIZE_NUMBER_INT));
-                        $vars[$key] = str_replace(' ', '', $val);
+                        break;
+                    case 'cost' :
+                        $val = trim(filter_var($val, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION));
                         break;
                     default :
                         $vars[$key] = trim(filter_var($val, FILTER_SANITIZE_STRING));
@@ -186,18 +190,37 @@ class BaseController
     }
 
     /**
-     * Returns first 40 characters of a string
-     * @param  string $full
+     * Returns first $limit characters of a string
+     * @param  string  full
+     * @param  int     limit
      * @return string
      */
-    public function short(string $full) : string
+    public function short(string $full, $limit = 55) : string
     {
-        $limit = 55;
-
         if (strlen($full) >= $limit) {
             return substr($full, 0, $limit-1) . "...";
         } else {
             return substr($full, 0, $limit);
+        }
+    }
+
+    /**
+     * Returns only the filename in the path
+     * @param  string  $path - full path
+     * @return string
+     */
+    public function name(string $path) : string
+    {
+        $arr = explode('/', $path);
+        return $arr[count($arr) - 1];
+    }
+
+    public function active(string $section)
+    {
+        if ($section == Router::$route['section']) {
+            return 'active';
+        } else {
+            return '';
         }
     }
 
@@ -279,6 +302,28 @@ class BaseController
 
                     case 'db' :
                         $badOut .= "\n\nDatabase failure:\n";
+                        for ($i = 0; $i < count($fields); $i++) {
+                            if ($i != 0) $badOut .= " - ";
+                            $badOut .= "[" . $fields[$i] . "]";
+                        }
+                        foreach ($items as $item) {
+                            $badOut .= $this->getBatchResultsRow($item, $fields);
+                        }
+                        break;
+
+                    case 'fs' :
+                        $badOut .= "\n\nFile System failure:\n";
+                        for ($i = 0; $i < count($fields); $i++) {
+                            if ($i != 0) $badOut .= " - ";
+                            $badOut .= "[" . $fields[$i] . "]";
+                        }
+                        foreach ($items as $item) {
+                            $badOut .= $this->getBatchResultsRow($item, $fields);
+                        }
+                        break;
+
+                    case 'ext' :
+                        $badOut .= "\n\nWrong file extension\n";
                         for ($i = 0; $i < count($fields); $i++) {
                             if ($i != 0) $badOut .= " - ";
                             $badOut .= "[" . $fields[$i] . "]";

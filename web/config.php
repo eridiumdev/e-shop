@@ -4,16 +4,20 @@ date_default_timezone_set("Asia/Shanghai");
 /**
  * TESTING FLAGS
  *
- * Access rights (privileges) - works on all pages :
+ * Access rights (privileges) :
  * -1 - default (need to login)
- *  0 - guest user
- *  1 - signed user
- *  2 - admin
+ *  0 - no privileges on all pages
+ *  1 - signed in user privileges on all pages
+ *  2 - admin privileges on all pages
  */
-const ACCESS_RIGHTS = -1;
+const ACCESS_RIGHTS = 2;
 
 // Default password when creating users from a batch file
 const BATCH_USER_PASSWORD = '123';
+
+// Uploads
+const YML_DIRECTORY   = '/yml/';
+const PIC_DIRECTORY  = '/uploads/img/';
 
 // Debug global helper-shortcuts
 // print $obj

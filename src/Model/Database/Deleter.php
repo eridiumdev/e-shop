@@ -13,7 +13,7 @@ class Deleter extends Connection
      */
     public function deleteUser(int $userId)
     {
-        $oldUser = (new Reader())->findUserById($userId);
+        $old = (new Reader())->getUserById($userId);
 
         $sql = "DELETE FROM users WHERE id = ?";
         $stmt = $this->db->prepare($sql);
@@ -23,6 +23,6 @@ class Deleter extends Connection
             return false;
         }
 
-        return $oldUser;
+        return $old;
     }
 }

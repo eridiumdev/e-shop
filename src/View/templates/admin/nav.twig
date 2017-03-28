@@ -1,0 +1,38 @@
+<nav class="navbar navbar-default col-sm-3 col-lg-2">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed"  data-toggle="collapse" data-target="#sideNav" aria-expanded="false">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+    </div>
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="sideNav">
+        <ul class="nav nav-pills head-menu nav-stacked" data-spy="affix" data-offset-top="72">
+            <li role="presentation" class="{{active('')}}">
+                <a href="/admin">Dashboard</a></li>
+            <li class="{{active('accounts')}}">
+                <a href="/admin/accounts">Users</a></li>
+            <li role="presentation" class="{{active('orders')}}">
+                <a href="/admin/#">Orders</a></li>
+            <li role="presentation" class="{{active('drugs')}}">
+                <a href="/admin/$">Categories</a></li>
+            <li role="presentation" class="{{active('payments')}}">
+                <a href="/admin/payments">Products</a></li>
+            <li role="presentation" class="{{active('uploads')}}">
+                <a href="/admin/uploads">Uploads</a></li>
+            <hr>
+            <li role="presentation">
+                <a href="/">Homepage</a></li>
+            <li role="presentation">
+                <a href="/catalog">Catalog</a></li>
+            <hr style="color:black">
+            <li role="presentation">
+                <a href="/account">My Account</a></li>
+            <li role="presentation">
+                <a href="/logout">Logout</a>
+            </li>
+        </ul>
+    </div><!-- /.navbar-collapse -->
+</nav>

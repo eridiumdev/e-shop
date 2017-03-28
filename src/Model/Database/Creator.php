@@ -37,6 +37,6 @@ class Creator extends Connection
         $stmt = $this->db->prepare($sql);
         $stmt->execute([$email, $password, $type, $registeredAt]);
 
-        return (new Reader())->findUserByEmail($email);
+        return (new Reader())->getUserByEmail($email);
     }
 }

@@ -3,7 +3,7 @@
         <form class="form-signin" method="post" action="/account/login">
             <h2 class="form-signin-heading">Sign in<small class="pull-right"><a href="/account/register">Not registered yet?</a></small></h2>
             {% include "inc/flashes.twig" %}
-            <input type="email" name="email" class="form-control" placeholder="E-mail address"{% if email %}value="{{email}}"{% endif %} required autofocus>
+            <input type="email" name="email" class="form-control" placeholder="E-mail address"{% if email %} value="{{email}}"{% endif %} required autofocus>
             <br>
             <input type="password" name="password" class="form-control" placeholder="Password" required>
             <br>

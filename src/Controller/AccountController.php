@@ -44,7 +44,7 @@ class AccountController extends BaseController
 
         try {
             $dbReader = new Reader();
-            $user = $dbReader->findUserByEmail($email);
+            $user = $dbReader->getUserByEmail($email);
         } catch (\Exception $e) {
             Logger::log('db', 'error', 'Failed to find user by email', $e);
             $this->flash('danger', 'Login failed, please try again');
@@ -89,7 +89,7 @@ class AccountController extends BaseController
 
         try {
             $dbReader = new Reader();
-            $user = $dbReader->findUserByEmail($email);
+            $user = $dbReader->getUserByEmail($email);
 
             if (!empty($user)) {
                 $this->flash('danger', 'This email is already registered');
@@ -144,7 +144,7 @@ class AccountController extends BaseController
 
         try {
             $dbReader = new Reader();
-            $user = $dbReader->findUserById($userId);
+            $user = $dbReader->getUserById($userId);
 
             if (empty($user)) {
                 $this->flash(

@@ -13,7 +13,7 @@ class Reader extends Connection
      * @param  string $email
      * @return User OR false
      */
-    public function findUserByEmail(string $email)
+    public function getUserByEmail(string $email)
     {
         $sql = "SELECT * FROM users WHERE email = ?";
         $stmt = $this->db->prepare($sql);
@@ -38,7 +38,7 @@ class Reader extends Connection
      * @param  int $userId
      * @return User OR false
      */
-    public function findUserById(int $userId)
+    public function getUserById(int $userId)
     {
         $sql = "SELECT * FROM users WHERE id = ?";
         $stmt = $this->db->prepare($sql);

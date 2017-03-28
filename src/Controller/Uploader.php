@@ -1,119 +1,161 @@
 <?php
 namespace App\Controller;
 
-const YML_DIRECTORY  = 'yml/';
-const PICS_DIRECTORY = 'uploads/img';
-const VIDS_DIRECTORY = 'uploads/vid';
-
 class Uploader
 {
+    public static function getFiles(
+        string $directory,
+        array $extensions
+    ) {
+        $files = [];
+
+        if ($handle = opendir(ltrim($directory, '/'))) {
+
+            while (false !== ($file = readdir($handle))) {
+                $fileInfo = pathinfo($file);
+                if (!empty($fileInfo['extension']) &&
+                    in_array($fileInfo['extension'], $extensions)
+                ) {
+                    $files[] = $directory . $file;
+                }
+            }
+
+            closedir($handle);
+
+        } else {
+            Logger::log('upload', 'error', "Failed to open directory $directory");
+        }
+
+        return $files;
+    }
+
+    public static function readYml(
+        $controller, string $file = null, string $redirect
+    ) {
+        if (empty($file)) {
+            $controller->flash('fail', 'No file selected');
+            Router::redirect($redirect);
+        }
+
+        try {
+            $data = \Symfony\Component\Yaml\Yaml::parse(
+                file_get_contents(ltrim(YML_DIRECTORY, '/') . $file)
+            );
+            return $data;
+
+        } catch (\Exception $e) {
+            Logger::log('upload', 'error', 'Failed to parse YML', $e);
+            $controller->flash('fail', 'Could not parse data, check the file');
+            Router::redirect($redirect);
+        }
+    }
+
     public static function uploadFile(string $location, string $name, $file)
     {
-        return $file->move(YML_DIRECTORY, $filename);
+        return $file->move(ltrim($location, '/'), $name);
     }
 
-    public static function readAccountsFromYml(
-        AccountManager $controller, array $files
+    public static function uploadPicture(
+        string $dir,
+        $controller,
+        $tmp,
+        string $redirect
     ) {
-        if (empty($files['batch_file'])) {
-            $controller->flash('danger', 'No file selected');
-            Router::redirect('/admin/accounts');
-        }
+        $ext = $tmp->getClientOriginalExtension();
+        $mime = $tmp->getMimeType();
 
-        $upload = $files['batch_file'];
-        $ext = $upload->getClientOriginalExtension();
-        $mime = $upload->getMimeType();
-
-        if ($mime != 'text/plain' && $ext != 'yml') {
-            $controller->flash('danger',
-                "<b>yml</b> file expected, <b>$ext</b> file given"
+        if (!(in_array($mime, ['image/png', 'image/jpeg'])) ||
+            !(in_array($ext, ['png', 'jpg'])))
+        {
+            $controller->flash('fail',
+                ".png or .jpg file expected, .$ext file given"
             );
-            Router::redirect('/admin/accounts');
+            Router::redirect($redirect);
         }
 
-        try {
-            $users = \Symfony\Component\Yaml\Yaml::parse(
-                file_get_contents($upload)
-            );
-            return $users;
-        } catch (\Exception $e) {
-            Logger::log('auth', 'error', 'Failed to parse users YML', $e);
-            $controller->flash('danger', 'Could not parse data, check the file');
-            Router::redirect('/admin/accounts');
+        $filename = $tmp->getClientOriginalName();
+        $path = $dir . $filename;
+
+        if (file_exists($path)) {
+            // DUP
+            // Router::addCookie('file_to_overwrite', $upload);
+            //
+            // $controller->addTwigVar('filename', $filename);
+            // $controller->showAccountListPage();
         }
+
+        $pic = self::uploadFile($dir, $filename, $tmp);
+
+        if (!$pic) {
+            $controller->flash('fail', 'Upload failed');
+            Router::redirect($redirect);
+        }
+
+        return $filename;
     }
 
-    public static function readIllnessesFromYml(
-        IllnessManager $controller, array $files
+    public function uploadPictures(
+        string $dir,
+        $controller,
+        array $pics,
+        string $redirect
     ) {
-        if (empty($files['batch_file'])) {
-            $controller->flash('danger', 'No file selected');
-            Router::redirect('/admin/illnesses');
-        }
+        $good = [];
+        $bad = [];
 
-        $upload = $files['batch_file'];
-        $ext = $upload->getClientOriginalExtension();
-        $mime = $upload->getMimeType();
-
-        if ($mime != 'text/plain' && $ext != 'yml') {
-            $controller->flash('danger',
-                "<b>yml</b> file expected, <b>$ext</b> file given"
-            );
-            Router::redirect('/admin/illnesses');
-        }
-
-        try {
-            $users = \Symfony\Component\Yaml\Yaml::parse(
-                file_get_contents($upload)
-            );
-            return $users;
-        } catch (\Exception $e) {
-            Logger::log('auth', 'error', 'Failed to parse illnesses YML', $e);
-            $controller->flash('danger', 'Could not parse data, check the file');
-            Router::redirect('/admin/illnesses');
-        }
-    }
-
-    public static function uploadPictures(
-        UploadManager $controller, array $files
-    ) {
-        if (empty($files['pics'])) {
-            $controller->flash('danger', 'No files selected');
-            Router::redirect('/admin/uploads');
-        }
-
-        foreach ($files['pics'] as $tmp) {
-
+        foreach ($pics as $tmp) {
             $ext = $tmp->getClientOriginalExtension();
             $mime = $tmp->getMimeType();
+            $filename = $tmp->getClientOriginalName();
+            $path = ltrim($dir . $filename, '/');
 
-            if ($mime != 'image/png' && $ext != 'png') {
-                $controller->flash('danger',
-                    "<b>png</b> file expected, <b>$ext</b> file given"
-                );
-                Router::redirect('/admin/uploads');
+            if (!(in_array($mime, ['image/png', 'image/jpeg'])) ||
+                !(in_array($ext, ['png', 'jpg'])))
+            {
+                $bad['ext'][] = $filename;
+                continue;
             }
-
-            $filename = $upload->getClientOriginalName();
-            $path = PICS_DIRECTORY . $filename;
 
             if (file_exists($path)) {
-                // DUP
-                // Router::addCookie('file_to_overwrite', $upload);
-                //
-                // $controller->addTwigVar('filename', $filename);
-                // $controller->showAccountListPage();
+                $bad['duplicate'][] = $filename;
+                continue;
             }
 
-            $pic = self::uploadFile(PICS_DIRECTORY, $filename, $tmp);
+            $pic = Uploader::uploadFile($dir, $filename, $tmp);
 
             if (!$pic) {
-                $controller->flash('danger', 'Upload failed');
-            } else {
-                $controller->flash('success', 'Upload successful');
+                $bad['fs'][] = $filename;
+                continue;
             }
 
-            Router::redirect('/admin/uploads');
+            $good[] = $filename;
+        }
+
+        $controller->prepareGoodBatchResults($good, $pics, ['name']);
+        $controller->prepareBadBatchResults($bad, $pics, ['name']);
+
+        return Router::redirect($redirect);
+    }
+
+    public function deleteFile(string $fullPath)
+    {
+        $file = ltrim($fullPath, '/');
+        if (file_exists($file)) {
+            unlink($file);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static function isEmbedded(string $path)
+    {
+        if (strpos($path, 'http://') !== false ||
+            strpos($path, 'https://') !== false)
+        {
+            return true;
+        } else {
+            return false;
         }
     }
 }

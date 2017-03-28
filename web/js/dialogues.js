@@ -1,9 +1,9 @@
-// Confirm delete user dialogue
+// Confirm delete dialogue
 $('input[name="delete"]').on('click', function(e) {
 	var $btn = $(this);
 	var $form = $btn.closest('form');
 	e.preventDefault();
-	$('#confirm_delete').modal()
+	$('#deleteModal').modal()
 	.one('click', '#confirm_button', function(e) {
 		$("form").each(function(){
     		$(this).find('input:checkbox').prop('checked', false);
@@ -14,11 +14,11 @@ $('input[name="delete"]').on('click', function(e) {
 	});
 });
 
-// Confirm delete selected users dialogue
-$('input[name="delete_selected"]').on('click', function(e) {
+// Confirm delete selected dialogue
+$('input[name="deleteSelected"]').on('click', function(e) {
 	var $form = $(this).closest('form');
 	e.preventDefault();
-	$('#confirm_delete_selected').modal()
+	$('#deleteAllModal').modal()
 	.one('click', '#confirm_button', function(e) {
 		$form.trigger('submit');
 	});

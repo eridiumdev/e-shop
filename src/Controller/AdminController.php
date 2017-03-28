@@ -4,13 +4,13 @@ namespace App\Controller;
 /**
  * Template for all Manager classes
  * - admin controller classes to manage particular data,
- * e.g. Account manager, Drug manager...
+ * e.g. Account manager, Order manager...
  */
 class AdminController extends BaseController
 {
     public function showDashboardPage()
     {
-        $this->setTemplate('admin.twig');
+        $this->setTemplate('dashboard.twig');
         $this->render();
     }
 }
