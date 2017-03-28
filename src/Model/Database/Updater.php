@@ -33,7 +33,7 @@ class Updater extends Connection
         int     $id,
         string  $email,
         string  $password,
-        int     $type,
+        string  $type,
         string  $registeredAt
     ) : bool
     {
