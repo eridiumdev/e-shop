@@ -1,0 +1,23 @@
+{
+    "require": {
+        "symfony/http-foundation" : "~3.2",
+        "twig/twig" : "~2.0",
+
+        "phpdocumentor/graphviz" : "~1.0",
+        "monolog/monolog" : "~1.0",
+
+        "firebase/php-jwt" : ">=4.0.0",
+        "vlucas/phpdotenv" : "^2.4",
+
+        "phpunit/phpunit" : "^6.0",
+        "phpunit/dbunit" : "^3.0",
+        "mockery/mockery" : "dev-master@dev",
+        "whatthejeff/nyancat-phpunit-resultprinter" : "~1.2"
+    },
+
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    }
+}

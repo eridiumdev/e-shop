@@ -47,7 +47,6 @@ Temporary Items
 .apdisk
 
 # Composer
-composer.json
 composer.lock
 composer.phar
 vendor
