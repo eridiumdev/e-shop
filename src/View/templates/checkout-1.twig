@@ -1,0 +1,14 @@
+{% extends 'base.twig' %}
+
+{% block title %}{{parent()}} | Checkout{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Checkout</h1>
+    <ol class="breadcrumb">
+        <li><a href="/">Home</a></li>
+        <li class="active">Checkout - Shipping Details</li>
+    </ol>
+    {% include 'inc/flashes.twig' %}
+</div>
+{% endblock %}

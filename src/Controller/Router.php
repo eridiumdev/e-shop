@@ -69,6 +69,18 @@ class Router
                 }
                 break;
 
+            case 'cart':
+
+                $controller = new CartController();
+                $controller->showCartPage();
+                break;
+
+            case 'checkout' :
+
+                $controller = new CheckoutController();
+                $controller->showStepOnePage();
+                break;
+
             case 'admin' :
 
                 self::routeAdmin();

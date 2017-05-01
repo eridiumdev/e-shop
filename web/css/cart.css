@@ -1,0 +1,36 @@
+.qty-selector {
+    width: 70px;
+}
+
+.item-row {
+    display: flex;
+    align-items: center;
+    min-height: 10vh;
+}
+
+.item-row>div>p {
+    font-size: 1.15em;
+}
+
+.price {
+    padding-top: 9px;
+}
+
+.glyphicon-remove {
+    color: #2c3e50;
+}
+
+.glyphicon-remove:hover {
+    color: #e74c3c;
+}
+
+.checkout-btn {
+    margin-left: 10px;
+    margin-right: 20px;
+}
+
+.total {
+    font-size: 2em;
+    padding: 11px;
+    margin-right: 20px;
+}

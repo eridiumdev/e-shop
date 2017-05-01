@@ -1,0 +1,86 @@
+{% extends 'base.twig' %}
+
+{% block title %}{{parent()}} | Shopping Cart{% endblock %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="/css/cart.css">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Shopping Cart</h1>
+    <ol class="breadcrumb">
+        <li><a href="/">Home</a></li>
+        <li class="active">Shopping Cart</li>
+    </ol>
+    {% include 'inc/flashes.twig' %}
+    <hr>
+    <form action="/cart" method="post">
+    <div class="row item-row">
+        <div class="col-xs-2">
+            <img class="img-responsive" src="/img/ms3.jpg" width="120" height="120">
+        </div>
+        <div class="col-xs-4 col-md-5">
+            <p>Name</p>
+        </div>
+        <div class="col-xs-2">
+            <input type="number" class="qty-selector form-control" name="qty[]" min="0" max="10" step="1" value="1">
+        </div>
+        <div class="col-xs-2">
+            <p class="price">¥130</p>
+        </div>
+        <div class="col-xs-2">
+            <a role="button" href="#"><span class="glyphicon glyphicon-remove"></span></a>
+        </div>
+    </div>
+    <hr>
+    <div class="row item-row">
+        <div class="col-xs-2">
+            <img class="img-responsive" src="/img/ms3.jpg" width="120" height="120">
+        </div>
+        <div class="col-xs-4">
+            <p>Full Size Ergonomic Backlit Hub KeyboardFull Size Ergonomic Backlit Hub Keyboard</p>
+        </div>
+        <div class="col-xs-2">
+            <input type="number" class="qty-selector form-control" name="qty[]" min="0" max="10" step="1" value="1">
+        </div>
+        <div class="col-xs-2">
+            <p>¥130</p>
+        </div>
+        <div class="col-xs-2">
+            <a role="button" href="#"><span class="glyphicon glyphicon-remove"></span></a>
+        </div>
+    </div>
+    <hr>
+    <div class="row item-row">
+        <div class="col-xs-2">
+            <img class="img-responsive" src="/img/ms3.jpg" width="120" height="120">
+        </div>
+        <div class="col-xs-4">
+            <p>Name</p>
+        </div>
+        <div class="col-xs-2">
+            <input type="number" class="qty-selector form-control" name="qty[]" min="0" max="10" step="1" value="1">
+        </div>
+        <div class="col-xs-2">
+            <p>¥130</p>
+        </div>
+        <div class="col-xs-2">
+            <a role="button" href="#"><span class="glyphicon glyphicon-remove"></span></a>
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="checkout-btn pull-right">
+            <a href="/checkout" role="button" class="btn btn-lg btn-success">Checkout</a>
+        </div>
+        <div class="pull-right">
+            <input type="submit" class="btn btn-lg btn-primary" value="Update">
+        </div>
+        <div class="total pull-right">
+            <p>Total: &nbsp;&nbsp;¥390</p>
+        </div>
+    </div>
+    </form>
+</div>
+{% endblock %}
