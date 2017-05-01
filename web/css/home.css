@@ -4,7 +4,7 @@
 }
 
 /* Hide the carousel text when the screen is less than 600 pixels wide */
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   .carousel-caption {
     display: none;
   }
@@ -27,66 +27,3 @@
     padding: 10px;
     margin-top: 30px;
 }
-
-.panel:hover {
-    /*transform:scale(1.015, 1.015);*/
-    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
-}
-
-.panel-more {
-    height: 350px;
-}
-
-.panel-more .btn {
-    /*display: inline-block;*/
-    margin-top: 120px;
-}
-
-.panel-heading {
-    text-align: center;
-    height: 70px;
-}
-
-.panel-body {
-    white-space: nowrap;
-    text-align: center;
-    height: 210px;
-}
-
-/*.panel-body .img-aligner {
-    display: inline-block;
-    height: 100%;
-    vertical-align: middle;
-}*/
-
-.panel-body img {
-    /*vertical-align: middle;*/
-    margin: 0 auto;
-    max-height: 180px;
-}
-
-.panel-footer {
-    height: 70px;
-    text-align: center;
-}
-
-.panel-footer .label {
-    display: inline-block;
-    font-size: 1.2em;
-    padding: 10px;
-    margin-top: 5px;
-}
-
-.panel-footer a.label {
-    font-size: 1.1em;
-}
-
-.panel-footer a.label:hover {
-
-}
-
-/*@media (min-width: 1000px) {
-    #buyBtn {
-        margin-top: 30px;
-    }
-}*/

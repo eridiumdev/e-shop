@@ -1,0 +1,33 @@
+.product-cards {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.product-cards > [class*='col-'] {
+  display: flex;
+  flex-direction: column;
+}
+
+/*.thumbnail {
+  height: 100%;
+}*/
+
+/*.row.display-flex {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.thumbnail {
+  display: flex;
+  flex-direction: column;
+}
+
+.thumbnail .caption {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}*/

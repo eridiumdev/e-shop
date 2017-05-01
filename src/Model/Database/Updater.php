@@ -31,6 +31,7 @@ class Updater extends Connection
      */
     public function updateUser(
         int     $id,
+        string  $username,
         string  $email,
         string  $password,
         string  $type,
@@ -38,12 +39,13 @@ class Updater extends Connection
     ) : bool
     {
         $sql = "UPDATE users
-        		SET email = ?,
+        		SET username = ?,
+                    email = ?,
                     password = ?,
                     type = ?,
                     registeredAt = ?
                 WHERE id = ?";
         $stmt = $this->db->prepare($sql);
-        return $stmt->execute([$email, $password, $type, $registeredAt, $id]);
+        return $stmt->execute([$username, $email, $password, $type, $registeredAt, $id]);
     }
 }

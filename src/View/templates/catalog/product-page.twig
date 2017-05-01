@@ -1,0 +1,70 @@
+{% extends 'base.twig' %}
+
+{% block title %}{{parent()}} | Product page{% endblock %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="/css/xzoom.css">
+<link rel="stylesheet" href="/css/product.css">
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="/js/xzoom.min.js"></script>
+<script type="text/javascript" src="/js/gallery.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-sm-5">
+        {% include 'catalog/inc/img-gallery.twig' %}
+        </div>
+        <div class="col-sm-7">
+            <h1>Full Size Ergonomic Backlit Hub Keyboard</h1>
+            <div class="well">
+                <span class="product-price-striked"><s>¥200</s></span>
+                <span class="product-price-sale">¥150 Sale!</span>
+                <span class="pull-right">
+                    <a class="btn btn-success" role="button" href="#" style="margin-left:5px"><span class="glyphicon glyphicon-shopping-cart"></span><span class="hidden-sm"> Add to cart</span></a>
+                </span>
+                <span class="pull-right">
+                    <a class="btn btn-warning" role="button" href="#"><span class="glyphicon glyphicon-ok"></span><span class="hidden-sm"> Checkout</span></a>
+                </span>
+            </div>
+            <div class="well">
+                <h3>Description</h3>
+                <p>The PERI-312 is the ideal Ergonomic Backlit Keyboard for all scenarios.
+                    Its natural Ergonomic Full-Size design is comfortable and easy to use and it's split-key, 3-D design helps users maintain a natural posture. The integrated palm rest make the interaction between user and keyboard more seamless. People who suffer from Repetitive Strain Injuries (RSI) might find such ergonomic features helpful.</p>
+            </div>
+            <div class="well">
+                <h3>Specifications</h3>
+                <table class="table table-striped">
+                    <tr>
+                        <td>Model</td>
+                        <td>KBC-PERI-312B-UK</td>
+                    </tr>
+                    <tr>
+                        <td>Connection</td>
+                        <td>USB</td>
+                    </tr>
+                    <tr>
+                        <td>Layout</td>
+                        <td>United Kingdom</td>
+                    </tr>
+                    <tr>
+                        <td>Length</td>
+                        <td>512 mm</td>
+                    </tr>
+                    <tr>
+                        <td>Height</td>
+                        <td>62 mm</td>
+                    </tr>
+                    <tr>
+                        <td>Weight</td>
+                        <td>1.25 kg</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

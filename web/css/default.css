@@ -11,6 +11,17 @@ body {
     margin-bottom: 100px;
 }
 
+.dropdown-menu>li>a {
+    padding: 12px;
+}
+
+.breadcrumb {
+    padding-left: 5px;
+    padding-top: 10px;
+    margin-bottom: 0;
+    background-color: #ffffff;
+}
+
 footer {
   position: absolute;
   bottom: 0;

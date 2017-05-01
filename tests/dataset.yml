@@ -1,0 +1,189 @@
+users:
+    -
+        user_id:    1
+        user_name:  "admin"
+        # password = '123'
+        password:   "$2y$10$bRD7HFqsU3dV8UFfrYsNvOdHKOp1HlHnuaz1krBgjyAiXPKSKksAm"
+        role_id:    1
+        createdAt:  "2017-01-01 00:00:00"
+    -
+        user_id:    2
+        user_name:  "user"
+        # password = '321'
+        password:   "$2y$10$2ui/hWJTln9ab2UsTAz88.CdOOR8MVO0SWM9gdXIfBTNIjznaV0Ai"
+        role_id:    2
+        createdAt:  "2017-02-02 10:20:30"
+
+drug:
+    -
+        drug_id:      1
+        drug_name:    "AB-01"
+        drug_text:    "ABCDEFG"
+        drug_picture: \uploads\img\drugs\jkl.jpg
+        drug_cost:    5.5
+
+    -
+        drug_id:       2
+        drug_name:     "jkl"
+        drug_text:     "HHHHHHHHHHHHH"
+        drug_picture:  \uploads\img\drugs\jkl.jpg
+        drug_cost:     6.8
+
+    -
+        drug_id:       3
+        drug_name:     "kfby"
+        drug_text:     "HHHHHHHHHHHHH"
+        drug_picture:  \uploads\img\drugs\kfby.jpg
+        drug_cost:     8.8
+
+
+illness:
+    -
+        ill_id:         1
+        ill_name:       "illone"
+        class_name:     "class1"
+        ill_describe:    "The first illness."
+
+    -
+        ill_id:         2
+        ill_name:       "illtwo"
+        class_name:     "class2"
+        ill_describe:    "The second illness."
+
+    -
+        ill_id:         3
+        ill_name:       "illthree"
+        class_name:     "class3"
+        ill_describe:    "The third illness."
+
+stepname:
+    -
+        step_num:       1
+        step_name:      "接诊"
+
+    -
+        step_num:       2
+        step_name:      "检查"
+
+    -
+        step_num:       3
+        step_name:      "诊断"
+
+    -
+        step_num:       4
+        step_name:      "治疗方案"
+
+payments:
+    -
+        pay_id:         1
+        ill_id:         1
+        pay_name:       "payment1"
+        pay_cost:       10.5
+        number:         1
+
+    -
+        pay_id:         2
+        ill_id:         2
+        pay_name:       "payment2"
+        pay_cost:       100.8
+        number:         5
+
+    -
+        pay_id:         3
+        ill_id:         3
+        pay_name:       "payment3"
+        pay_cost:       20.5
+        number:         3
+
+steps:
+    -
+        ill_id:         1
+        step_num:       1
+        step_text:      "step1text"
+
+    -
+        ill_id:         1
+        step_num:       2
+        step_text:      "step2text"
+
+    -
+        ill_id:         1
+        step_num:       3
+        step_text:      "step3text"
+
+    -
+        ill_id:         1
+        step_num:       4
+        step_text:      "step4text"
+
+    -
+        ill_id:         2
+        step_num:       1
+        step_text:      "step1text"
+
+    -
+        ill_id:         2
+        step_num:       2
+        step_text:      "step2text"
+
+    -
+        ill_id:         2
+        step_num:       3
+        step_text:      "step3text"
+
+    -
+        ill_id:         2
+        step_num:       4
+        step_text:      "step4text"
+
+
+    -
+        ill_id:         3
+        step_num:       1
+        step_text:      "step1text"
+
+    -
+        ill_id:         3
+        step_num:       2
+        step_text:      "step2text"
+
+    -
+        ill_id:         3
+        step_num:       3
+        step_text:      "step3text"
+
+    -
+        ill_id:         3
+        step_num:       4
+        step_text:      "step4text"
+
+
+illdrug:
+    -
+        ill_id:         1
+        drug_id:        1
+
+    -
+        ill_id:         2
+        drug_id:        3
+
+    -
+        ill_id:         3
+        drug_id:        2
+
+illpic:
+    -
+        ill_id:         1
+        step_num:       1
+        pic_path:       \uploads\img\step1.png
+
+    -
+        ill_id:         2
+        step_num:       2
+        pic_path:       \uploads\img\step2.png
+
+illvid:
+    -
+        ill_id:         1
+        step_num:       3
+        vid_path:       \uploads\vid\video.mp4

@@ -16,6 +16,14 @@ $(document).ready(function() {
         }
     });
 
+    $("#tableToSort_5-7").tablesorter({
+        headers: {
+            5: { sorter: false },
+            6: { sorter: false },
+            7: { sorter: false }
+        }
+    });
+
     $("#tableToSort_6-8").tablesorter({
         headers: {
             6: { sorter: false },

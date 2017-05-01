@@ -4,22 +4,25 @@ namespace App\Model\Data;
 class User
 {
     private $id;
+    private $username;
     private $email;
     private $password;
     private $type;
     private $registeredAt;
+    private $address;
 
-    private $addresses = [];
     private $orders = [];
 
     public function __construct(
-        int     $id = null,
-        string  $email,
-        string  $password,
-        string  $type,
-        string  $registeredAt
+        $id           = -1,
+        $username     = '',
+        $email        = '',
+        $password     = '',
+        $type         = 'guest',
+        $registeredAt = '2017-01-01 00:00:00'
     ) {
         $this->setId($id);
+        $this->setUsername($username);
         $this->setEmail($email);
         $this->setPassword($password);
         $this->setType($type);
@@ -34,6 +37,16 @@ class User
     public function setId(int $id)
     {
         $this->id = $id;
+    }
+
+    public function getUsername() : string
+    {
+    	return $this->username;
+    }
+
+    public function setUsername(string $username)
+    {
+    	$this->username = $username;
     }
 
     public function getEmail() : string
@@ -65,7 +78,7 @@ class User
     {
     	$this->type = $type;
     }
-
+    
     public function getRegisteredAt() : string
     {
         return $this->registeredAt;
@@ -74,5 +87,25 @@ class User
     public function setRegisteredAt(string $registeredAt)
     {
         $this->registeredAt = $registeredAt;
+    }
+
+    public function getAddress() : string
+    {
+        return $this->address;
+    }
+
+    public function setAddress(string $address)
+    {
+        $this->address = $address;
+    }
+
+    public function getOrders() : array
+    {
+        return $this->orders;
+    }
+
+    public function setOrders(array $orders)
+    {
+        $this->orders = $orders;
     }
 }

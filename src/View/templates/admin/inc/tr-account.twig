@@ -1,0 +1,18 @@
+<tr>
+    <td>{{ user.id }}</td>
+    <td>{{ user.username }}</td>
+    <td>{{ user.email }}</td>
+    <td>{{ user.registeredAt }}</td>
+    <td>{{ user.type }}</td>
+    <td>{{ short(user.address, 15) }}
+    </td>
+    <td class="col-xs-1 col-xs-offset-10">
+        <a class="btn btn-sm btn-primary" role="button" href="/admin/accounts/change/{{user.id}}">View</a>
+    </td>
+    <td class="col-xs-1">
+        <input class="btn btn-sm btn-danger" type="submit" name="delete" value="Delete">
+    </td>
+    <td class="col-xs-1 checkable" role="button" style="text-align:center">
+        <input type="checkbox" name="id[]" role="button" value="{{ user.id }}">
+    </td>
+</tr>

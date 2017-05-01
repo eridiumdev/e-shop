@@ -11,17 +11,17 @@ class AccountController extends BaseController
 
     /**
      * Shows account homepage OR login/register page
-     * @param  string  $email - previous user input (if some error occurred)
+     * @param  string  $input - user email or username (if some error occurred)
      */
-    public function showAccountPage(string $email = null)
+    public function showAccountPage(string $input = null)
     {
-        if ($email) $this->addTwigVar('email', $email);
+        if ($input) $this->addTwigVar('input', $input);
         $this->render();
     }
 
-    public function showRegisterPage(string $email = null)
+    public function showRegisterPage(string $input = null)
     {
-        if ($email) $this->addTwigVar('email', $email);
+        if ($input) $this->addTwigVar('input', $input);
 
         $this->setTemplate('account/register.twig');
         $this->render();
@@ -30,38 +30,44 @@ class AccountController extends BaseController
     /**
      * Verifies login info, logs in user and redirects to account homepage
      * OR stays on login page and displays errors
-     * @param  array  $post - [email, password]
+     * @param  array  $post - [input, password]
      */
     public function login(array $post)
     {
         if (!$this->isClean($post)) {
             $this->flash('danger', 'Password contains invalid characters');
-            return $this->showAccountPage($post['email']);
+            return $this->showAccountPage($post['input']);
         }
 
-        $email = $post['email'];
+        $input = $post['input'];
         $password = $post['password'];
 
         try {
             $dbReader = new Reader();
-            $user = $dbReader->getUserByEmail($email);
+
+            if (filter_var($input, FILTER_VALIDATE_EMAIL)) {
+                $user = $dbReader->getUserByEmail($input);
+            } else {
+                $user = $dbReader->getUserByUsername($input);
+            }
+
         } catch (\Exception $e) {
-            Logger::log('db', 'error', 'Failed to find user by email', $e);
+            Logger::log('db', 'error', 'Failed to find user by username or email', $e);
             $this->flash('danger', 'Login failed, please try again');
-            return $this->showAccountPage($email);
+            return $this->showAccountPage($input);
         }
 
         if (empty($user)) {
-            $this->flash('danger', 'Email was not found');
-            return $this->showAccountPage($email);
+            $this->flash('danger', 'Username or email not found');
+            return $this->showAccountPage($input);
         }
 
         if (!password_verify($password, $user->getPassword())) {
             $this->flash('danger', 'Password is incorrect');
-            return $this->showAccountPage($email);
+            return $this->showAccountPage($input);
         }
 
-        $this->flash('success', "Welcome back, $email");
+        $this->flash('success', "Welcome back, $input");
         $authToken = Security::encodeToken($user->getId(), $user->getType());
         return Router::redirect('/account', $authToken);
     }
@@ -69,7 +75,7 @@ class AccountController extends BaseController
     /**
      * Verifies inputs, registers user and redirects to account homepage
      * OR stays on registration page and displays errors
-     * @param  array  $post - [email, password, confirm_password]
+     * @param  array  $post - [username, email, password, confirm_password]
      */
     public function register(array $post)
     {
@@ -78,6 +84,7 @@ class AccountController extends BaseController
             return $this->showAccountPage($post['email']);
         }
 
+        $username = $post['username'];
         $email = $post['email'];
         $password = $post['password'];
         $confirmPassword = $post['confirmPassword'];
@@ -99,14 +106,14 @@ class AccountController extends BaseController
             $hashed = password_hash($password, PASSWORD_DEFAULT);
 
             $dbCreator = new Creator();
-            $user = $dbCreator->createUser($email, $hashed);
+            $user = $dbCreator->createUser($username, $email, $hashed);
 
             $this->flash('success', 'Registration complete');
             $authToken = Security::encodeToken($user->getId(), $user->getType());
             return Router::redirect('/account', $authToken);
 
         } catch (\Exception $e) {
-            Logger::log('db', 'error', 'Failed to register new user', $e);
+            Logger::log('db', 'error', 'Failed to register new user' . $username, $e);
             $this->flash('danger', 'Registration failed, please try again');
             return $this->showRegisterPage($email);
         }

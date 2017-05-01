@@ -1,15 +1,67 @@
-<tr>
-    <td>{{ user.id }}</td>
-    <td>{{ user.email }}</td>
-    <td>{{ user.registeredAt }}</td>
-    <td>{{ user.type }}</td>
-    <td class="col-xs-1 col-xs-offset-10">
-        <a class="btn btn-sm btn-primary" role="button" href="/admin/accounts/change/{{user.id}}">Change</a>
-    </td>
-    <td class="col-xs-1">
-        <input class="btn btn-sm btn-danger" type="submit" name="delete" value="Delete">
-    </td>
-    <td class="col-xs-1 checkable" role="button" style="text-align:center">
-        <input type="checkbox" name="id[]" role="button" value="{{ user.id }}">
-    </td>
-</tr>
+{% extends 'base-admin.twig' %}
+
+{% block title %}Modify Account{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="well col-sm-6 col-sm-offset-2">
+        <form id="form" method="post" action="/admin/accounts/change/{{user.id}}">
+            <h2>Modify Account<button class="btn btn-sm btn-primary pull-right" type="reset" form="form">
+                <span class="glyphicon glyphicon-refresh"></span>
+                <span class="hidden-sm"> Reset form</button>
+            </h2>
+
+            {% include "inc/flashes.twig" %}
+            <br>
+            <ul class="nav nav-tabs nav-justified">
+                <li class="active"><a href="#details" data-toggle="tab">Account details</a></li>
+                <li><a href="#shipping" data-toggle="tab">Shipping details</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane fade active in" id="details">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" class="form-control" id="username" name="username" placeholder="Username" value="{{user.username}}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="E-mail address" value="{{user.email}}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Leave blank for no changes">
+                    </div>
+                    <label>Privileges</label>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="type" value="user"{% if user.type == 'user' %} checked{% endif %}>User
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="type" value="admin"{% if user.type == 'user' %} checked{% endif %}>Admin
+                        </label>
+                    </div>
+                </div>
+                <div class="tab-pane fade in" id="shipping">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="Full name" value="asd" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="phone">Phone</label>
+                        <input type="text" class="form-control" id="phone" name="phone" placeholder="Phone number" value="1231232" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="address">Address</label>
+                        <textarea rows="4" cols="50" class="form-control" id="address" name="address" placeholder="Full address" required>asdadsdas
+                        asdasds</textarea>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <br>
+        <button class="btn btn-lg btn-primary btn-block" type="submit" form="form">Confirm changes</button>
+    </div>
+</div>
+{% endblock %}

@@ -195,12 +195,22 @@ class BaseController
      * @param  int     limit
      * @return string
      */
-    public function short(string $full, $limit = 55) : string
+    public function short(string $full, $limit = 30) : string
     {
-        if (strlen($full) >= $limit) {
-            return substr($full, 0, $limit-1) . "...";
+        preg_match(PATTERN_CHINESE, $full, $matches);
+
+        if (!empty($matches)) {
+            if (mb_strlen($full) >= $limit) {
+                return mb_substr($full, 0, $limit-1) . "...";
+            } else {
+                return mb_substr($full, 0, $limit);
+            }
         } else {
-            return substr($full, 0, $limit);
+            if (strlen($full) >= $limit) {
+                return substr($full, 0, $limit-1) . "...";
+            } else {
+                return substr($full, 0, $limit);
+            }
         }
     }
 

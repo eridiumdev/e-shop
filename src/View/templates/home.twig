@@ -2,7 +2,10 @@
 
 {% block title %}{{parent()}} | Homepage{% endblock %}
 
-{% block stylesheets %}<link rel="stylesheet" href="/css/home.css">{% endblock %}
+{% block stylesheets %}
+<link rel="stylesheet" href="/css/home.css">
+<link rel="stylesheet" href="/css/catalog.css">
+{% endblock %}
 
 {% block header %}{% include 'inc/banner.twig' %}{% endblock %}
 

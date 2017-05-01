@@ -1,0 +1,15 @@
+/* Product page */
+.product-price {
+    padding: 4px;
+    font-size: 1.6em;
+}
+
+.product-price-striked {
+    font-size: 1.1em;
+}
+
+.product-price-sale {
+    color: #ff5722;
+    margin-left: 2px;
+    font-size: 1.6em;
+}

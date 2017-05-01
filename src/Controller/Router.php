@@ -37,6 +37,7 @@ class Router
 
         $route = self::getRoute();
         self::$route = $route;
+        // pe($route);
 
         switch ($route['base']) {
             case '' :
@@ -73,18 +74,19 @@ class Router
                 self::routeAdmin();
                 break;
 
-            case 'catalog' :
+            case 'keyboards' :
 
                 $controller = new CatalogController();
 
                 if (is_numeric($route['page'])) {
-                    // TODO $controller->showProductPage($route['page']);
+                    $controller->showProductPage($route['page']);
                 } else {
-                    $controller->showCatalogPage();
+                    $controller->showCatalogPage('keyboards');
                 }
                 break;
 
             default:
+                self::redirect('/');
                 // 404 NOT_FOUND
         }
     }

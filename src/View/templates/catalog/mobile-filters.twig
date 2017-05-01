@@ -1,0 +1,106 @@
+<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+  <div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingOne">
+      <h4 class="panel-title">
+        <a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+          Filter <span class="caret"></span>
+        </a>
+      </h4>
+    </div>
+    <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+      <div class="panel-body">
+          <h4>Price</h4>
+          <div class="form-inline">
+              <div class="form-group">
+                  <label>Min&nbsp;</label>
+                  <input type="number" id="priceMin" class="form-control" name="priceMin" min="0" max="1000" step="10" value="100">
+              </div>
+              <div class="form-group">
+                  <label>Max</label>
+                  <input type="number" id="priceMax" class="form-control" name="priceMax" min="0" max="1000" step="10" value="500">
+              </div>
+          </div>
+          <br>
+          <h4>Brand</h4>
+          <div class="form-inline">
+              <input type="checkbox">
+              <label>Goldtouch</label>
+          </div>
+          <div class="form-inline">
+              <input type="checkbox">
+              <label>Matias</label>
+          </div>
+          <div class="form-inline">
+              <input type="checkbox">
+              <label>Microsoft</label>
+          </div>
+          <div class="form-inline">
+              <input type="checkbox">
+              <label>Truly Ergonomic</label>
+          </div>
+          <div class="form-inline">
+              <input type="checkbox">
+              <label>Perixx</label>
+          </div>
+          <br>
+          <h4>Color</h4>
+          <div class="form-inline">
+              <input type="radio">
+              <label>Black</label>
+          </div>
+          <div class="form-inline">
+              <input type="radio">
+              <label>Grey</label>
+          </div>
+          <div class="form-inline">
+              <input type="radio">
+              <label>White</label>
+          </div>
+          <br>
+          <button class="btn btn-primary btn-block" type="submit">Filter</button>
+      </div><!-- panel-body -->
+    </div>
+  </div>
+  <div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingTwo">
+      <h4 class="panel-title">
+        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+          Sort <span class="caret">
+        </a>
+      </h4>
+    </div>
+    <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+      <div class="panel-body">
+          <div class="form-group">
+              <label>Sort by price: </label>
+              <select class="form-control" name="sortBy" required>
+                  <option disabled selected value="">Select option</option>
+                  <option value="priceAsc">Low to High</option>
+                  <option value="priceDesc">High to Low</option>
+              </select>
+          </div>
+      </div>
+    </div>
+  </div>
+  <div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="headingThree">
+      <h4 class="panel-title">
+        <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+          Group <span class="caret">
+        </a>
+      </h4>
+    </div>
+    <div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+      <div class="panel-body">
+          <div class="form-group col-sm-offset-1">
+              <label>Group by: </label>
+              <select class="form-control" name="groupBy" required>
+                  <option disabled selected value="">Select option</option>
+                  <option value="brand">Brand</option>
+                  <option value="color">Color</option>
+              </select>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>

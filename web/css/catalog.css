@@ -1,0 +1,54 @@
+.well {
+    padding: 12px;
+}
+
+.my-pagination {
+    padding-bottom: 20px;
+}
+
+/* Product card */
+.product-card:hover {
+    /*transform:scale(1.015, 1.015);*/
+    box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+}
+
+/* Remove link underline in the Buy button */
+.product-card .btn:hover {
+    text-decoration: none;
+}
+
+.product-price-row {
+    margin-top: 30px;
+    padding-bottom: 10px;
+}
+
+.product-price-row .btn {
+    padding: 8px 12px;
+}
+
+@media (max-width: 600px) {
+    .product-price-row .btn {
+        padding: 4px 8px;
+    }
+}
+
+.card-price {
+    padding: 4px;
+    font-size: 1.6em;
+}
+
+.card-striked {
+    font-size: 1.1em;
+}
+
+.card-sale {
+    color: #ff5722;
+    margin-left: 2px;
+    font-size: 1.6em;
+}
+
+.card-more {
+    height: 250px;
+    line-height: 250px;
+    text-align: center;
+}

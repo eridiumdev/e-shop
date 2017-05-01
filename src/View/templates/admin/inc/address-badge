@@ -1,0 +1,5 @@
+<span role="button" class="badge pop-toggle">{{ user.addresses|length }}
+    <div data-container="body" data-toggle="popover" data-placement="bottom" data-html="true"
+    data-content="<ul style='margin-left:-15px;margin-top:5px'>{% for addr in user.addresses %}<li>{{addr|nl2br}}</li>{% endfor %}</ul>">
+    </div>
+</span>

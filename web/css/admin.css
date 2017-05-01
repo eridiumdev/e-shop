@@ -24,6 +24,7 @@ hr {
     border-width: 1px;
 }
 
+/* Sidebar nav */
 .navbar-default {
     background-color: transparent;
 }
@@ -50,6 +51,30 @@ table tbody tr:hover {
     outline: 1px solid #2c3e50;
 }
 
+/* Tabs */
+.nav-tabs>li>a {
+    background-color: #ecf0f1;
+}
+
+@media (min-width: 768px) {
+.nav-tabs.nav-justified>.active>a, .nav-tabs.nav-justified>.active>a:hover, .nav-tabs.nav-justified>.active>a:focus {
+    background-color: #ecf0f1;
+    border: 1px solid #2c3e50;
+    border-bottom-color: #ecf0f1;
+}}
+
+.nav-tabs.nav-justified>li>a {
+    color: #2c3e50;
+}
+
+@media (min-width: 768px) {
+.nav-tabs.nav-justified>li>a {
+    border-bottom: 1px solid #2c3e50;
+}}
+
+/* Textarea only resizable virtically */
+textarea { resize: vertical; }
+
 /* Uploads */
 .tab-content {
     padding: 7px;
@@ -58,4 +83,8 @@ table tbody tr:hover {
 
 .outline {
     outline: 3px solid #2c3e50;
+}
+
+.btn {
+    min-width: 65px;
 }

@@ -1,0 +1,17 @@
+<phpunit
+    backupGlobals="true"
+    bootstrap="../vendor/autoload.php"
+    printerFile="../vendor/whatthejeff/nyancat-phpunit-resultprinter/src/NyanCat/PHPUnit/ResultPrinter.php"
+    printerClass="NyanCat\PHPUnit\ResultPrinter">
+    <filter>
+        <blacklist>
+            <!-- <directory>vendor</directory> -->
+        </blacklist>
+    </filter>
+    <testsuites>
+        <testsuite name="Data">
+            <directory>Data</directory>
+            <exclude>Data/DataTest.php</exclude>
+        </testsuite>
+    </testsuites>
+</phpunit>

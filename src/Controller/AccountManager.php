@@ -104,6 +104,7 @@ class AccountManager extends AdminController
                 continue;
             }
 
+            $username = $user['username'];
             $email = $user['email'];
             $type = $user['type'];
 
@@ -116,7 +117,7 @@ class AccountManager extends AdminController
                 }
 
                 $password = password_hash(BATCH_USER_PASSWORD, PASSWORD_DEFAULT);
-                $newUser = $dbCreator->createUser($email, $password, $type);
+                $newUser = $dbCreator->createUser($username, $email, $password, $type);
 
                 $good[] = $newUser;
 
@@ -149,7 +150,7 @@ class AccountManager extends AdminController
             Router::redirect('/admin/accounts');
         }
 
-        $this->setTemplate('admin/inc/change-account.twig');
+        $this->setTemplate('admin/inc/account.twig');
         $this->addTwigVar('user', $user);
         $this->render();
     }
