@@ -12,9 +12,9 @@
             <div class="modal-body">
                 <p>{% block modal_body %}Body{% endblock %}</p>
             </div>
-            <div class="modal-footer">
+            <div id="modal_footer" class="modal-footer">
                 {% block button_yes %}
-                    <button type="button" data-dismiss="modal"
+                    <button type="button" {% block yes_dismiss %}data-dismiss="modal"{% endblock %}
                         class="btn btn-{% block yes_color %}primary{% endblock %}"
                         id="{% block yes_id %}confirm_button{% endblock %}">
                         {% block yes_text %}Confrim{% endblock %}

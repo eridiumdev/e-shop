@@ -1,0 +1,89 @@
+{% extends 'base.twig' %}
+
+{% block title %}{{parent()}} | Checkout{% endblock %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="/css/checkout.css">
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="/js/checkout.js"></script>
+{% endblock %}
+
+{% block content %}
+{% include 'dlg/payment-gateway.twig' %}
+<div class="container">
+    <div class="checkout-steps">
+        <div class="checkout-step checkout-active">
+            <a href="/checkout/step-one"><div class="checkout-step-num">1</div><span class="checkout-step-text hidden-xs">Fill in Shipping Details</span></a>
+        </div>
+        <div class="checkout-step checkout-active">
+            <span class="glyphicon glyphicon-menu-right"></span>
+            <a href="/checkout/step-two"><div class="checkout-step-num">2</div><span class="checkout-step-text hidden-xs">Select Delivery and Payment Methods</span></a>
+
+        </div>
+        <div class="checkout-step checkout-active">
+            <span class="glyphicon glyphicon-menu-right"></span>
+            <a href="/checkout/step-three"><div class="checkout-step-num">3</div><span class="checkout-step-text hidden-xs">Confirm Order</span></a>
+        </div>
+    </div>
+    <div class="well col-sm-6 col-sm-offset-3">
+        <h2 class="form-signin-heading">Review Order</h2>
+        {% include "inc/flashes.twig" %}
+        <br>
+        <div class="order-details">
+            <table class="table table-striped order-details">
+                <tr>
+                    <th>Name</th>
+                    <td>John Smith</td>
+                </tr>
+                <tr>
+                    <th>Phone</th>
+                    <td>1231232142</td>
+                </tr>
+                <tr>
+                    <th>Address</th>
+                    <td>jiangan lu 3333</td>
+                </tr>
+                <tr>
+                    <th>Delivery</th>
+                    <td>Post (¥10)</td>
+                </tr>
+                <tr>
+                    <th>Payment</th>
+                    <td>Alipay</td>
+                </tr>
+                <tr>
+                    <th>Items</th>
+                    <td>
+                        <div class="item-row">
+                            <img class="img-responsive" src="/img/ms3.jpg" width="60" height="60">
+                            <span class="item-qty">x1</span>
+                            <span class="item-subtotal">(¥100)</span>
+                        </div>
+                        <div class="item-row">
+                            <img class="img-responsive" src="/img/ms3.jpg" width="60" height="60">
+                            <span class="item-qty">x1</span>
+                            <span class="item-subtotal">(¥100)</span>
+                        </div>
+                        <div class="item-row">
+                            <img class="img-responsive" src="/img/ms3.jpg" width="60" height="60">
+                            <span class="item-qty">x1</span>
+                            <span class="item-subtotal">(¥100)</span>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th>Total</th>
+                    <td>¥250</td>
+                </tr>
+            </table>
+        </div>
+        <br>
+        <button id="confirmOrderBtn" class="btn btn-lg btn-primary btn-block">Confirm Order</button>
+        <div id="successBtn" hidden>
+            <a href="/" class="btn btn-lg btn-success btn-block">Success!</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

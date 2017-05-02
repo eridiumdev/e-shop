@@ -72,9 +72,6 @@ table tbody tr:hover {
     border-bottom: 1px solid #2c3e50;
 }}
 
-/* Textarea only resizable virtically */
-textarea { resize: vertical; }
-
 /* Uploads */
 .tab-content {
     padding: 7px;

@@ -1,0 +1,17 @@
+{% extends 'dlg/base.twig' %}
+
+{% block modal_id %}paymentModal{% endblock %}
+{% block modal_size %}modal-sm{% endblock %}
+{% block modal_title %}Payment Processing{% endblock %}
+{% block modal_body %}
+<input id="paymentPassword" type="password" class="form-control" placeholder="Enter your password">
+<div id="paymentProcessing" hidden>
+    <span class="glyphicon glyphicon-refresh glyphicon-spin"></span>
+</div>
+<div id="paymentSuccess" hidden>
+    <span class="glyphicon glyphicon-ok"></span>
+</div>
+{% endblock %}
+{% block yes_dismiss %}{% endblock %}
+{% block yes_color %}primary{% endblock %}
+{% block yes_text %}Submit{% endblock %}

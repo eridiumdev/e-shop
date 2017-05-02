@@ -1,0 +1,83 @@
+.checkout-steps {
+    text-align: center;
+    font-size: 1.4em;
+    padding-top: 18px;
+    padding-bottom: 36px;
+}
+
+.checkout-step {
+    display: inline-block;
+    color: #95a5a6;
+}
+
+.checkout-active {
+    color: #18bc9c;
+}
+
+.checkout-step-num {
+    display: inline-block;
+    border-radius: 100px;
+    width: 1.55em;
+    height: 1.55em;
+    text-align: center;
+    padding: 1px;
+    background-color: #95a5a6;
+    color: white;
+}
+
+.checkout-active .checkout-step-num {
+    background-color: #18bc9c;
+    color: white;
+}
+
+.checkout-step-text {
+    margin-left: 10px;
+}
+
+.checkout-step>a:hover {
+    text-decoration: none;
+}
+
+/* Review page */
+.order-details>tbody>tr>th {
+    vertical-align: middle;
+}
+
+.item-row {
+    display: flex;
+    align-items: center;
+    /*min-height: 10vh;*/
+    /*padding: 2px;*/
+}
+
+.item-qty, .item-subtotal {
+    margin-left: 20px;
+}
+
+/* Processing rotate icon */
+#paymentProcessing, #paymentSuccess {
+    text-align: center;
+    font-size: 3em;
+}
+
+.glyphicon-spin {
+	animation: spin 2000ms infinite linear;
+}
+
+@keyframes spin {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(359deg);
+	}
+}
+
+@-webkit-keyframes spin {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(359deg);
+	}
+}

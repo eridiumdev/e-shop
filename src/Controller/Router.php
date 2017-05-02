@@ -78,7 +78,19 @@ class Router
             case 'checkout' :
 
                 $controller = new CheckoutController();
-                $controller->showStepOnePage();
+                switch($route['section']) {
+                    case 'step-one' :
+                        $controller->showStepOnePage();
+                        break;
+                    case 'step-two' :
+                        $controller->showStepTwoPage();
+                        break;
+                    case 'step-three' :
+                        $controller->showStepThreePage();
+                        break;
+                    default :
+                        self::redirect('/checkout/step-one');
+                }
                 break;
 
             case 'admin' :

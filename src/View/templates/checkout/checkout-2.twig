@@ -1,0 +1,66 @@
+{% extends 'base.twig' %}
+
+{% block title %}{{parent()}} | Checkout{% endblock %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="/css/checkout.css">
+{% endblock %}
+
+{% block scripts %}
+<script type="text/javascript" src="/js/checkout.js"></script>
+{% endblock %}
+
+{% block content %}
+<script>
+    var delivery = {{ (delivery|json_encode|raw) }};
+    var payment = {{ (payment|json_encode|raw) }};
+</script>
+
+<div class="container">
+    <div class="checkout-steps">
+        <div class="checkout-step checkout-active">
+            <a href="/checkout/step-one"><div class="checkout-step-num">1</div><span class="checkout-step-text hidden-xs">Fill in Shipping Details</span></a>
+        </div>
+        <div class="checkout-step checkout-active">
+            <span class="glyphicon glyphicon-menu-right"></span>
+            <a href="/checkout/step-two"><div class="checkout-step-num">2</div><span class="checkout-step-text hidden-xs">Select Delivery and Payment Methods</span></a>
+
+        </div>
+        <div class="checkout-step">
+            <span class="glyphicon glyphicon-menu-right"></span>
+            <span><div class="checkout-step-num">3</div><span class="checkout-step-text hidden-xs">Confirm Order</span></span>
+        </div>
+    </div>
+    <div class="well col-sm-6 col-sm-offset-3">
+        <form id="form" method="post" action="/checkout/step-three">
+            <h2 class="form-signin-heading">Checkout<small class="pull-right"><a href="/account/register">Register first?</a></small></h2>
+            {% include "inc/flashes.twig" %}
+            <br>
+            <div class="form-group">
+                <label for="delivery">Delivery</label>
+                <select id="delivery" class="form-control" name="delivery" required>
+                    <option disabled selected value="">Select delivery method</option>
+                    <option value="post">Post (¥10)</option>
+                    <option value="express">Express Delivery (¥20)</option>
+                </select>
+                <br>
+                <p id="deliveryDesc">Select a delivery method to view its description.</p>
+            </div>
+            <br>
+            <div class="form-group">
+                <label for="payment">Payment</label>
+                <select id="payment" class="form-control" name="payment" required>
+                    <option disabled selected value="">Select payment method</option>
+                    <option value="card">Credit Card</option>
+                    <option value="alipay">Alipay</option>
+                    <option value="wechat">Wechat</option>
+                </select>
+                <br>
+                <p id="paymentDesc">Select a delivery method to view its description.</p>
+            </div>
+            <br>
+            <button class="btn btn-lg btn-primary btn-block" type="submit" form="form">Next</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
