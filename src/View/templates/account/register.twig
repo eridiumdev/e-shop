@@ -7,8 +7,11 @@
     <div class="well col-sm-6 col-sm-offset-3">
         <form class="form-signin" method="post" action="/account/register">
             <h2 class="form-signin-heading">Registration</h2>
+            <br>
             {% include "inc/flashes.twig" %}
-            <input type="text" name="email" class="form-control" placeholder="E-mail address"{% if email %} value="{{ email }}"{% endif %} required autofocus>
+            <input type="text" name="username" class="form-control" placeholder="Username"{% if username %} value="{{username}}"{% endif %} required autofocus>
+            <br>
+            <input type="email" name="email" class="form-control" placeholder="Email address"{% if email %} value="{{email}}"{% endif %} required>
             <br>
             <input type="password" name="password" class="form-control" placeholder="Password" required>
             <br>

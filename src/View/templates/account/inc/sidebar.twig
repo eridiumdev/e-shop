@@ -1,0 +1,35 @@
+<ul class="nav nav-pills nav-stacked hidden-xs">
+  <li role="presentation" class="{{active('')}}">
+      <a href="/account"><span class="glyphicon glyphicon-user"></span>My Account</a>
+  </li>
+  <li role="presentation" class="{{active('orders')}}">
+      <a href="/account/orders"><span class="glyphicon glyphicon-list-alt"></span>Orders</a>
+  </li>
+  <li role="presentation" class="{{active('shipping')}}">
+      <a href="/account/shipping"><span class="glyphicon glyphicon-road"></span>Shipping Details</a>
+  </li>
+  <li role="presentation" class="{{active('details')}}">
+      <a href="/account/details"><span class="glyphicon glyphicon-lock"></span>Login Details</a>
+  </li>
+  <li role="presentation">
+      <a href="/logout"><span class="glyphicon glyphicon-log-out"></span>Logout</a>
+  </li>
+</ul>
+<!-- .xs .sm viewports => no nav-stacked -->
+<ul class="nav nav-pills hidden-sm hidden-md hidden-lg">
+  <li role="presentation" class="col-xs-2 col-xs-offset-1 {{active('')}}">
+      <a href="/account"><span class="glyphicon glyphicon-user"></span></a>
+  </li>
+  <li role="presentation" class="col-xs-2 {{active('orders')}}">
+      <a href="/account/orders"><span class="glyphicon glyphicon-list-alt"></span></a>
+  </li>
+  <li role="presentation" class="col-xs-2 {{active('shipping')}}">
+      <a href="/account/shipping"><span class="glyphicon glyphicon-road"></span></a>
+  </li>
+  <li role="presentation" class="col-xs-2 {{active('details')}}">
+      <a href="/account/details"><span class="glyphicon glyphicon-lock"></span></a>
+  </li>
+  <li role="presentation" class="col-xs-2">
+      <a href="/logout"><span class="glyphicon glyphicon-log-out"></span></a>
+  </li>
+</ul>

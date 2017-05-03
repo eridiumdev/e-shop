@@ -1,0 +1,66 @@
+/* Sidebar nav */
+.acc-sidebar .nav-pills>li.active>a {
+    color: #fff;
+}
+
+.acc-sidebar .nav-pills>li>a {
+    color: #2c3e50;
+}
+
+@media (min-width: 768px) {
+    .acc-sidebar .nav-pills>li>a>span {
+        margin-right: 12px;
+    }
+}
+
+@media (max-width: 768px) {
+    .acc-sidebar .nav-pills>li {
+        padding: 0 10px;
+    }
+    .acc-sidebar .nav-pills>li>a {
+        text-align: center;
+    }
+}
+
+/* Username inside h1 */
+h1>small {
+    margin-top: 12px;
+}
+
+/* Registration prompt inside h2 */
+h2>small {
+    margin-top: 10px;
+}
+
+.acc-actions>li {
+    padding: 3px 0;
+}
+
+/* ORDERS PAGE */
+.order-item {
+    display: flex;
+    align-items: center;
+    min-height: 10vh;
+}
+
+.order-header {
+    font-size: 1.1em;
+}
+
+.order-status {
+    color: #18bc9c;
+    font-style: italic;
+    margin-left: 4px;
+}
+
+.qty-price-separator {
+    padding: 0 10px;
+}
+
+.order-total {
+    font-size: 1.5em;
+    border: 2px solid;
+    border-radius: 5px;
+    width: 3.5em;
+    text-align: center;
+}

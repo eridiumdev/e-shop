@@ -11,19 +11,62 @@ class AccountController extends BaseController
 
     /**
      * Shows account homepage OR login/register page
-     * @param  string  $input - user email or username (if some error occurred)
+     * @param  string  $input - user email or username
+     *                        (if some error occurred while logging in)
      */
     public function showAccountPage(string $input = null)
     {
+        $user = $this->getCurrentUser();
+        if ($user) {
+            $this->addTwigVar('user', $user);
+        }
+
         if ($input) $this->addTwigVar('input', $input);
         $this->render();
     }
 
-    public function showRegisterPage(string $input = null)
+    public function showRegisterPage(string $username = null, string $email = null)
     {
-        if ($input) $this->addTwigVar('input', $input);
+        if ($username) $this->addTwigVar('username', $username);
+        if ($email) $this->addTwigVar('email', $email);
 
         $this->setTemplate('account/register.twig');
+        $this->render();
+    }
+
+    public function showOrdersPage()
+    {
+        $user = $this->getCurrentUser();
+        // try {
+        //     $dbReader = new Reader();
+        //     $orders = $dbReader->getUserOrders($user->getId());
+        //     $user->setOrders($orders);
+        // } catch (\Exception $e) {
+        //     Logger::log('db', 'error', 'Failed to get user orders', $e);
+        //     $this->flash('danger', 'Database operation failed');
+        //     return $this->showAccountPage();
+        // }
+
+        $this->addTwigVar('user', $user);
+        $this->setTemplate('account/orders.twig');
+        $this->render();
+    }
+
+    public function showShippingPage()
+    {
+        $user = $this->getCurrentUser();
+
+        $this->addTwigVar('user', $user);
+        $this->setTemplate('account/shipping.twig');
+        $this->render();
+    }
+
+    public function showDetailsPage()
+    {
+        $user = $this->getCurrentUser();
+
+        $this->addTwigVar('user', $user);
+        $this->setTemplate('account/details.twig');
         $this->render();
     }
 
@@ -35,7 +78,7 @@ class AccountController extends BaseController
     public function login(array $post)
     {
         if (!$this->isClean($post)) {
-            $this->flash('danger', 'Password contains invalid characters');
+            $this->flash('danger', 'Some field contains invalid characters');
             return $this->showAccountPage($post['input']);
         }
 
@@ -44,13 +87,11 @@ class AccountController extends BaseController
 
         try {
             $dbReader = new Reader();
-
             if (filter_var($input, FILTER_VALIDATE_EMAIL)) {
                 $user = $dbReader->getUserByEmail($input);
             } else {
                 $user = $dbReader->getUserByUsername($input);
             }
-
         } catch (\Exception $e) {
             Logger::log('db', 'error', 'Failed to find user by username or email', $e);
             $this->flash('danger', 'Login failed, please try again');
@@ -80,8 +121,8 @@ class AccountController extends BaseController
     public function register(array $post)
     {
         if (!$this->isClean($post)) {
-            $this->flash('danger', 'Password contains invalid characters');
-            return $this->showAccountPage($post['email']);
+            $this->flash('danger', 'Some field(s) contains invalid characters');
+            return $this->showRegisterPage($post['username'], $post['email']);
         }
 
         $username = $post['username'];
@@ -91,16 +132,22 @@ class AccountController extends BaseController
 
         if ($password != $confirmPassword) {
             $this->flash('danger', 'Passwords do not match');
-            return $this->showRegisterPage($email);
+            return $this->showRegisterPage($username, $email);
         }
 
         try {
             $dbReader = new Reader();
-            $user = $dbReader->getUserByEmail($email);
 
+            $user = $dbReader->getUserByUsername($username);
+            if (!empty($user)) {
+                $this->flash('danger', 'This username is already registered');
+                return $this->showRegisterPage($username, $email);
+            }
+
+            $user = $dbReader->getUserByEmail($email);
             if (!empty($user)) {
                 $this->flash('danger', 'This email is already registered');
-                return $this->showRegisterPage($email);
+                return $this->showRegisterPage($username, $email);
             }
 
             $hashed = password_hash($password, PASSWORD_DEFAULT);
@@ -115,7 +162,7 @@ class AccountController extends BaseController
         } catch (\Exception $e) {
             Logger::log('db', 'error', 'Failed to register new user' . $username, $e);
             $this->flash('danger', 'Registration failed, please try again');
-            return $this->showRegisterPage($email);
+            return $this->showRegisterPage($username, $email);
         }
     }
 

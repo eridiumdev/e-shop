@@ -10,6 +10,32 @@ class Reader extends Connection
 {
     /**
      * Returns existing user data
+     * @param  string $username
+     * @return User OR false
+     */
+    public function getUserByUsername(string $username)
+    {
+        $sql = "SELECT * FROM users WHERE username = ?";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$username]);
+        $row = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        if (!$row) {
+            return false;
+        }
+
+        return new User(
+            $row['id'],
+            $row['username'],
+            $row['email'],
+            $row['password'],
+            $row['type'],
+            $row['registeredAt']
+        );
+    }
+
+    /**
+     * Returns existing user data
      * @param  string $email
      * @return User OR false
      */

@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
+use App\Model\Database\Reader;
 
 const TEMPLATES_DIR = __DIR__ . '/../View/templates';
 
@@ -34,6 +35,26 @@ class BaseController
     public function showHomepage()
     {
         $this->render();
+    }
+
+    /**
+     * Returns current session user (from cookies) or false if no user logged in
+     * @return User OR false
+     */
+    public function getCurrentUser()
+    {
+        $userId = Security::getUserId();
+        if ($userId) {
+            try {
+                $dbReader = new Reader();
+                $user = $dbReader->getUserById($userId);
+                return $user;
+            } catch (\Exception $e) {
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -167,13 +188,16 @@ class BaseController
                         $val = trim(filter_var($val, FILTER_SANITIZE_STRING));
                         $vars[$key] = str_replace(' ', '', $val);
                         break;
+                    case 'email' :
+                        $val = trim(filter_var($val, FILTER_SANITIZE_EMAIL));
+                        break;
+                    case 'input' :
                     case 'username' :
                         $val = trim(filter_var($val, FILTER_SANITIZE_STRING));
                         $vars[$key] = str_replace(' ', '', $val);
                         break;
                     case 'text' :
                     case 'description' :
-                    // case 'name' :
                         $val = trim(filter_var($val, FILTER_SANITIZE_STRING));
                         break;
                     case 'number' :

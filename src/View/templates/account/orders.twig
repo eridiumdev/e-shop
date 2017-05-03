@@ -1,0 +1,95 @@
+{% extends 'base.twig' %}
+
+{% block title %}{{parent()}} | Orders{% endblock %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="/css/account.css">
+{% endblock %}
+
+{% block scripts %}
+<script>
+$(function () {
+  $('[data-toggle="popover"]').popover()
+})
+</script>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="col-sm-3 acc-sidebar">
+        {% include 'account/inc/sidebar.twig' %}
+    </div>
+    <div class="col-sm-9">
+        <h1>Orders</h1>
+        <br>
+        {% include "inc/flashes.twig" %}
+        <hr>
+        <div class="order">
+            <div class="row order-header">
+                <div class="col-xs-4">
+                    <p>2017-03-04</p>
+                </div>
+                <div class="col-xs-4">
+                    <p>Order #142</p>
+                </div>
+                <div class="col-xs-4">
+                    <p>Status: <span class="order-status">in-progress</span></p>
+                </div>
+            </div>
+            <div class="row order-item">
+                <div class="col-xs-3">
+                    <img class="img-responsive" src="/img/ms3.jpg" width="120" height="120">
+                </div>
+                <div class="col-xs-3">
+                    <p>Name</p>
+                </div>
+                <div class="col-xs-3">
+                    <p>2<span class="qty-price-separator">x</span>¥130</p>
+                </div>
+                <div class="col-xs-3">
+                    <p>¥260</p>
+                </div>
+            </div>
+            <div class="row order-item">
+                <div class="col-xs-3">
+                    <img class="img-responsive" src="/img/ms3.jpg" width="120" height="120">
+                </div>
+                <div class="col-xs-3">
+                    <p>Name</p>
+                </div>
+                <div class="col-xs-3">
+                    <p>2<span class="qty-price-separator">x</span>¥130</p>
+                </div>
+                <div class="col-xs-3">
+                    <p>¥260</p>
+                </div>
+            </div>
+            <div class="row order-item">
+                <div class="col-xs-3">
+                    <img class="img-responsive" src="/img/ms3.jpg" width="120" height="120">
+                </div>
+                <div class="col-xs-3">
+                    <p>Name</p>
+                </div>
+                <div class="col-xs-3">
+                    <p>2<span class="qty-price-separator">x</span>¥130</p>
+                </div>
+                <div class="col-xs-3">
+                    <p>¥260</p>
+                </div>
+            </div>
+            <div class="row order-footer">
+                <div class="col-xs-9 col-md-9">
+                    <p><strong>Delivery: </strong>Post (¥10)</p>
+                    <p><strong>Payment: </strong>Alipay</p>
+                    <p><strong>Shipping Details: </strong><a tabindex="0" class="badge" data-placement="right" role="button" data-toggle="popover" data-trigger="focus" data-html="true" data-content="<b>Name: </b>asdasd<br><b>Phone: </b>12312312<br><b>Address: </b>dsfsdfsdfs 8228">?</a></p>
+                </div>
+                <div class="col-xs-2">
+                    <p class="order-total">¥270</p>
+                </div>
+            </div>
+        </div>
+        <hr>
+    </div>
+</div>
+{% endblock %}

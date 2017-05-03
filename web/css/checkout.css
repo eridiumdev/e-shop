@@ -1,3 +1,8 @@
+/* Registration prompt inside h2 */
+h2>small {
+    margin-top: 10px;
+}
+
 .checkout-steps {
     text-align: center;
     font-size: 1.4em;
@@ -46,8 +51,7 @@
 .item-row {
     display: flex;
     align-items: center;
-    /*min-height: 10vh;*/
-    /*padding: 2px;*/
+    padding: 2px;
 }
 
 .item-qty, .item-subtotal {

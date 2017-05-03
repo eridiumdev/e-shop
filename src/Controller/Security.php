@@ -136,18 +136,18 @@ class Security
 
         // stub for tests
         if (ACCESS_RIGHTS == 0) {
-            $token = self::killToken('auth_token');
+            // $token = self::killToken('auth_token');
             $session->getFlashBag()->add('success', 'Please sign in first');
-            return Router::redirect('/login', $token);
+            return Router::redirect('/account/login', $token);
         } elseif (ACCESS_RIGHTS > 0) {
             return true;
         }
 
         if (!self::isAuthenticated()) {
             // BUG ? might need to comment out
-            $token = self::killToken('auth_token');
+            // $token = self::killToken('auth_token');
             $session->getFlashBag()->add('success', 'Please sign in first');
-            return Router::redirect('/login', $token);
+            return Router::redirect('/account/login', $token);
         }
 
         return true;
@@ -168,7 +168,7 @@ class Security
             $session->getFlashBag()->add(
                 'danger', 'Not authorized to view this page contents'
             );
-            return Router::redirect('/');
+            return Router::redirect('/account');
         }
 
         self::requireAuth();
@@ -177,7 +177,7 @@ class Security
             $session->getFlashBag()->add(
                 'danger', 'Not authorized to view this page contents'
             );
-            return Router::redirect('/');
+            return Router::redirect('/account');
         }
 
         return true;

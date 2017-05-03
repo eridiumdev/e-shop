@@ -242,6 +242,21 @@ class Router
                 }
                 break;
 
+            case 'orders' :
+                Security::requireAuth();
+                $controller->showOrdersPage();
+                break;
+
+            case 'shipping' :
+                Security::requireAuth();
+                $controller->showShippingPage();
+                break;
+
+            case 'details' :
+                Security::requireAuth();
+                $controller->showDetailsPage();
+                break;
+
             default :
                 $controller->showAccountPage();
         }

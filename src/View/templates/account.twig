@@ -2,11 +2,30 @@
 
 {% block title %}{{parent()}} | My Account{% endblock %}
 
+{% block stylesheets %}
+<link rel="stylesheet" href="/css/account.css">
+{% endblock %}
+
 {% block content %}
 {% if not authenticated() %}
 {% include 'account/login.twig' %}
 {% else %}
-<h1>Welcome</h1>
-{% include "inc/flashes.twig" %}
+<div class="container">
+    <div class="col-sm-3 acc-sidebar">
+        {% include 'account/inc/sidebar.twig' %}
+    </div>
+    <div class="col-sm-9">
+        <h1>My Account<small class="pull-right">Logged in as {{user.username}}</small></h1>
+        <br>
+        {% include "inc/flashes.twig" %}
+        <h4>From your account, you can:</h4>
+        <ul class="acc-actions">
+            <li>Keep track of all your previous orders</li>
+            <li>Change your shipping details for the next purchases</li>
+            <li>Change login email or password</li>
+            <li>Logout from the system</li>
+        </ul>
+    </div>
+</div>
 {% endif %}
 {% endblock %}

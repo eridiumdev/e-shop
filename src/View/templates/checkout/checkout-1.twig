@@ -22,10 +22,10 @@
         </div>
     </div>
     <div class="well col-sm-6 col-sm-offset-3">
+        <h2 class="form-signin-heading">Checkout<small class="pull-right"><a href="/account/register">Register first?</a></small></h2>
+        <br>
+        {% include "inc/flashes.twig" %}
         <form id="form" method="post" action="/checkout/step-two">
-            <h2 class="form-signin-heading">Checkout<small class="pull-right"><a href="/account/register">Register first?</a></small></h2>
-            {% include "inc/flashes.twig" %}
-            <br>
             <div class="form-group">
                 <label for="name">Name</label>
                 <input type="text" class="form-control" id="name" name="name" placeholder="Full name" value="" required>

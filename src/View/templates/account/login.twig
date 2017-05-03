@@ -1,9 +1,10 @@
 <div class="container">
     <div class="well col-sm-6 col-sm-offset-3">
+        <h2 class="form-signin-heading">Sign in<small class="pull-right"><a href="/account/register">Not registered yet?</a></small></h2>
+        <br>
+        {% include "inc/flashes.twig" %}
         <form class="form-signin" method="post" action="/account/login">
-            <h2 class="form-signin-heading">Sign in<small class="pull-right"><a href="/account/register">Not registered yet?</a></small></h2>
-            {% include "inc/flashes.twig" %}
-            <input type="email" name="email" class="form-control" placeholder="E-mail address"{% if email %} value="{{email}}"{% endif %} required autofocus>
+            <input type="text" name="input" class="form-control" placeholder="Username or Email"{% if input %} value="{{input}}"{% endif %} required autofocus>
             <br>
             <input type="password" name="password" class="form-control" placeholder="Password" required>
             <br>

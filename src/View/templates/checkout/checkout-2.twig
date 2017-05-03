@@ -34,8 +34,8 @@
     <div class="well col-sm-6 col-sm-offset-3">
         <form id="form" method="post" action="/checkout/step-three">
             <h2 class="form-signin-heading">Checkout<small class="pull-right"><a href="/account/register">Register first?</a></small></h2>
-            {% include "inc/flashes.twig" %}
             <br>
+            {% include "inc/flashes.twig" %}
             <div class="form-group">
                 <label for="delivery">Delivery</label>
                 <select id="delivery" class="form-control" name="delivery" required>
