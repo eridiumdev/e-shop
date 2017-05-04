@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
         {% block meta %}{% endblock %}
-        <title>{% block title %}Dashboard{% endblock %}</title>
+        <title>{% block title %}Admin{% endblock %}</title>
         <link rel="stylesheet" href="/css/bootstrap.min.css">
         <link rel="stylesheet" href="/css/global.css">
         <link rel="stylesheet" href="/css/admin.css">
@@ -14,10 +14,10 @@
     <body>
         {% include 'dlg/delete.twig' %}
         {% include 'dlg/delete-all.twig' %}
-        {% block header %}{% include "admin/header.twig" %}{% endblock %}
+        {% block header %}{% include "admin/inc/header.twig" %}{% endblock %}
         <div class="container-fluid">
             <div class="row">
-                {% block nav %}{% include "admin/nav.twig" %}{% endblock %}
+                {% block nav %}{% include "admin/inc/nav.twig" %}{% endblock %}
                 {% block content %}{% endblock %}
             </div>
         </div>

@@ -38,7 +38,12 @@ hr {
     padding: 7px;
 }
 
-/* Table links */
+/* Tables */
+table>tbody>tr>td.checkable, .checkable {
+    text-align: center;
+    padding: 15px;
+}
+
 table a:not(.btn), .table a:not(.btn) {
     text-decoration: none;
 }
@@ -51,9 +56,21 @@ table tbody tr:hover {
     outline: 1px solid #2c3e50;
 }
 
+table tfoot td {
+    text-align: right;
+}
+
+.thumb {
+    margin: -3px 0;
+}
+
 /* Tabs */
 .nav-tabs>li>a {
     background-color: #ecf0f1;
+}
+
+form > div.tab-content {
+    margin-top: 20px;
 }
 
 @media (min-width: 768px) {

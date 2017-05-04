@@ -9,7 +9,7 @@ class User
     private $password;
     private $type;
     private $registeredAt;
-    private $address;
+    private $address = "address kappa 123";
 
     private $orders = [];
 
@@ -78,7 +78,7 @@ class User
     {
     	$this->type = $type;
     }
-    
+
     public function getRegisteredAt() : string
     {
         return $this->registeredAt;

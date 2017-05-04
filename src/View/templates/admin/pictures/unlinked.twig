@@ -1,0 +1,48 @@
+<form id="picsForm" action="/admin/pictures/upload" method="post" enctype="multipart/form-data" novalidate>
+    {% include 'dlg/add_to_illness.twig' %}
+    {% include 'dlg/delete_pics.twig' %}
+    <input id="picChooser" style="display:none" type="file" name="uploads[]" multiple>
+    <div class="row">
+        {% for page, pagePics in pics %}
+        <div class="hidable picture-flex" id="page{{page}}"
+        {% if page > 1 %}hidden{% endif %}>
+            {% for pic in pagePics %}
+            <div class="col-md-{{12 / picsPerRow}} col-xs-{{24 / picsPerRow}}">
+                <div style="padding-bottom:10px;">
+                    <span id="picName">{{ pic|name }}</span>
+                </div>
+                <span role="button" class="thumbnail"><img src="{{pic}}"></span>
+                <input type="hidden" name="pics[]" value="">
+            </div>
+            {% endfor %}
+        </div>
+        {% endfor %}
+    </div>
+</form>
+<div class="btn-toolbar">
+    <div class="btn-group">
+        <form id="pagesForm" action="/admin/pictures" method="post">
+        <button type="submit" name="pics_per_page" value="high" class="btn btn-default {% if picsNum == "high" %}active{% endif %}">
+            <span class="glyphicon glyphicon-th"></span>
+        </button>
+        <button type="submit" name="pics_per_page" value="low" class="btn btn-default {% if picsNum == "low" %}active{% endif %}">
+            <span class="glyphicon glyphicon-th-large"></span>
+        </button>
+        </form>
+    </div>
+    <div class="btn-group">
+        {% for page, pagePics in pics %}
+        <a id="link{{page}}" onclick="showPage({{page}})"
+        class="links btn btn-default
+        {% if page == 1 %}active{% endif %}">{{page}}</a>
+        {% endfor %}
+    </div>
+    <div class="btn-group pull-right">
+        <input class="btn btn-primary" type="submit"
+            name="uploadPics" value="Upload new">
+        <input class="btn btn-info" type="submit" style="margin-left:5px"
+            name="addPics" value="Add to illness">
+        <input class="btn btn-danger" type="submit" style="margin-left:5px"
+            name="deletePics" value="Delete selected">
+    </div>
+</div>

@@ -5,18 +5,17 @@
 {% block content %}
 <div class="container">
     <div class="well col-sm-6 col-sm-offset-2">
+        <h2>Modify Account<button class="btn btn-sm btn-primary pull-right" type="reset" form="form">
+            <span class="glyphicon glyphicon-refresh"></span>
+            <span class="hidden-sm"> Reset form</button>
+        </h2>
+        <br>
+        <ul class="nav nav-tabs nav-justified">
+            <li class="active"><a href="#details" data-toggle="tab">Account details</a></li>
+            <li><a href="#shipping" data-toggle="tab">Shipping details</a></li>
+        </ul>
+        {% include "inc/flashes.twig" %}
         <form id="form" method="post" action="/admin/accounts/change/{{user.id}}">
-            <h2>Modify Account<button class="btn btn-sm btn-primary pull-right" type="reset" form="form">
-                <span class="glyphicon glyphicon-refresh"></span>
-                <span class="hidden-sm"> Reset form</button>
-            </h2>
-
-            {% include "inc/flashes.twig" %}
-            <br>
-            <ul class="nav nav-tabs nav-justified">
-                <li class="active"><a href="#details" data-toggle="tab">Account details</a></li>
-                <li><a href="#shipping" data-toggle="tab">Shipping details</a></li>
-            </ul>
             <div class="tab-content">
                 <div class="tab-pane fade active in" id="details">
                     <div class="form-group">

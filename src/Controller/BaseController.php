@@ -69,7 +69,8 @@ class BaseController
         $this->addTwigFunc('authenticated', 'isAuthenticated', 'App\Controller\Security');
         $this->addTwigFunc('admin', 'isAdmin', 'App\Controller\Security');
         $this->addTwigFunc('short', 'short', $this);
-        $this->addTwigFunc('active', 'active', $this);
+        $this->addTwigFunc('activeSection', 'activeSection', $this);
+        $this->addTwigFunc('activeAction', 'activeAction', $this);
 
         $this->twig->addFilter(new \Twig_Filter(
             'name', [$this, 'name']
@@ -249,9 +250,18 @@ class BaseController
         return $arr[count($arr) - 1];
     }
 
-    public function active(string $section)
+    public function activeSection(string $section)
     {
         if ($section == Router::$route['section']) {
+            return 'active';
+        } else {
+            return '';
+        }
+    }
+
+    public function activeAction(string $action)
+    {
+        if ($action == Router::$route['action']) {
             return 'active';
         } else {
             return '';

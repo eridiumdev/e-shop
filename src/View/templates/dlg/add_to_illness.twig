@@ -1,0 +1,22 @@
+{% extends 'dlg/base.twig' %}
+
+{% block modal_id %}add_to_illness{% endblock %}
+{% block modal_title %}Add selected pictures to illness{% endblock %}
+{% block modal_body %}
+<select class="form-control" name="illnessId" required>
+    <option disabled selected value="">Select Illness</option>
+    {% for ill in ills %}
+        <option value="{{ill.id}}">{{ ill.name }}</option>
+    {% endfor %}
+</select>
+<br>
+<select class="form-control" name="stepNum" required>
+    <option disabled selected value="">Select Step</option>
+    {% for step in steps %}
+        <option value="{{step.num}}">{{ step.name }}</option>
+    {% endfor %}
+</select>
+{% endblock %}
+
+{% block yes_color %}primary{% endblock %}
+{% block yes_text %}Confirm{% endblock %}

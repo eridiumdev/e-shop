@@ -5,8 +5,9 @@
 {% block content %}
 <div class="container">
     <div class="well col-sm-6 col-sm-offset-2">
-        <form method="post" action="/admin/accounts/add-single">
+        <form method="post" action="/admin/users/add-single">
             <h2>Add Account</h2>
+            <br>
             {% include "inc/flashes.twig" %}
             <div class="form-group">
                 <label for="email">Email</label>

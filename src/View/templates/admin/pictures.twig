@@ -1,0 +1,40 @@
+{% extends 'base-admin.twig' %}
+
+{% block title %}{{parent()}} | Pictures{% endblock %}
+
+{% block scripts %}
+    <script src="/js/pic_pages.js"></script>
+    <script src="/js/pic_uploads.js"></script>
+    <script src="/js/popover.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="col-sm-9">
+    <div class="well">
+        <h2>Picture Management</h2>
+        <br>
+        {% include "inc/flashes.twig" %}
+    </div>
+    <div class="well">
+        <ul class="nav nav-tabs">
+            <li class="{{activeAction('')}}">
+                <a href="/admin/pictures">Unlinked</a>
+            </li>
+            <li class="{{activeAction('mice')}}">
+                <a href="/admin/pictures/mice">Mice</a>
+            </li>
+            <li class="{{activeAction('keyboards')}}">
+                <a href="/admin/pictures/keyboards">Keyboards</a>
+            </li>
+            <li class="{{activeAction('accessories')}}">
+                <a href="/admin/pictures/accessories">Accessories</a>
+            </li>
+        </ul>
+        <div id="tabContent" class="tab-content">
+            <div id="illPics" class="tab-pane fade in {{activeAction('')}}">
+                {% include 'admin/pictures/unlinked.twig' %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

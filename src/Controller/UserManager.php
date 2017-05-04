@@ -9,11 +9,11 @@ use App\Model\Database\Updater;
 use App\Controller\Uploader;
 
 /**
- * Admin controller for managing user accounts
+ * Admin controller for managing user users
  */
-class AccountManager extends AdminController
+class UserManager extends AdminController
 {
-    public function showAccountListPage()
+    public function showUsersListPage()
     {
         try {
             $dbReader = new Reader();
@@ -27,25 +27,25 @@ class AccountManager extends AdminController
         $ymls = Uploader::getFiles(YML_DIRECTORY, ['yml']);
         $this->addTwigVar('files', $ymls);
 
-        $this->setTemplate('admin/accounts.twig');
+        $this->setTemplate('admin/users.twig');
         $this->addTwigVar('users', $users);
         $this->render();
     }
 
-    public function showAddAccountPage(
+    public function showAddUserPage(
         string $email = null, string $type = null
     ) {
-        $this->setTemplate('admin/inc/add-account.twig');
+        $this->setTemplate('admin/inc/add-user.twig');
         $this->addTwigVar('email', $email);
         $this->addTwigVar('type', $type);
         $this->render();
     }
 
-    public function addAccount(array $post)
+    public function addUser(array $post)
     {
         if (!$this->isClean($post)) {
             $this->flash('danger', 'Password contains invalid characters');
-            return $this->showAddAccountPage($post['email'], $post['type']);
+            return $this->showAddUserPage($post['email'], $post['type']);
         }
 
         $email = $post['email'];
@@ -58,7 +58,7 @@ class AccountManager extends AdminController
 
             if (!empty($user)) {
                 $this->flash('danger', "Email [$email] is already registered");
-                return $this->showAddAccountPage($email, $type);
+                return $this->showAddUserPage($email, $type);
             }
 
             $hashed = password_hash($password, PASSWORD_DEFAULT);
@@ -67,16 +67,16 @@ class AccountManager extends AdminController
             $user = $dbCreator->createUser($email, $hashed, $type);
 
             $this->flash('success', "New user [$email] added successfully");
-            return Router::redirect('/admin/accounts');
+            return Router::redirect('/admin/users');
 
         } catch (\Exception $e) {
             Logger::log('db', 'error', 'Failed to create user (single)', $e);
             $this->flash('danger', 'Database operation failed');
-            return $this->showAddAccountPage($email, $type);
+            return $this->showAddUserPage($email, $type);
         }
     }
 
-    public function batchAddAccounts(array $users)
+    public function batchAddUsers(array $users)
     {
         try {
             $dbReader = new Reader();
@@ -84,7 +84,7 @@ class AccountManager extends AdminController
         } catch (\Exception $e) {
             Logger::log('db', 'error', 'Failed to open connection', $e);
             $this->flash('danger', 'Database connection failed');
-            return Router::redirect('/admin/accounts');
+            return Router::redirect('/admin/users');
         }
 
         $good = [];
@@ -96,7 +96,7 @@ class AccountManager extends AdminController
                     'danger',
                     'Wrong file selected! (or some required details are missing)'
                 );
-                return Router::redirect('/admin/accounts');
+                return Router::redirect('/admin/users');
             }
 
             if (!$this->isClean($user)) {
@@ -131,10 +131,10 @@ class AccountManager extends AdminController
         $this->prepareGoodBatchResults($good, $users, ['id', 'email', 'type']);
         $this->prepareBadBatchResults($bad, $users, ['email']);
 
-        return Router::redirect('/admin/accounts');
+        return Router::redirect('/admin/users');
     }
 
-    public function showChangeAccountPage(int $userId)
+    public function showUserPage(int $userId)
     {
         try {
             $dbReader = new Reader();
@@ -142,24 +142,24 @@ class AccountManager extends AdminController
         } catch (\Exception $e) {
             Logger::log('db', 'error', 'Failed to find user by id', $e);
             $this->flash('danger', 'Database operation failed');
-            Router::redirect('/admin/accounts');
+            Router::redirect('/admin/users');
         }
 
         if (empty($user)) {
             $this->flash('danger', 'User not found');
-            Router::redirect('/admin/accounts');
+            Router::redirect('/admin/users');
         }
 
-        $this->setTemplate('admin/inc/account.twig');
+        $this->setTemplate('admin/users/view-user.twig');
         $this->addTwigVar('user', $user);
         $this->render();
     }
 
-    public function changeAccount(int $userId, array $post)
+    public function changeUser(int $userId, array $post)
     {
         if (!$this->isClean($post)) {
             $this->flash('danger', 'Password contains invalid characters');
-            return $this->showChangeAccountPage($userId);
+            return $this->showUserPage($userId);
         }
 
         $email = $post['email'];
@@ -172,7 +172,7 @@ class AccountManager extends AdminController
 
             if (empty($old)) {
                 $this->flash('danger', 'Some problem occurred, please try again');
-                return $this->showChangeAccountPage($userId);
+                return $this->showUserPage($userId);
             }
 
             if ($old->getEmail() != $email) {
@@ -180,7 +180,7 @@ class AccountManager extends AdminController
                 $duplicate = $dbReader->getUserByEmail($email);
                 if (!empty($duplicate)) {
                     $this->flash('danger', "Email [$email] is already registered");
-                    return $this->showChangeAccountPage($userId);
+                    return $this->showUserPage($userId);
                 }
             }
 
@@ -198,20 +198,20 @@ class AccountManager extends AdminController
             );
 
             $this->flash('success', "[$email] updated successfully");
-            return Router::redirect('/admin/accounts');
+            return Router::redirect('/admin/users');
 
         } catch (\Exception $e) {
             Logger::log('db', 'error',
-                'Failed to change user account', $e, [
+                'Failed to change user user', $e, [
                 'user id' => $userId,
                 'username' => $email,
             ]);
             $this->flash('danger', 'Database operation failed');
-            return $this->showChangeAccountPage($userId);
+            return $this->showUserPage($userId);
         }
     }
 
-    public function deleteAccount(int $userId)
+    public function deleteUser(int $userId)
     {
         try {
             $dbDeleter = new Deleter();
@@ -220,13 +220,13 @@ class AccountManager extends AdminController
                 $this->flash('danger',
                     "Could not delete user [$userId], try again"
                 );
-                return Router::redirect('/admin/accounts');
+                return Router::redirect('/admin/users');
             }
 
             $email = $deleted->getEmail();
 
             $this->flash('success', "User [$email] deleted");
-            return Router::redirect('/admin/accounts');
+            return Router::redirect('/admin/users');
 
         } catch (\Exception $e) {
             Logger::log('db', 'error',
@@ -234,11 +234,11 @@ class AccountManager extends AdminController
                 ['user id' => $userId]
             );
             $this->flash('danger', 'Database operation failed');
-            return Router::redirect('/admin/accounts');
+            return Router::redirect('/admin/users');
         }
     }
 
-    public function deleteAccounts(array $users)
+    public function deleteUsers(array $users)
     {
         $good = [];
         $bad = [];
@@ -265,6 +265,6 @@ class AccountManager extends AdminController
         $this->prepareGoodBatchResults($good, $users, ['id', 'email']);
         $this->prepareBadBatchResults($bad, $users, ['id']);
 
-        return Router::redirect('/admin/accounts');
+        return Router::redirect('/admin/users');
     }
 }

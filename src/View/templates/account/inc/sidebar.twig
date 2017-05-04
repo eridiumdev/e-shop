@@ -1,14 +1,14 @@
 <ul class="nav nav-pills nav-stacked hidden-xs">
-  <li role="presentation" class="{{active('')}}">
+  <li role="presentation" class="{{activeSection('')}}">
       <a href="/account"><span class="glyphicon glyphicon-user"></span>My Account</a>
   </li>
-  <li role="presentation" class="{{active('orders')}}">
+  <li role="presentation" class="{{activeSection('orders')}}">
       <a href="/account/orders"><span class="glyphicon glyphicon-list-alt"></span>Orders</a>
   </li>
-  <li role="presentation" class="{{active('shipping')}}">
+  <li role="presentation" class="{{activeSection('shipping')}}">
       <a href="/account/shipping"><span class="glyphicon glyphicon-road"></span>Shipping Details</a>
   </li>
-  <li role="presentation" class="{{active('details')}}">
+  <li role="presentation" class="{{activeSection('details')}}">
       <a href="/account/details"><span class="glyphicon glyphicon-lock"></span>Login Details</a>
   </li>
   <li role="presentation">
@@ -17,16 +17,16 @@
 </ul>
 <!-- .xs .sm viewports => no nav-stacked -->
 <ul class="nav nav-pills hidden-sm hidden-md hidden-lg">
-  <li role="presentation" class="col-xs-2 col-xs-offset-1 {{active('')}}">
+  <li role="presentation" class="col-xs-2 col-xs-offset-1 {{activeSection('')}}">
       <a href="/account"><span class="glyphicon glyphicon-user"></span></a>
   </li>
-  <li role="presentation" class="col-xs-2 {{active('orders')}}">
+  <li role="presentation" class="col-xs-2 {{activeSection('orders')}}">
       <a href="/account/orders"><span class="glyphicon glyphicon-list-alt"></span></a>
   </li>
-  <li role="presentation" class="col-xs-2 {{active('shipping')}}">
+  <li role="presentation" class="col-xs-2 {{activeSection('shipping')}}">
       <a href="/account/shipping"><span class="glyphicon glyphicon-road"></span></a>
   </li>
-  <li role="presentation" class="col-xs-2 {{active('details')}}">
+  <li role="presentation" class="col-xs-2 {{activeSection('details')}}">
       <a href="/account/details"><span class="glyphicon glyphicon-lock"></span></a>
   </li>
   <li role="presentation" class="col-xs-2">

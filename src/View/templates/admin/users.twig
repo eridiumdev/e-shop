@@ -13,13 +13,13 @@
 {% block content %}
 <div class="col-sm-9">
     <div class="well">
-        <h2>用户管理</h2>
+        <h2>User Management</h2>
         <br>
         {% include "inc/flashes.twig" %}
         <h4>Add new users:</h4>
-        <form class="form-inline" action="/admin/accounts/add-many" method="post">
+        <form class="form-inline" action="/admin/users/add-many" method="post">
             <div class="form-group">
-                <a class="btn btn-primary" role="button" href="/admin/accounts/add-single">Add one</a>
+                <a class="btn btn-primary" role="button" href="/admin/users/add-single">Add one</a>
                 <span style="margin: 0 10px"> OR </span>
                 <select class="form-control" name="yml" required>
                     <option disabled selected value="">Select YML file</option>
@@ -32,8 +32,8 @@
         </form>
     </div>
     <div class="well table-responsive">
-        <form action="/admin/accounts/delete" method="post">
-        <table id="tableToSort_6-8" class="table table-striped">
+        <form action="/admin/users/delete" method="post">
+        <table id="tableToSort_5-7" class="table table-striped">
             <thead>
                 <tr>
                     <th role="button">ID</th>
@@ -41,7 +41,6 @@
                     <th role="button">Email</th>
                     <th role="button">Registered at</th>
                     <th role="button">Type</th>
-                    <th role="button">Address</th>
                     <th></th>
                     <th></th>
                     <th role="button" class="col-sm-1 checkable" style="text-align:center">
@@ -51,7 +50,7 @@
             </thead>
             <tbody id="tableTBody">
                 {% for user in users %}
-                    {% include "admin/inc/tr-account.twig" %}
+                    {% include "admin/users/tr-user.twig" %}
                 {% endfor %}
             </tbody>
             <tfoot>
@@ -59,7 +58,6 @@
                     <input class="btn btn-sm btn-danger" type="submit" name="deleteSelected" value="Delete selected">
                 </td>
             </tfoot>
-
         </table>
         </form>
     </div>

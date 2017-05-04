@@ -1,82 +1,38 @@
 <?php
-namespace VVC\Controller;
+namespace App\Controller;
 
-use VVC\Model\Database\Reader;
-use VVC\Model\Database\Updater;
-use VVC\Model\Database\Creator;
-use VVC\Model\Database\Deleter;
+use App\Model\Database\Reader;
+use App\Model\Database\Updater;
+use App\Model\Database\Creator;
+use App\Model\Database\Deleter;
 
-class UploadManager extends AdminController
+class PictureManager extends AdminController
 {
-    public function showUploadsPage($tab = '', string $picsNum = null)
+    public function showPicturesPage(string $picsNum = null)
     {
         // How many pictures to display
         if ($picsNum === 'low') {
             $picsPerRow = 4;
-            $picsPerPage = $picsPerRow * 3;
+            $picsPerPage = $picsPerRow * 2;
         } else {
             $picsNum = 'high';
             $picsPerRow = 6;
-            $picsPerPage = $picsPerRow * 4;
+            $picsPerPage = $picsPerRow * 2;
         }
-
-        $tab = ($tab == '') ? 'pictures' : $tab;
 
         // List of pictures from uploads folder
-        $illFiles = Uploader::getFiles(PIC_DIRECTORY, ['png', 'jpg', 'gif']);
-        $drugFiles = Uploader::getFiles(DRUG_DIRECTORY, ['png', 'jpg', 'gif']);
+        $picFiles = Uploader::getFiles(PIC_DIRECTORY, ['png', 'jpg', 'gif']);
 
-        $illPics = [];
-        for ($i = 0; $i < count($illFiles); $i++) {
-            $illPics[($i/$picsPerPage) + 1][] = $illFiles[$i];
+        $pics = [];
+        for ($i = 0; $i < count($picFiles); $i++) {
+            $pics[($i/$picsPerPage) + 1][] = $picFiles[$i];
         }
 
-        $drugPics = [];
-        for ($i = 0; $i < count($drugFiles); $i++) {
-            $drugPics[($i/$picsPerPage) + 1][] = $drugFiles[$i];
-        }
-
-        try {
-            $dbReader = new Reader();
-
-            // These are for display when linking picture to new illlness
-            $ills = $dbReader->getAllIllnesses();
-            $steps = $dbReader->getAllSteps();
-            // $drugs = $dbReader->getAllDrugs();
-
-            $assocIllnesses = [];
-            foreach ($illFiles as $pic) {
-                // Find what illnesses the picture is linked to
-                $assocIllnesses[$pic] = $dbReader->findIllnessesByPicture($pic);
-            }
-
-            $assocDrugs = [];
-            foreach ($drugFiles as $pic) {
-                // Find what drug the picture is linked to
-                $assocDrugs[$pic] = $dbReader->findDrugByPicture($pic);
-            }
-
-        } catch (\Exception $e) {
-            Logger::log('db', 'error', 'Failed to get info from DB', $e);
-            $this->flash('fail', 'Database operation failed');
-            return $this->showDashboardPage();
-        }
-
-        $this->addTwigVar('illPics', $illPics);
-        $this->addTwigVar('drugPics', $drugPics);
-
-        $this->addTwigVar('ills', $ills->getJustIllnesses());
-        $this->addTwigVar('steps', $steps);
-        // $this->addTwigVar('drugs', $drugs);
-
-        $this->addTwigVar('assocIlls', $assocIllnesses);
-        $this->addTwigVar('assocDrugs', $assocDrugs);
-
+        $this->addTwigVar('pics', $pics);
         $this->addTwigVar('picsNum', $picsNum);
         $this->addTwigVar('picsPerRow', $picsPerRow);
-        $this->addTwigVar('tab', $tab);
 
-        $this->setTemplate('admin_uploads.twig');
+        $this->setTemplate('admin/pictures.twig');
         $this->render();
     }
 

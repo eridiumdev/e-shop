@@ -1,0 +1,66 @@
+{% extends 'base-admin.twig' %}
+
+{% block title %}{{parent()}} | Products{% endblock %}
+
+{% block scripts %}
+    <script src="/js/dialogues.js"></script>
+    <script src="/js/popover.js"></script>
+    <script src="/js/check_all.js"></script>
+    <script src="/js/jquery.tablesorter.min.js"></script>
+    <script src="/js/tablesorter.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="col-sm-9">
+    <div class="well">
+        <h2>Product Management</h2>
+        <br>
+        {% include "inc/flashes.twig" %}
+        <h4>Add new products:</h4>
+        <form class="form-inline" action="/admin/products/add-many" method="post">
+            <div class="form-group">
+                <a class="btn btn-primary" role="button" href="/admin/products/add-single">Add one</a>
+                <span style="margin: 0 10px"> OR </span>
+                <select class="form-control" name="yml" required>
+                    <option disabled selected value="">Select YML file</option>
+                    {% for file in files %}
+                        <option value="{{file|name}}">{{ file|name }}</option>
+                    {% endfor %}
+                </select>
+                <input type="submit" class="btn btn-primary" value="Add many">
+            </div>
+        </form>
+    </div>
+    <div class="well table-responsive">
+        <form action="/admin/products/delete" method="post">
+        <table id="tableToSort_6-8" class="table table-striped">
+            <thead>
+                <tr>
+                    <th role="button">ID</th>
+                    <th role="button">Thumbnail</th>
+                    <th role="button">Name</th>
+                    <th role="button">Category</th>
+                    <th role="button">Price</th>
+                    <th role="button">Discount</th>
+                    <th></th>
+                    <th></th>
+                    <th role="button" class="col-sm-1 checkable" style="text-align:center">
+                        <input role="button" type="checkbox" id="checkAll">
+                    </th>
+                </tr>
+            </thead>
+            <tbody id="tableTBody">
+                {% for i in 1..10 %}
+                    {% include "admin/products/tr-prod.twig" %}
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <td colspan="9" style="text-align:right">
+                    <input class="btn btn-sm btn-danger" type="submit" name="deleteSelected" value="Delete selected">
+                </td>
+            </tfoot>
+        </table>
+        </form>
+    </div>
+</div>
+{% endblock %}

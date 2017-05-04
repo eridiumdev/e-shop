@@ -101,7 +101,7 @@ class Reader extends Connection
         while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)){
             $users[] = new User(
                 $row['id'],
-                $row['usern'],
+                $row['username'],
                 $row['email'],
                 $row['password'],
                 $row['type'],

@@ -1,0 +1,42 @@
+{% extends 'base-admin.twig' %}
+
+{% block title %}{{parent()}} | Payment Details{% endblock %}
+
+{% block scripts %}
+    <script src="/js/dialogues.js"></script>
+    <script src="/js/popover.js"></script>
+    <script src="/js/check_all.js"></script>
+    <script src="/js/jquery.tablesorter.min.js"></script>
+    <script src="/js/tablesorter.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="col-sm-9">
+    <div class="well">
+        <h2>Payment Methods Management</h2>
+        <br>
+        {% include "inc/flashes.twig" %}
+        <a class="btn btn-primary" role="button" href="/admin/payments/add-single">Create new</a>
+    </div>
+    <div class="well table-responsive">
+        <form action="/admin/payments/delete" method="post">
+        <table id="tableToSort_6-8" class="table table-striped">
+            <thead>
+                <tr>
+                    <th role="button">ID</th>
+                    <th role="button">Name</th>
+                    <th role="button">Description</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="tableTBody">
+                {% for i in 1..10 %}
+                    {% include "admin/payments/tr-pay.twig" %}
+                {% endfor %}
+            </tbody>
+        </table>
+        </form>
+    </div>
+</div>
+{% endblock %}

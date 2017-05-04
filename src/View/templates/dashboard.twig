@@ -3,40 +3,38 @@
 {% block content %}
 <div class="col-sm-9">
     <div class="well">
-        <h2>管理仪表板</h2>
-        {# display error message if login failed #}
+        <h2>Admin Dashboard</h2>
+        <br>
         {% include "inc/flashes.twig" %}
-        <p>From this dashboard you can manage:</p>
         <div class="row">
-
-        <div class="dashboard-block col-sm-6 col-md-4 col-xs-12">
-            <a class="btn btn-lg btn-primary btn-block" role="button" href="/admin/accounts">Product Categories</a>
+            <div class="dashboard-block col-sm-6 col-md-4 col-xs-12">
+                <a class="btn btn-lg btn-primary btn-block" role="button" href="/admin/products">Products</a>
+            </div>
+            <div class="dashboard-block col-sm-6 col-md-4 col-xs-12">
+                <a class="btn btn-lg btn-primary btn-block" role="button" href="/admin/categories">Categories</a>
+            </div>
+            <div class="dashboard-block col-sm-6 col-md-4 col-xs-12">
+                <a class="btn btn-lg btn-primary btn-block" role="button" href="/admin/sections">Sections</a>
+            </div>
+            <div class="dashboard-block col-sm-6 col-md-4 col-xs-12">
+                <a class="btn btn-lg btn-primary btn-block" role="button" href="/admin/specs">Specifications</a>
+            </div>
+            <div class="dashboard-block col-sm-6 col-md-4 col-xs-12">
+                <a class="btn btn-lg btn-primary btn-block" role="button" href="/admin/pictures">Pictures</a>
+            </div>
+            <div class="dashboard-block col-sm-6 col-md-4 col-xs-12">
+                <a class="btn btn-lg btn-primary btn-block" role="button" href="/admin/users">Users</a>
+            </div>
+            <div class="dashboard-block col-sm-6 col-md-4 col-xs-12">
+                <a class="btn btn-lg btn-primary btn-block" role="button" href="/admin/orders">Orders</a>
+            </div>
+            <div class="dashboard-block col-sm-6 col-md-4 col-xs-12">
+                <a class="btn btn-lg btn-primary btn-block" role="button" href="/admin/deliveries">Deliveries</a>
+            </div>
+            <div class="dashboard-block col-sm-6 col-md-4 col-xs-12">
+                <a class="btn btn-lg btn-primary btn-block" role="button" href="/admin/payments">Payments</a>
+            </div>
         </div>
-        <div class="dashboard-block col-sm-6 col-md-4 col-xs-12">
-            <a class="btn btn-lg btn-primary btn-block" role="button" href="/admin/accounts">Products</a>
-        </div>
-        <div class="dashboard-block col-sm-6 col-md-4 col-xs-12">
-            <a class="btn btn-lg btn-primary btn-block" role="button" href="/admin/accounts">Product Specifications</a>
-        </div>
-        <div class="dashboard-block col-sm-6 col-md-4 col-xs-12">
-            <a class="btn btn-lg btn-primary btn-block" role="button" href="/admin/accounts">Product Pictures</a>
-        </div>
-        <div class="dashboard-block col-sm-6 col-md-4 col-xs-12">
-            <a class="btn btn-lg btn-primary btn-block" role="button" href="/admin/accounts">Product Sections</a>
-        </div>
-        <div class="dashboard-block col-sm-6 col-md-4 col-xs-12">
-            <a class="btn btn-lg btn-primary btn-block" role="button" href="/admin/accounts">User Accounts</a>
-        </div>
-        <div class="dashboard-block col-sm-6 col-md-4 col-xs-12">
-            <a class="btn btn-lg btn-primary btn-block" role="button" href="/admin/accounts">User Orders</a>
-        </div>
-        <div class="dashboard-block col-sm-6 col-md-4 col-xs-12">
-            <a class="btn btn-lg btn-primary btn-block" role="button" href="/admin/accounts">Delivery Methods</a>
-        </div>
-        <div class="dashboard-block col-sm-6 col-md-4 col-xs-12">
-            <a class="btn btn-lg btn-primary btn-block" role="button" href="/admin/accounts">Payment Methods</a>
-        </div>
-
     </div>
 </div>
 {% endblock %}

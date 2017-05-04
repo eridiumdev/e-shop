@@ -10,19 +10,19 @@ date_default_timezone_set("Asia/Shanghai");
  *  1 - signed in user privileges on all pages
  *  2 - admin privileges on all pages
  */
-const ACCESS_RIGHTS = -1;
+const ACCESS_RIGHTS = 2;
 
 // Default password when creating users from a batch file
 const BATCH_USER_PASSWORD = '123';
 
 // Uploads
 const YML_DIRECTORY   = '/yml/';
-const PIC_DIRECTORY  = '/uploads/img/';
+const PIC_DIRECTORY  = '/uploads/';
 
 // Chinese characters pattern for regular expression
 const PATTERN_CHINESE = "/[\p{Han}]/simu";
 
-// Debug global helper-shortcuts
+// Global debug helper-shortcuts
 // print $obj
 function p($obj)
 {
