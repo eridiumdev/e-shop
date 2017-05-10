@@ -10,7 +10,7 @@ Application represents an e-commerce platform with most basic functionalities of
 
 System is built based on Symfony HTTP-foundation component, using mostly pure PHP + MySQL, frontend built using Bootstrap + Twig templating, as well as custom CSS and jQuery code. The logic is structured around MVC principle, and also Front Controller and Router concepts.
 
-For more information about the project, see thesis abstract (ABSTRACT.md)
+For more information about the project, see [thesis abstract](https://github.com/eridiumdev/e-shop/blob/master/ABSTRACT.md)
 
 ## Installation
 
