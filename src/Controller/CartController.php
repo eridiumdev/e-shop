@@ -6,6 +6,7 @@ class CartController extends BaseController
 
     public function showCartPage()
     {
+        $this->addTwigVar('cart', 1);
         $this->setTemplate('cart.twig');
         $this->render();
     }

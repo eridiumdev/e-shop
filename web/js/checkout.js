@@ -1,12 +1,12 @@
 $("#delivery").change(function (){
     $("#deliveryDesc").html(delivery);
-    $("#deliveryDesc").fadeOut();
+    $("#deliveryDesc").hide();
     $("#deliveryDesc").fadeIn();
 });
 
 $("#payment").change(function (){
     $("#paymentDesc").html(payment);
-    $("#paymentDesc").fadeOut();
+    $("#paymentDesc").hide();
     $("#paymentDesc").fadeIn();
 });
 
@@ -27,5 +27,5 @@ $('#confirm_button').on('click', function(e) {
         $('#confirmOrderBtn').remove();
         $('#successBtn').show();
         setTimeout(function() {$('#paymentModal').modal('hide');}, 1500);
-    }, 3000);
+    }, 2300);
 });

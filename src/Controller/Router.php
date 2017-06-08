@@ -105,7 +105,26 @@ class Router
                 if (is_numeric($route['page'])) {
                     $controller->showProductPage($route['page']);
                 } else {
-                    $controller->showCatalogPage('keyboards');
+                    if (!empty($post)) {
+                        $controller->showFilteredPage('filtered');
+                    } else {
+                        $controller->showCatalogPage('keyboards');
+                    }
+                }
+                break;
+
+            case 'mice' :
+
+                $controller = new CatalogController();
+
+                if (is_numeric($route['page'])) {
+                    $controller->showProductPage($route['page']);
+                } else {
+                    if (!empty($post)) {
+                        $controller->showFilteredPage('filtered');
+                    } else {
+                        $controller->showCatalogPage('mice');
+                    }
                 }
                 break;
 

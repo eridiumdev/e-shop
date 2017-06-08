@@ -35,7 +35,7 @@ class UserManager extends AdminController
     public function showAddUserPage(
         string $email = null, string $type = null
     ) {
-        $this->setTemplate('admin/inc/add-user.twig');
+        $this->setTemplate('admin/users/add-user.twig');
         $this->addTwigVar('email', $email);
         $this->addTwigVar('type', $type);
         $this->render();
@@ -48,6 +48,7 @@ class UserManager extends AdminController
             return $this->showAddUserPage($post['email'], $post['type']);
         }
 
+        $username = $post['username'];
         $email = $post['email'];
         $password = $post['password'];
         $type = $post['type'];
@@ -64,7 +65,7 @@ class UserManager extends AdminController
             $hashed = password_hash($password, PASSWORD_DEFAULT);
 
             $dbCreator = new Creator();
-            $user = $dbCreator->createUser($email, $hashed, $type);
+            $user = $dbCreator->createUser($username, $email, $hashed, $type);
 
             $this->flash('success', "New user [$email] added successfully");
             return Router::redirect('/admin/users');
@@ -162,9 +163,14 @@ class UserManager extends AdminController
             return $this->showUserPage($userId);
         }
 
+        $username = $post['username'];
         $email = $post['email'];
         $password = $post['password'];
         $type = $post['type'];
+
+        $name = $post['name'];
+        $phone = $post['phone'];
+        $address = $post['address'];
 
         try {
             $dbReader = new Reader();
@@ -197,7 +203,14 @@ class UserManager extends AdminController
                 $old->getRegisteredAt()
             );
 
-            $this->flash('success', "[$email] updated successfully");
+            if (empty($old->getShipping())) {
+                $dbCreator = new Creator();
+                $dbCreator->createUserShipping($userId, $name, $phone, $address);
+            } else {
+                $dbUpdater->updateUserShipping($name, $phone, $address);
+            }
+
+            $this->flash('success', "[$username] updated successfully");
             return Router::redirect('/admin/users');
 
         } catch (\Exception $e) {

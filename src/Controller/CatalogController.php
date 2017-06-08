@@ -9,6 +9,9 @@ class CatalogController extends BaseController
             case 'keyboards' :
                 $id = 1;
                 break;
+            case 'filtered' :
+                $id = 2;
+                break;
             default :
                 $id = 0;
         }
@@ -18,7 +21,13 @@ class CatalogController extends BaseController
 
     public function showCatalogPage(string $category)
     {
-        $this->setTemplate('catalog.twig');
+        $this->setTemplate('catalog2.twig');
+        $this->render();
+    }
+
+    public function showFilteredPage(string $category)
+    {
+        $this->setTemplate('filtered.twig');
         $this->render();
     }
 

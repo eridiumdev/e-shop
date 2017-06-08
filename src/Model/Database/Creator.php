@@ -41,6 +41,21 @@ class Creator extends Connection
         return (new Reader())->getUserByEmail($email);
     }
 
+    public function createUserShipping(
+        string  $userId,
+        string  $name,
+        string  $phone,
+        string  $address
+    ) {
+        $sql = "INSERT INTO
+                user_shipping(userId, name, phone, address)
+                VALUES (?, ?, ?, ?)";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$userId, $name, $phone, $address]);
+
+        return (new Reader())->getUserById($userId);
+    }
+
     /**
      * Creates and returns full product, rolls back transaction in case of failure
      * @param  string $name

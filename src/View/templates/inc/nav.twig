@@ -16,7 +16,7 @@
         <li class="dropdown">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Catalog<span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li><a href="#">Mice</a></li>
+            <li><a href="/mice">Mice</a></li>
             <li><a href="/keyboards">Keyboards</a></li>
             <li><a href="#">Accessories</a></li>
           </ul>
@@ -48,9 +48,9 @@
           <li><a href="/account"><span class="glyphicon glyphicon-user"></span><span class="hidden-sm"> My Account</span></a></li>
         {% endif %}
         <li><a href="/cart"><span class="glyphicon glyphicon-shopping-cart"></span>
-        {% if cart is empty %}
-          <span style="margin-left:5px">¥530</span>
-          <span style="margin-left:5px" class="badge">2</span>
+        {% if cart is not empty %}
+          <span style="margin-left:5px">¥160</span>
+          <span style="margin-left:5px" class="badge">1</span>
         {% else %}
           <span class="hidden-sm">Shopping Cart</span>
           <span style="margin-left:5px" class="badge">0</span>

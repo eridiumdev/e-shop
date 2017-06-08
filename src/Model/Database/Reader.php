@@ -34,6 +34,24 @@ class Reader extends Connection
         );
     }
 
+    public function getUserShipping(int $userId)
+    {
+        $sql = "SELECT * FROM user_shipping WHERE userId = ?";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$userId]);
+        $row = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        if (!$row) {
+            return false;
+        }
+
+        return [
+            $row['name'],
+            $row['phone'],
+            $row['address']
+        ];
+    }
+
     /**
      * Returns existing user data
      * @param  string $email
