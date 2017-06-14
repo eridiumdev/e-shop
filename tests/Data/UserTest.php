@@ -2,43 +2,59 @@
 namespace App\Test\Data;
 
 use App\Model\Data\User;
-use App\Model\Data\ShippingDetails;
 
-
-class DataProvider
+class UserTest extends DataTest
 {
-    public function getUser()
+    /**
+     * Data provider for User tests
+     */
+    public function userData()
     {
-        $item = new User(
-            37,                     // id
-            'test_user123',         // username
-            'test@mail.com',        // email
-            'secret123',            // password
-            'user',                 // type
-            '2017-04-10 10:30:00'   // registeredAt
-        );
 
-        $item->setShipping($this->getShipping());
-        $item->setOrders($this->getOrders());
-
-        return $item;
+        $input = [
+            'id'           => 37,
+            'username'     => 'test_user123',
+            'email'        => 'test@mail.com',
+            'password'     => 'secret123',
+            'type'         => 'user',
+            'registeredAt' => '2017-04-10 10:30:00'
+        ];
+        $expected = [
+            'id'           => 37,
+            'username'     => 'test_user123',
+            'email'        => 'test@mail.com',
+            'password'     => 'secret123',
+            'type'         => 'user',
+            'registeredAt' => '2017-04-10 10:30:00'
+        ];
+        return [[$input, $expected]];
     }
 
-    public function getShipping()
+    /**
+     * @test
+     * @dataProvider userData
+     */
+    public function getterTest($input, $expected)
     {
-        $item = new ShippingDetails(
-            'Test McTesterino',                     // name
-            '1234-1234-123',                        // phone
-            'China, Shanghai, Blightstone road 300' // address
+        $user = new User(
+            $input['id'],
+            $input['username'],
+            $input['email'],
+            $input['password'],
+            $input['type'],
+            $input['registeredAt']
         );
 
-        return $item;
+        $this->runGetter($user, $input, $expected);
     }
 
-    public function getOrders()
+    /**
+     * @test
+     * @dataProvider userData
+     */
+    public function setterTest($input, $expected)
     {
-        $item = [];
-
-        return $item;
+        $user = new User();
+        $this->runSetter($user, $input, $expected);
     }
 }
