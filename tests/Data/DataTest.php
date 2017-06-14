@@ -11,6 +11,15 @@ class DataTest extends TestCase
     {
         foreach ($input as $propName => $propValue) {
             $getter = 'get' . ucfirst($propName);
+
+            if (is_array($expected[$propName])) {
+                // if item
+                $out .= $item[$fields[$i]];
+            } elseif (is_object($item)) {
+                // if item is object, output uses class getters
+                $getter = 'get' . ucfirst($fields[$i]);
+                $out .= $item->$getter();
+            }
             $this->assertEquals(
                 $expected[$propName],
                 $obj->$getter(),
