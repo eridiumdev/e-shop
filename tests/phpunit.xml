@@ -11,7 +11,7 @@
     <testsuites>
         <testsuite name="Data">
             <directory>Data</directory>
-            <exclude>Data/DataTest.php</exclude>
+            <exclude>DataProvider.php</exclude>
         </testsuite>
     </testsuites>
 </phpunit>

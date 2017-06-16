@@ -9,8 +9,8 @@ class User
     private $password;
     private $type;
     private $registeredAt;
-    private $address = "address kappa 123";
 
+    private $shipping;
     private $orders = [];
 
     public function __construct(
@@ -89,14 +89,14 @@ class User
         $this->registeredAt = $registeredAt;
     }
 
-    public function getAddress() : string
+    public function getShipping() : Shipping
     {
-        return $this->address;
+        return $this->shipping;
     }
 
-    public function setAddress(string $address)
+    public function setShipping(Shipping $shipping)
     {
-        $this->address = $address;
+        $this->shipping = $shipping;
     }
 
     public function getOrders() : array
