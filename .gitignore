@@ -51,9 +51,9 @@ composer.lock
 composer.phar
 vendor
 
-# SQL and configs
-db.sql
-web/.htaccess
+# Configs
+# db.sql
+# web/.htaccess
 web/.env
 
 # Debug and test dummies
