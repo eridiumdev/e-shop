@@ -1,24 +1,24 @@
 {% extends 'base.twig' %}
 
-{% block title %}{{parent()}} | Keyboards{% endblock %}
+{% block title %}{{parent()}} | {{ category.name }}{% endblock %}
 
 {% block stylesheets %}
 <link rel="stylesheet" href="/css/catalog.css">
 {% endblock %}
 
 {% block content %}
-{% include "inc/flashes.twig" %}
 <div class="container">
     <div class="row">
         <div class="col-sm-3 col-lg-2 filter-bar hidden-xs">
         {% include "catalog/sidebar.twig" %}
         </div>
         <div class="col-sm-9 col-lg-10">
-            <h1>Ergonomic Mice</h1>
+            <h1>{{ category.description }}</h1>
             <ol class="breadcrumb">
                 <li><a href="#">Catalog</a></li>
-                <li class="active">Mice</li>
+                <li class="active">{{ category.name }}</li>
             </ol>
+            {% include "inc/flashes.twig" %}
             <div class="row hidden-xs">
                 {% include "catalog/topbar.twig" %}
             </div>
@@ -29,16 +29,9 @@
                 {% include "catalog/pagination.twig" %}
             </div>
             <div class="row product-cards">
-                {% include 'catalog/inc/ms/card1.twig' %}
-                {% include 'catalog/inc/ms/card2.twig' %}
-                {% include 'catalog/inc/ms/card3.twig' %}
-                {% include 'catalog/inc/ms/card4.twig' %}
-                {% include 'catalog/inc/ms/card5.twig' %}
-                {% include 'catalog/inc/ms/card6.twig' %}
-                {% include 'catalog/inc/ms/card7.twig' %}
-                {% include 'catalog/inc/ms/card8.twig' %}
-                {% include 'catalog/inc/ms/card9.twig' %}
-                {% include 'catalog/inc/ms/card10.twig' %}
+                {% for product in products %}
+                    {% include 'catalog/card.twig' %}
+                {% endfor %}
             </div>
             <div class="row my-pagination">
                 {% include "catalog/pagination.twig" %}

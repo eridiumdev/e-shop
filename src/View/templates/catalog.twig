@@ -7,7 +7,6 @@
 {% endblock %}
 
 {% block content %}
-{% include "inc/flashes.twig" %}
 <div class="container">
     <div class="row">
         <div class="col-sm-3 col-lg-2 filter-bar hidden-xs">
@@ -19,6 +18,7 @@
                 <li><a href="#">Catalog</a></li>
                 <li class="active">Keyboards</li>
             </ol>
+            {% include "inc/flashes.twig" %}
             <div class="row hidden-xs">
                 {% include "catalog/topbar.twig" %}
             </div>

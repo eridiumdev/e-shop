@@ -1,6 +1,17 @@
 <?php
 namespace App\Model\Database;
 
+use App\Model\Data\Category;
+use App\Model\Data\Delivery;
+use App\Model\Data\Discount;
+use App\Model\Data\Order;
+use App\Model\Data\OrderItem;
+use App\Model\Data\Payment;
+use App\Model\Data\Picture;
+use App\Model\Data\Product;
+use App\Model\Data\Section;
+use App\Model\Data\Shipping;
+use App\Model\Data\Spec;
 use App\Model\Data\User;
 
 /**
@@ -128,5 +139,107 @@ class Reader extends Connection
         }
 
         return $users;
+    }
+
+    public function getProductsByCatId(int $catId)
+    {
+        $sql = "SELECT * FROM products WHERE catId = ?";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$catId]);
+
+        $products = [];
+
+        while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)){
+            $product = new Product(
+                 $row['id'],
+                 $row['name'],
+                 $row['description'],
+                 $row['price']
+            );
+
+            $product->setCategory($this->getCategoryById($row['catId']));
+            $product->setMainPic(new Picture($row['mainPic']));
+
+            $discount = $this->getProductDiscount($row['id']);
+            if (!empty($discount)) {
+                $product->setDiscount($discount);
+            }
+
+            $products[] = $product;
+        }
+
+        return $products;
+    }
+
+    public function getProductDiscount(int $prodId)
+    {
+        $sql = "SELECT amount FROM product_discount WHERE prodId = ?";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$prodId]);
+        $row = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        if (!$row) {
+            return false;
+        }
+
+        return new Discount($row['amount']);
+    }
+
+    public function getAllCategories()
+    {
+        $sql = "SELECT * FROM categories";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+
+        $categories = [];
+
+        while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)){
+            $categories[] = new Category(
+                $row['id'],
+                $row['name'],
+                $row['description'],
+                $row['uri']
+            );
+        }
+
+        return $categories;
+    }
+
+    public function getCategoryById(int $id)
+    {
+        $sql = "SELECT * FROM categories WHERE id = ?";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$id]);
+        $row = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        if (!$row) {
+            return false;
+        }
+
+        return new Category(
+            $row['id'],
+            $row['name'],
+            $row['description'],
+            $row['uri']
+        );
+    }
+
+    public function getCategoryByUri(string $uri)
+    {
+        $sql = "SELECT * FROM categories WHERE uri = ?";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$uri]);
+        $row = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        if (!$row) {
+            return false;
+        }
+
+        return new Category(
+            $row['id'],
+            $row['name'],
+            $row['description'],
+            $row['uri']
+        );
     }
 }

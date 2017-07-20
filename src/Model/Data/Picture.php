@@ -6,8 +6,7 @@ class Picture
     private $name;
     private $path;
 
-    public function __construct($name = '', $path = '') {
-        $this->setName($name);
+    public function __construct($path) {
         $this->setPath($path);
     }
 
@@ -29,5 +28,7 @@ class Picture
     public function setPath(string $path)
     {
     	$this->path = $path;
+        $pathParts = explode('/', $path);
+        $this->setName(array_pop($pathParts));
     }
 }

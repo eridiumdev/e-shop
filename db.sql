@@ -57,6 +57,7 @@ CREATE TABLE categories (
     id          int(10) NOT NULL AUTO_INCREMENT,
     name        varchar(20) NOT NULL UNIQUE,
     description varchar(100) NULL,
+    uri         varchar(20) NOT NULL UNIQUE,
     PRIMARY KEY (id)
 );
 
@@ -76,11 +77,11 @@ CREATE TABLE spec_cats (
 
 CREATE TABLE products (
     id           int(10) NOT NULL AUTO_INCREMENT,
-    name         varchar(20) NOT NULL UNIQUE,
+    name         varchar(50) NOT NULL UNIQUE,
     description  text NULL,
     catId        int(10) NOT NULL,
     price        numeric(6,2) NOT NULL,
-    mainPic      varchar(20) NULL,
+    mainPic      varchar(50) NULL,
     PRIMARY KEY (id)
 );
 
@@ -128,3 +129,45 @@ CREATE TABLE product_specs (
     specId  int(10) NOT NULL,
     PRIMARY KEY (prodId, specId)
 );
+
+
+INSERT INTO categories VALUES
+    (1, 'Keyboards', 'Ergonomic keyboards', 'keyboards'),
+    (2, 'Mice', 'Ergonomic mice', 'mice'),
+    (3, 'Accessories', 'Various accessories', 'accessories');
+
+INSERT INTO products VALUES
+    (1, 'Ergo Pro Quiet Mac Ergonomic Keyboard', '', 1, 330, '/uploads/kb/kb1.jpg'),
+    (2, 'Full Size Ergonomic Backlit Hub Keyboard', '', 1, 160, '/uploads/kb/kb2.jpg'),
+    (3, 'Wireless Sculpt Ergonomic Desktop', '', 1, 220, '/uploads/kb/kb3.jpg'),
+    (4, 'Truly Ergonomic 227 Mechanical Keyboard', '', 1, 300, '/uploads/kb/kb4.jpg'),
+    (5, 'Black Goldtouch V2 Adjustable Comfort Keyboard', '', 1, 190, '/uploads/kb/kb5.jpg'),
+    (6, 'Maltron, Ergonomic, Single Left-Handed Keyboard, USB', '', 1, 400, '/uploads/kb/kb6.jpg'),
+    (7, 'Fully Adjustable Split-Keyfield Ergonomic RSI Keyboard<', '', 1, 210, '/uploads/kb/kb7.jpg'),
+    (8, 'Maltron, Ergonomic Two-Handed Trackball Keyboard Black USB', '', 1, 500, '/uploads/kb/kb8.jpg'),
+    (9, 'Wireless super mini keyboard with built-in touchpad', '', 1, 90, '/uploads/kb/kb9.jpg'),
+    (10, 'Black Left-Handed Keypad Keyboard', '', 1, 120, '/uploads/kb/kb10.jpg'),
+    (11, 'Evoluent Reduced Reach Right-Hand Keyboard', '', 1, 160, '/uploads/kb/kb11.jpg'),
+    (12, 'Goldtouch Go!2 Foreign Language Mobile Keyboards', '', 1, 250, '/uploads/kb/kb12.jpeg'),
+    (13, 'Goldtouch V2 Adjustable Comfort Keyboard ', '', 1, 230, '/uploads/kb/kb13.jpg'),
+
+    (14, 'Evoluent Vertical Mouse Bluetooth Right Handed White', '', 2, 220, '/uploads/ms/ms1.jpg'),
+    (15, 'OrthoMouse Orthopaedic Ergonomic and Adjustable Wireless Laser Mouse', '', 2, 250, '/uploads/ms/ms2.jpg'),
+    (16, 'Evoluent Vertical C Mouse Right Handed Silver', '', 2, 230, '/uploads/ms/ms3.jpg'),
+    (17, 'Handshoe Mouse Left Handed Small', '', 2, 240, '/uploads/ms/ms4.jpg'),
+    (18, 'Handshoe Mouse Left Handed Large', '', 2, 260, '/uploads/ms/ms5.jpg'),
+    (19, 'Logitech Wireless Trackball M570', '', 2, 160, '/uploads/ms/ms6.jpg'),
+    (20, 'Contour Mouse, Grey Metal, Left Handed, Large', '', 2, 200, '/uploads/ms/ms7.jpg'),
+    (21, 'E-Quill-AirO2bic Mouse, Pearl, Left Handed and Clickless Software Bundle', '', 2, 290, '/uploads/ms/ms8.jpg'),
+    (22, 'Vertical Grip Mouse, Optical, USB', '', 2, 100, '/uploads/ms/ms9.jpg'),
+    (23, 'Evoluent VerticalMouse 3, Right Handed, Optical, USB', '', 2, 150, '/uploads/ms/ms10.jpg');
+
+INSERT INTO product_discount VALUES
+    (1, 0.15),
+    (4, 0.5),
+    (8, 0.2),
+    (11, 0.25),
+
+    (16, 0.3),
+    (21, 0.15),
+    (23, 0.05);

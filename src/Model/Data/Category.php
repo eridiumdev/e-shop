@@ -6,6 +6,7 @@ class Category
     private $id;
     private $name;
     private $description;
+    private $uri;
 
     private $specs = [];
     private $products = [];
@@ -13,11 +14,13 @@ class Category
     public function __construct(
         $id             = -1,
         $name           = '',
-        $description    = ''
+        $description    = '',
+        $uri            = 'new'
     ) {
         $this->setId($id);
         $this->setName($name);
         $this->setDescription($description);
+        $this->setUri($uri);
     }
 
     public function getId() : int
@@ -48,6 +51,16 @@ class Category
     public function setDescription(string $description)
     {
     	$this->description = $description;
+    }
+
+    public function getUri() : string
+    {
+    	return $this->uri;
+    }
+
+    public function setUri(string $uri)
+    {
+    	$this->uri = $uri;
     }
 
     public function getSpecs() : array

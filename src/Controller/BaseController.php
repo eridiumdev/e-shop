@@ -34,6 +34,21 @@ class BaseController
 
     public function showHomepage()
     {
+        // $limit = 3;
+        // try {
+        //     $dbReader = new Reader();
+        //     $featured = $dbReader->getProducts('featured', $limit);
+        // } catch (\Exception $e) {
+        //     Logger::log('db', 'error', 'Failed to get all users', $e);
+        //     $this->flash('danger', 'Database operation failed');
+        //     $this->showDashboardPage();
+        // }
+        //
+        // $ymls = Uploader::getFiles(YML_DIRECTORY, ['yml']);
+        // $this->addTwigVar('files', $ymls);
+        //
+        // $this->setTemplate('admin/users.twig');
+        // $this->addTwigVar('users', $users);
         $this->render();
     }
 
@@ -75,6 +90,17 @@ class BaseController
         $this->twig->addFilter(new \Twig_Filter(
             'name', [$this, 'name']
         ));
+
+        try {
+            $dbReader = new Reader();
+            $categories = $dbReader->getAllCategories();
+        } catch (\Exception $e) {
+            Logger::log('db', 'error', 'Failed to get all categories', $e);
+        }
+
+        if (!empty($categories)) {
+            $this->addTwigVar('categories', $categories);
+        }
     }
 
     /**

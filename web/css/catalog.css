@@ -34,17 +34,17 @@
 
 .card-price {
     padding: 4px;
-    font-size: 1.6em;
+    font-size: 1.4em;
 }
 
 .card-striked {
-    font-size: 1.1em;
+    font-size: 1.00em;
 }
 
 .card-sale {
     color: #ff5722;
     margin-left: 2px;
-    font-size: 1.6em;
+    font-size: 1.4em;
 }
 
 .card-more {

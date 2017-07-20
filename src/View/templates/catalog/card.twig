@@ -1,17 +1,21 @@
 <div class="col-xs-6 col-md-4 col-lg-3">
     <div class="thumbnail product-card">
-        <a role="button" href="/keyboards/2">
-            <img src="/img/ms3.jpg">
+        <a role="button" href="/{{category.uri}}/{{product.id}}">
+            <img src="{{product.mainPic.path}}">
         </a>
         <div class="caption">
-            <h4>Black Newtral 2 Ergonomic</h4>
+            <h4>{{ product.name }}</h4>
             <div class="product-price-row">
-                <span class="card-price">¥130</span>
+                {% if product.onSale %}
+                    <span class="card-striked"><s>¥{{product.price}}</s></span>
+                    <span class="card-sale">¥{{product.discountedPrice}}</span>
+                {% else %}
+                    <span class="card-price">¥{{product.price}}</span>
+                {% endif %}
                 <span class="pull-right">
                     <a href="#" class="btn btn-success" role="button"><span class="glyphicon glyphicon-shopping-cart"></span> Buy</a>
                 </span>
             </div>
         </div>
-
     </div>
 </div>

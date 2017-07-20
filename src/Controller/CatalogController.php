@@ -1,27 +1,39 @@
 <?php
 namespace App\Controller;
 
+use App\Model\Database\Reader;
+
 class CatalogController extends BaseController
 {
-    public function getCategoryId(string $category)
+    public function showCatalogPage()
     {
-        switch ($category) {
-            case 'keyboards' :
-                $id = 1;
-                break;
-            case 'filtered' :
-                $id = 2;
-                break;
-            default :
-                $id = 0;
-        }
-
-        return $id;
+        $this->setTemplate('catalog.twig');
+        $this->render();
     }
 
-    public function showCatalogPage(string $category)
+    public function showCategoryPage(string $uri)
     {
-        $this->setTemplate('catalog2.twig');
+        try {
+            $dbReader = new Reader();
+            $category = $dbReader->getCategoryByUri($uri);
+
+            if (empty($category)) {
+                $this->flash('danger', "Category '$uri' does not exist");
+                Router::redirect('/catalog');
+            }
+
+            $products = $dbReader->getProductsByCatId($category->getId());
+
+        } catch (\Exception $e) {
+            Logger::log('db', 'error', 'Failed to get products by catId', $e);
+            $this->flash('danger', 'Database operation failed');
+            $this->showCatalogPage();
+        }
+
+        $this->addTwigVar('category', $category);
+        $this->addTwigVar('products', $products);
+
+        $this->setTemplate('catalog/category.twig');
         $this->render();
     }
 

@@ -116,11 +116,19 @@ class Product
         $this->specs = $specs;
     }
 
+    public function onSale() : bool
+    {
+        if (!empty($this->discount)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
     public function getDiscountedPrice() : float
     {
-        if (!empty($this->discount)) {
-            return $this->discount->getAmount() * $this->price;
+        if (!empty($this->onSale())) {
+            return (1 -$this->discount->getAmount()) * $this->price;
         } else {
             return $this->price;
         }

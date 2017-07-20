@@ -98,6 +98,24 @@ class Router
                 self::routeAdmin();
                 break;
 
+            case 'catalog' :
+
+                $controller = new CatalogController();
+                if (!empty($route['section'])) {
+                    if (is_numeric($route['page'])) {
+                        $controller->showProductPage($route['page']);
+                    } else {
+                        if (!empty($post)) {
+                            $controller->showFilteredPage('filtered');
+                        } else {
+                            $controller->showCategoryPage($route['section']);
+                        }
+                    }
+                } else {
+                    $controller->showCatalogPage();
+                }
+                break;
+
             case 'keyboards' :
 
                 $controller = new CatalogController();
