@@ -1,0 +1,33 @@
+{% extends 'base-admin.twig' %}
+
+{% block title %}{{parent()}} | Category Details{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="well col-sm-6 col-sm-offset-3">
+        <form method="post" action="/admin/categories/update/{{category.id}}">
+            <h2>Category Details</h2>
+            <br>
+            {% include "inc/flashes.twig" %}
+            <div class="form-group">
+                <label for="id">ID</label>
+                <input type="text" class="form-control" id="id" name="id" value="{{category.id}}" readonly>
+            </div>
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="name" name="name" placeholder="Category name" value="{{category.name}}" required autofocus>
+            </div>
+            <div class="form-group">
+                <label for="uri">URI</label>
+                <input type="text" class="form-control" id="uri" name="uri" placeholder="Category URI address" value="{{category.uri}}" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea rows="4" cols="50" class="form-control" id="description" name="description" placeholder="Product description">{{category.description}}</textarea>
+            </div>
+            <br>
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Update category</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

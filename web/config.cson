@@ -1,0 +1,8 @@
+"php-debug":
+  {
+    ServerPort: 9000
+    PathMaps: [
+      "remotepath;localpath"
+      "/;D:\\xampp\\htdocts\\e-shop\\web"
+    ]
+  }

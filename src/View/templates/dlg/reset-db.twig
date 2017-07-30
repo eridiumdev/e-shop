@@ -1,0 +1,8 @@
+{% extends 'dlg/base.twig' %}
+
+{% block modal_id %}resetDbModal{% endblock %}
+{% block modal_title %}Reset Database{% endblock %}
+{% block modal_body %}Do you want to reset testing database to initial its state?{% endblock %}
+{% block button_yes %}
+    <a href="/admin/reset" role="button" class="btn btn-warning">Yes, reset</a>
+{% endblock %}

@@ -1,13 +1,15 @@
 <tr>
-    <td>12</td>
-    <td>Mice</td>
-    <td>Ergonomic mice for all.</td>
-    <td>24</td>
-    <td>8</td>
+    <td>{{ category.id }}</td>
+    <td>{{ category.name }}</td>
+    <td>{{ category.uri }}</td>
+    <td>{{ short(category.description) }}</td>
+    <td>{{ category.products|length }}</td>
+    <td>{{ category.specs|length }}</td>
     <td class="col-xs-1 col-xs-offset-10">
-        <a class="btn btn-sm btn-primary" role="button" href="/admin/categories/view/">View</a>
+        <a class="btn btn-sm btn-primary" role="button" href="/admin/categories/view/{{category.id}}">View</a>
     </td>
     <td class="col-xs-1">
-        <input class="btn btn-sm btn-danger" type="submit" name="delete" value="Delete">
+        <input class="btn btn-sm btn-danger" type="submit" name="deleteSingle" value="Delete">
+        <input type="checkbox" name="id[]" role="button" value="{{category.id}}" hidden>
     </td>
 </tr>

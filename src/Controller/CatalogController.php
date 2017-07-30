@@ -43,8 +43,23 @@ class CatalogController extends BaseController
         $this->render();
     }
 
-    public function showProductPage(int $productId)
+    public function showProductPage(int $prodId, string $catUri)
     {
+        try {
+            $dbReader = new Reader();
+            $product = $dbReader->getFullProductById($prodId);
+
+            if (empty($product)) {
+                $this->flash('danger', "Product #$prodId not found");
+                Router::redirect("/catalog/$catUri");
+            }
+        } catch (\Exception $e) {
+            Logger::log('db', 'error', 'Failed to get full product by ID', $e);
+            $this->flash('danger', 'Database operation failed');
+            Router::redirect("/catalog/$catUri");
+        }
+
+        $this->addTwigVar('product', $product);
         $this->setTemplate('catalog/product-page.twig');
         $this->render();
     }

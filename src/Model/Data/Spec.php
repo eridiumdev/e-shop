@@ -15,14 +15,14 @@ class Spec
         $id         = -1,
         $name       = '',
         $type       = 'checkbox',
-        $value      = '',
-        $isRequired = false
+        $isRequired = false,
+        $value      = ''
     ) {
         $this->setId($id);
         $this->setName($name);
         $this->setType($type);
-        $this->setValue($value);
         $this->setIsRequired($isRequired);
+        $this->setValue($value);
     }
 
     public function getId() : int

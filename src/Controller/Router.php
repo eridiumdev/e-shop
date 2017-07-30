@@ -102,8 +102,10 @@ class Router
 
                 $controller = new CatalogController();
                 if (!empty($route['section'])) {
-                    if (is_numeric($route['page'])) {
-                        $controller->showProductPage($route['page']);
+                    if (is_numeric($route['page']) && !empty($route['action'])) {
+                        $controller->showProductPage(
+                            $route['page'], $route['section']
+                        );
                     } else {
                         if (!empty($post)) {
                             $controller->showFilteredPage('filtered');
@@ -113,36 +115,6 @@ class Router
                     }
                 } else {
                     $controller->showCatalogPage();
-                }
-                break;
-
-            case 'keyboards' :
-
-                $controller = new CatalogController();
-
-                if (is_numeric($route['page'])) {
-                    $controller->showProductPage($route['page']);
-                } else {
-                    if (!empty($post)) {
-                        $controller->showFilteredPage('filtered');
-                    } else {
-                        $controller->showCatalogPage('keyboards');
-                    }
-                }
-                break;
-
-            case 'mice' :
-
-                $controller = new CatalogController();
-
-                if (is_numeric($route['page'])) {
-                    $controller->showProductPage($route['page']);
-                } else {
-                    if (!empty($post)) {
-                        $controller->showFilteredPage('filtered');
-                    } else {
-                        $controller->showCatalogPage('mice');
-                    }
                 }
                 break;
 
@@ -323,142 +295,178 @@ class Router
                 $controller->showDashboardPage();
                 break;
 
-            case 'users' :
+            case 'reset' :
 
-                $controller = new UserManager();
+                $controller->resetDatabase();
+                break;
 
-                // Check if user id in uri is valid
-                if (in_array($route['action'], ['view', 'update'])) {
-                    if (empty($route['page']) || !is_numeric($route['page'])) {
-                        self::redirect('/admin/users');
-                    } else {
-                        $userId = $route['page'];
-                    }
+            case 'products' :
+
+                $controller = new ProductManager();
+                if (!empty($route['page']) && is_numeric($route['page'])) {
+                    $prodId = $route['page'];
+                }
+
+                // Check if prodId in uri is valid (when it is required)
+                if (in_array($route['action'], ['view', 'update'])
+                    && !isset($prodId)
+                ) {
+                    self::redirect('/admin/products');
                 }
 
                 switch ($route['action']) {
                     case '' :
-                        $controller->showUsersListPage();
+                        $controller->showProductsListPage();
+                        break;
+
+                    case 'add' :
+                        $controller->showAddProductPage();
                         break;
 
                     case 'add-single' :
                         if (empty($post)) {
-                            $controller->showAddUserPage();
+                            self::redirect('/admin/products/add');
                         } else {
-                            $controller->addUser($post);
+                            if (!empty($files['uploadedMainPic'])) {
+                                $mainPic = Uploader::uploadPicture(
+                                    PIC_DIRECTORY,
+                                    $controller,
+                                    $files['uploadedMainPic'],
+                                    "/admin/products/add"
+                                );
+                                if ($mainPic) {
+                                    $post['mainPic'] = $mainPic;
+                                }
+                            }
+                            if (!empty($files['uploadedPics'][0])) {
+                                $pics = [];
+                                foreach ($files['uploadedPics'] as $tempPic) {
+                                    $pic = Uploader::uploadPicture(
+                                        PIC_DIRECTORY,
+                                        $controller,
+                                        $tempPic,
+                                        "/admin/products/add"
+                                    );
+                                    if ($pic) {
+                                        $pics[] = $pic;
+                                    }
+                                }
+                                $post['pics'] = $pics;
+                            } else {
+                                $post['pics'] = [];
+                            }
+                            $controller->addProduct($post);
                         }
                         break;
 
-                    case 'add-many' :
-                        $accs = Uploader::readYml(
-                            $controller, $post['yml'], '/admin/users'
-                        );
-                        $controller->batchAddUsers($accs);
-                        break;
-
                     case 'view' :
-                        $controller->showUserPage($userId);
+                        $controller->showViewProductPage($prodId);
                         break;
 
                     case 'update' :
                         if (empty($post)) {
-                            self::redirect("/admin/users/view/$userId");
+                            self::redirect('/admin/products');
                         } else {
-                            $controller->updateUser($userId, $post);
-                        }
-
-                    case 'delete' :
-                        if (empty($post['id'])) {
-                            $controller->showUsersListPage();
-                        } elseif (count($post['id']) == 1){
-                            $controller->deleteUser($post['id'][0]);
-                        } else {
-                            $controller->deleteUsers($post['id']);
-                        }
-                        break;
-
-                    default :
-                        self::redirect('/admin/users');
-                }
-                break;
-
-            case 'orders' :
-
-                $controller = new OrderManager();
-
-                // Check if user id in uri is valid
-                if (in_array($route['action'], ['view']) && (
-                    empty($route['page']) ||
-                    !is_numeric($route['page'])
-                )) {
-                    self::redirect('/admin/orders');
-                }
-
-                switch ($route['action']) {
-                    case '' :
-                        $controller->showOrdersListPage();
-                        break;
-
-                    case 'view' :
-                        if (empty($post)) {
-                            $controller->showChangeAccountPage($route['page']);
-                        } else {
-                            $controller->changeAccount($route['page'], $post);
+                            if (!empty($files['uploadedMainPic'])) {
+                                $mainPic = Uploader::uploadPicture(
+                                    PIC_DIRECTORY,
+                                    $controller,
+                                    $files['uploadedMainPic'],
+                                    "/admin/products/view/$prodId"
+                                );
+                                if ($mainPic) {
+                                    $post['mainPic'] = $mainPic;
+                                }
+                            }
+                            if (!empty($files['uploadedPics'][0])) {
+                                $pics = [];
+                                foreach ($files['uploadedPics'] as $tempPic) {
+                                    $pic = Uploader::uploadPicture(
+                                        PIC_DIRECTORY,
+                                        $controller,
+                                        $tempPic,
+                                        "/admin/products/view/$prodId"
+                                    );
+                                    if ($pic) {
+                                        $pics[] = $pic;
+                                    }
+                                }
+                                $post['pics'] = $pics;
+                            } else {
+                                $post['pics'] = [];
+                            }
+                            $controller->updateProduct($prodId, $post);
                         }
                         break;
 
                     case 'delete' :
                         if (empty($post['id'])) {
-                            $controller->showAccountListPage();
-                        } elseif (count($post['id']) == 1){
-                            $controller->deleteAccount($post['id'][0]);
+                            self::redirect('/admin/products');
+                        } elseif (count($post['id']) == 1) {
+                            $controller->deleteProduct($post['id'][0]);
                         } else {
-                            $controller->deleteAccounts($post['id']);
+                            $controller->deleteProducts($post['id']);
                         }
                         break;
 
                     default :
-                        self::redirect('/admin/accounts');
+                        self::redirect('/admin/products');
                 }
                 break;
 
             case 'categories' :
 
                 $controller = new CategoryManager();
-
-                // Check if user id in uri is valid
-                if (in_array($route['action'], ['view']) && (
-                    empty($route['page']) ||
-                    !is_numeric($route['page'])
-                )) {
-                    self::redirect('/admin/categories');
+                if (!empty($route['page']) &&
+                    is_numeric($route['page']) &&
+                    in_array($route['action'], ['view', 'delete'])
+                ) {
+                    $catId = $route['page'];
                 }
 
                 switch ($route['action']) {
                     case '' :
-                        $controller->showCatsListPage();
+                        $controller->showCategoriesListPage();
+                        break;
+
+                    case 'add' :
+                        $controller->showAddCategoryPage();
+                        break;
+
+                    case 'add-single' :
+                        if (empty($post)) {
+                            self::redirect('/admin/categories/add');
+                        } else {
+                            $controller->addCategory($post);
+                        }
                         break;
 
                     case 'view' :
+                        if (!isset($catId)) {
+                            self::redirect('/admin/categories');
+                        }
+                        $controller->showViewCategoryPage($catId);
+                        break;
+
+                    case 'update' :
                         if (empty($post)) {
-                            $controller->showChangeAccountPage($route['page']);
+                            self::redirect('/admin/categories');
                         } else {
-                            $controller->changeAccount($route['page'], $post);
+                            // using post['id'] here is safer (readonly input)
+                            $controller->updateCategory($post['id'], $post);
                         }
                         break;
 
                     case 'delete' :
                         if (empty($post['id'])) {
-                            $controller->showAccountListPage();
-                        } elseif (count($post['id']) == 1){
-                            $controller->deleteAccount($post['id'][0]);
+                            self::redirect('/admin/categories');
                         } else {
-                            $controller->deleteAccounts($post['id']);
+                            $controller->deleteCategory($post['id'][0]);
                         }
                         break;
 
                     default :
-                        self::redirect('/admin/accounts');
+                        self::redirect('/admin/categories');
                 }
                 break;
 
@@ -477,46 +485,6 @@ class Router
                 switch ($route['action']) {
                     case '' :
                         $controller->showSectionsListPage();
-                        break;
-
-                    case 'view' :
-                        if (empty($post)) {
-                            $controller->showChangeAccountPage($route['page']);
-                        } else {
-                            $controller->changeAccount($route['page'], $post);
-                        }
-                        break;
-
-                    case 'delete' :
-                        if (empty($post['id'])) {
-                            $controller->showAccountListPage();
-                        } elseif (count($post['id']) == 1){
-                            $controller->deleteAccount($post['id'][0]);
-                        } else {
-                            $controller->deleteAccounts($post['id']);
-                        }
-                        break;
-
-                    default :
-                        self::redirect('/admin/accounts');
-                }
-                break;
-
-            case 'products' :
-
-                $controller = new ProductManager();
-
-                // Check if user id in uri is valid
-                if (in_array($route['action'], ['view']) && (
-                    empty($route['page']) ||
-                    !is_numeric($route['page'])
-                )) {
-                    self::redirect('/admin/categories');
-                }
-
-                switch ($route['action']) {
-                    case '' :
-                        $controller->showProductsListPage();
                         break;
 
                     case 'view' :
@@ -597,6 +565,105 @@ class Router
                 switch ($route['action']) {
                     case '' :
                         $controller->showDeliveriesListPage();
+                        break;
+
+                    case 'view' :
+                        if (empty($post)) {
+                            $controller->showChangeAccountPage($route['page']);
+                        } else {
+                            $controller->changeAccount($route['page'], $post);
+                        }
+                        break;
+
+                    case 'delete' :
+                        if (empty($post['id'])) {
+                            $controller->showAccountListPage();
+                        } elseif (count($post['id']) == 1){
+                            $controller->deleteAccount($post['id'][0]);
+                        } else {
+                            $controller->deleteAccounts($post['id']);
+                        }
+                        break;
+
+                    default :
+                        self::redirect('/admin/accounts');
+                }
+                break;
+
+            case 'users' :
+
+                $controller = new UserManager();
+
+                // Check if user id in uri is valid
+                if (in_array($route['action'], ['view', 'update'])) {
+                    if (empty($route['page']) || !is_numeric($route['page'])) {
+                        self::redirect('/admin/users');
+                    } else {
+                        $userId = $route['page'];
+                    }
+                }
+
+                switch ($route['action']) {
+                    case '' :
+                        $controller->showUsersListPage();
+                        break;
+
+                    case 'add-single' :
+                        if (empty($post)) {
+                            $controller->showAddUserPage();
+                        } else {
+                            $controller->addUser($post);
+                        }
+                        break;
+
+                    case 'add-many' :
+                        $accs = Uploader::readYml(
+                            $controller, $post['yml'], '/admin/users'
+                        );
+                        $controller->batchAddUsers($accs);
+                        break;
+
+                    case 'view' :
+                        $controller->showUserPage($userId);
+                        break;
+
+                    case 'update' :
+                        if (empty($post)) {
+                            self::redirect("/admin/users/view/$userId");
+                        } else {
+                            $controller->updateUser($userId, $post);
+                        }
+
+                    case 'delete' :
+                        if (empty($post['id'])) {
+                            $controller->showUsersListPage();
+                        } elseif (count($post['id']) == 1){
+                            $controller->deleteUser($post['id'][0]);
+                        } else {
+                            $controller->deleteUsers($post['id']);
+                        }
+                        break;
+
+                    default :
+                        self::redirect('/admin/users');
+                }
+                break;
+
+            case 'orders' :
+
+                $controller = new OrderManager();
+
+                // Check if user id in uri is valid
+                if (in_array($route['action'], ['view']) && (
+                    empty($route['page']) ||
+                    !is_numeric($route['page'])
+                )) {
+                    self::redirect('/admin/orders');
+                }
+
+                switch ($route['action']) {
+                    case '' :
+                        $controller->showOrdersListPage();
                         break;
 
                     case 'view' :

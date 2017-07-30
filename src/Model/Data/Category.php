@@ -73,6 +73,11 @@ class Category
         $this->specs = $specs;
     }
 
+    public function addSpec(Spec $spec)
+    {
+        $this->specs[$spec->getId()] = $spec;
+    }
+
     public function getProducts() : array
     {
         return $this->products;
@@ -81,5 +86,10 @@ class Category
     public function setProducts(array $products)
     {
         $this->products = $products;
+    }
+
+    public function addProduct(Product $product)
+    {
+        $this->products[$product->getId()] = $product;
     }
 }

@@ -65,9 +65,9 @@ class Uploader
         $mime = $tmp->getMimeType();
 
         if (!(in_array($mime, ['image/png', 'image/jpeg'])) ||
-            !(in_array($ext, ['png', 'jpg'])))
-        {
-            $controller->flash('fail',
+            !(in_array($ext, ['png', 'jpg', 'jpeg']))
+        ) {
+            $controller->flash('danger',
                 ".png or .jpg file expected, .$ext file given"
             );
             Router::redirect($redirect);
@@ -87,7 +87,7 @@ class Uploader
         $pic = self::uploadFile($dir, $filename, $tmp);
 
         if (!$pic) {
-            $controller->flash('fail', 'Upload failed');
+            $controller->flash('danger', "Could not upload $filename");
             Router::redirect($redirect);
         }
 

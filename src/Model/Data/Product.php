@@ -24,6 +24,11 @@ class Product
         $this->setName($name);
         $this->setDescription($description);
         $this->setPrice($price);
+
+        // Missing details placeholders | default values
+        $this->setCategory(new Category(-1, '-'));
+        $this->setDiscount(new Discount(0.0));
+        $this->setMainPic(new Picture(PIC_DIRECTORY . 'pna.jpg'));
     }
 
     public function getId() : int
@@ -106,6 +111,14 @@ class Product
         $this->pics = $pics;
     }
 
+    public function hasPic(string $picPath)
+    {
+        foreach ($this->pics as $pic) {
+            if ($pic->getPath() == $picPath) return true;
+        }
+        return false;
+    }
+
     public function getSpecs() : array
     {
         return $this->specs;
@@ -114,6 +127,11 @@ class Product
     public function setSpecs(array $specs)
     {
         $this->specs = $specs;
+    }
+
+    public function addSpec(Spec $spec)
+    {
+        $this->specs[$spec->getId()] = $spec;
     }
 
     public function onSale() : bool

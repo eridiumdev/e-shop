@@ -1,0 +1,23 @@
+{% extends 'dlg/base.twig' %}
+
+{% block modal_id %}selectPics{% endblock %}
+{% block modal_size %}modal-lg{% endblock %}
+{% block modal_title %}Select Gallery Pictures{% endblock %}
+
+{% block modal_body %}
+<div class="row">
+    <div class="row picture-flex" style="padding:10px">
+    {% for pic in pics %}
+        <div class="col-md-2">
+            <p>{{ pic|name }}</p>
+            <div role="button" class="thumbnail pic-thumbnail{% if (product) and product.hasPic(pic) %} outline{% endif %}"><img class="img-responsive" src="{{pic}}"></div>
+            <input form="productDetailsForm" type="hidden" name="selectedPics[]" value="{% if (product) and product.hasPic(pic) %}{{pic|name}}{% endif %}">
+        </div>
+    {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+{% block yes_id %}confirm_button_multi{% endblock %}
+{% block yes_color %}primary{% endblock %}
+{% block yes_text %}Confirm{% endblock %}

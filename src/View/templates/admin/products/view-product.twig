@@ -1,0 +1,111 @@
+{% extends 'base-admin.twig' %}
+
+{% block title %}{{parent()}} | Product Details{% endblock %}
+
+{% block scripts %}
+    <script src="/js/discounts.js"></script>
+    <script src="/js/main-pic-select.js"></script>
+    <script src="/js/pics-select.js"></script>
+{% endblock %}
+
+{% block content %}
+{# Dialogues #}
+{% include 'dlg/select-main-pic.twig' %}
+{% include 'dlg/select-pics.twig' %}
+<div class="container">
+    <div class="well col-sm-6 col-sm-offset-3">
+        <h2>Product Details<button class="btn btn-sm btn-primary pull-right" type="reset" form="productDetailsForm">
+            <span class="glyphicon glyphicon-refresh"></span>
+            <span class="hidden-sm"> Reset</button>
+        </h2>
+        <br>
+        {% include "inc/flashes.twig" %}
+        <ul class="nav nav-tabs nav-justified">
+            <li class="active"><a href="#basicTab" data-toggle="tab">Basic</a></li>
+            <li><a href="#specsTab" data-toggle="tab">Specs</a></li>
+            <li><a href="#picsTab" data-toggle="tab">Pictures</a></li>
+        </ul>
+        <form id="productDetailsForm" method="post" action="/admin/products/update/{{product.id}}" enctype="multipart/form-data">
+            <div class="tab-content">
+                <div class="tab-pane fade active in" id="basicTab">
+                    <div class="form-group">
+                        <label for="id">Product ID</label>
+                        <input type="text" class="form-control" id="id" name="id" placeholder="Product ID" value="{{product.id}}" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="Name" value="{{product.name}}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="category">Category</label>
+                        <select class="form-control" id="category" name="category" required>
+                            <option disabled selected value="">Select category</option>
+                            {% for category in categories %}
+                                <option value="{{category.id}}" {{ (category.id == product.category.id) ? 'selected' : ''}}>{{category.name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea rows="4" cols="50" class="form-control" id="description" name="description" placeholder="Product description">{{product.description}}</textarea>
+                    </div>
+                    <div class="form-inline">
+                        <div class="form-group">
+                            <label for="price">Price</label>
+                            <input type="number" class="form-control" id="price" size="4" name="price" min="0" max="10000"  value="{{product.price}}" step="any" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="discount">Discount</label>
+                            <input type="number" class="form-control" id="discount" name="discount" min="0" max="1" step="0.01" value="{{product.discount.amount}}">
+                        </div>
+                        <div class="form-group">
+                            <label for="discountedPrice">Discounted</label>
+                            <input type="number" class="form-control" id="discountedPrice" name="discountedPrice" min="0" max="10000" step="any" value="{{product.discountedPrice}}">
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade in" id="specsTab">
+                    {% for spec in specs %}
+                    <div class="form-group">
+                        <label>{{ spec.name }}</label>
+                        <input type="text" class="form-control" name="specs[{{spec.id}}]" {% if spec.isRequired %}required{% endif %} value="{% for prodSpec in product.specs %}{% if prodSpec.id == spec.id %}{{prodSpec.value}}{% endif %}{% endfor %}">
+                    </div>
+                    {% endfor %}
+                </div>
+                <div class="tab-pane fade in" id="picsTab">
+                    <div class="form-group">
+                        <label>Main picture</label>
+                        <input id="mainPic" type="text" class="form-control" name="mainPic" placeholder="No picture selected" {% if product.mainPic is not empty %}value="{{product.mainPic.name}}"{% endif %} readonly>
+                        <button type="button" class="btn btn-primary col-md-5" data-toggle="modal" data-target="#selectMainPic">
+                            Select from existing
+                        </button>
+                        <div class="col-md-2"></div>
+                        <label class="btn btn-primary btn-file col-md-5">
+                            Upload new <input id="mainPicUploader" type="file" style="display:none" name="uploadedMainPic">
+                        </label>
+                    </div>
+                    <br>
+                    <br>
+                    <br>
+                    <div class="form-group">
+                        <label>Picture gallery</label>
+                        <input id="pics" type="text" class="form-control" name="pics" placeholder="No pictures selected" {% if product.pics is not empty %}value="{{product.pics|length}} picture(s)"{% endif %} readonly>
+                        <button type="button" class="btn btn-primary col-md-5" data-toggle="modal" data-target="#selectPics">
+                            Select from existing
+                        </button>
+                        <div class="col-md-2"></div>
+                        <label class="btn btn-primary btn-file col-md-5">
+                            Upload new <input id="picUploader" type="file" style="display:none" name="uploadedPics[]" multiple>
+                        </label>
+                    </div>
+                    <br>
+                    <br>
+                    <br>
+                </div>
+            </div>
+        </form>
+        <br>
+        <button class="btn btn-lg btn-primary btn-block" type="submit" form="productDetailsForm">Confirm changes</button>
+    </div>
+</div>
+{% endblock %}

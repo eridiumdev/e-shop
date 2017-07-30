@@ -230,8 +230,11 @@ class BaseController
                     case 'number' :
                         $val = trim(filter_var($val, FILTER_SANITIZE_NUMBER_INT));
                         break;
-                    case 'cost' :
+                    case 'price' :
                         $val = trim(filter_var($val, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION));
+                        break;
+                    case 'uri' :
+                        $val = trim(filter_var($val, FILTER_SANITIZE_URL));
                         break;
                     default :
                         $vars[$key] = trim(filter_var($val, FILTER_SANITIZE_STRING));

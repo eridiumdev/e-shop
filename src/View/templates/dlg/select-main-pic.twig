@@ -1,0 +1,21 @@
+{% extends 'dlg/base.twig' %}
+
+{% block modal_id %}selectMainPic{% endblock %}
+{% block modal_size %}modal-lg{% endblock %}
+{% block modal_title %}Select Main Picture{% endblock %}
+
+{% block modal_body %}
+<div class="row">
+    <div class="row picture-flex" style="padding:10px">
+    {% for pic in pics %}
+        <div class="col-md-2">
+            <p>{{ pic|name }}</p>
+            <div role="button" class="thumbnail mainPic-thumbnail{% if (product) and pic == product.mainPic.path %} outline{% endif %}"><img class="img-responsive" src="{{pic}}"></div>
+        </div>
+    {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+{% block yes_color %}primary{% endblock %}
+{% block yes_text %}Confirm{% endblock %}

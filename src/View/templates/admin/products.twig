@@ -13,23 +13,13 @@
 {% block content %}
 <div class="col-sm-9">
     <div class="well">
-        <h2>Product Management</h2>
+        <h2 class="management-header">Product Management</h2>
+        <div class="pull-right management-header-buttons">
+            <a class="btn btn-primary" role="button" href="/admin/products/add"><span class="glyphicon glyphicon-plus"></span> <span class="hidden-xs hidden-sm">New product</span></a>
+            <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#resetDbModal" title="Reset database to initial state"><span class="glyphicon glyphicon-exclamation-sign"></span></button>
+        </div>
         <br>
         {% include "inc/flashes.twig" %}
-        <h4>Add new products:</h4>
-        <form class="form-inline" action="/admin/products/add-many" method="post">
-            <div class="form-group">
-                <a class="btn btn-primary" role="button" href="/admin/products/add-single">Add one</a>
-                <span style="margin: 0 10px"> OR </span>
-                <select class="form-control" name="yml" required>
-                    <option disabled selected value="">Select YML file</option>
-                    {% for file in files %}
-                        <option value="{{file|name}}">{{ file|name }}</option>
-                    {% endfor %}
-                </select>
-                <input type="submit" class="btn btn-primary" value="Add many">
-            </div>
-        </form>
     </div>
     <div class="well table-responsive">
         <form action="/admin/products/delete" method="post">
@@ -40,7 +30,7 @@
                     <th role="button">Thumbnail</th>
                     <th role="button">Name</th>
                     <th role="button">Category</th>
-                    <th role="button">Price</th>
+                    <th role="button">Price(¥)</th>
                     <th role="button">Discount</th>
                     <th></th>
                     <th></th>
@@ -50,7 +40,7 @@
                 </tr>
             </thead>
             <tbody id="tableTBody">
-                {% for i in 1..10 %}
+                {% for product in products %}
                     {% include "admin/products/tr-prod.twig" %}
                 {% endfor %}
             </tbody>

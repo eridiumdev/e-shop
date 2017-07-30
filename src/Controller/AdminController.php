@@ -1,6 +1,8 @@
 <?php
 namespace App\Controller;
 
+use App\Model\Database\Connection;
+
 /**
  * Template for all Manager classes
  * - admin controller classes to manage particular data,
@@ -12,5 +14,11 @@ class AdminController extends BaseController
     {
         $this->setTemplate('dashboard.twig');
         $this->render();
+    }
+
+    public function resetDatabase()
+    {
+        // $conn = new Connection();
+        // $conn->resetDatabase();
     }
 }

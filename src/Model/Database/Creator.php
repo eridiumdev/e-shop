@@ -1,7 +1,19 @@
 <?php
 namespace App\Model\Database;
 
+use App\Model\Data\Category;
+use App\Model\Data\Delivery;
+use App\Model\Data\Discount;
+use App\Model\Data\Order;
+use App\Model\Data\OrderItem;
+use App\Model\Data\Payment;
+use App\Model\Data\Picture;
+use App\Model\Data\Product;
+use App\Model\Data\Section;
+use App\Model\Data\Shipping;
+use App\Model\Data\Spec;
 use App\Model\Data\User;
+
 use App\Controller\Logger;
 
 /**
@@ -68,76 +80,66 @@ class Creator extends Connection
      * @param  array  $specs
      * @return Product
      */
-    public function createFullProduct(
+    public function createProduct(
         string   $name,
         string   $description,
-        float    $price,
         int      $catId,
-        string   $mainPic,
-        float    $discount,
-        array    $pics,
-        array    $specs
+        float    $price,
+        string   $mainPic
     ) {
-        // Turn autocommit off
-        $this->db->beginTransaction();
+        $sql = "INSERT INTO
+                products(name, description, catId, price, mainPic)
+                VALUES (?, ?, ?, ?, ?)";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$name, $description, $catId, $price, $mainPic]);
 
-        try {
-            // Init Reader to get category details and pictures
-            $dbReader = new Reader();
+        return (new Reader())->getProductByName($name);
+    }
 
-            // Init product with basic details
-            $newProduct = $this->createProduct(
-                $name, $description, $price, $catId, $mainPic
-            );
-            $prodId = $newProduct->getId();
-
-            // Set complete category
-            $category = $dbReader->getCategoryById($catId);
-            if (empty($category)) {
-                throw new \Exception;   // category is invalid
-            } else {
-                $newProduct->setCategory($category);
-            }
-
-            // Set main picture
-            if (!empty($mainPic)) {
-                $newProduct->setMainPic($mainPic);
-            }
-
-            // If product is on sale, set discount
-            if (!empty($discount)) {
-                $newDiscount = $this->createDiscount($prodId, $discount);
-                $newProduct->setDiscount($newDiscount);
-            }
-
-            // Add all pictures
-            foreach ($pics as $picPath) {
-                $pic = $dbReader->getPicture($picPath);
-                if (!$pic) {
-                    $pic = $this->createPicture($prodId, $picPath);
-                }
-                $newProduct->addPicture($pic);
-            }
-
-            // Add all specs
-            foreach ($specs as $specId => $specVal) {
-                $spec = $dbReader->getSpecById($specId);
-                $spec->setValue($specVal);
-                $newProduct->addSpec($spec);
-            }
-
-            // Commit transaction
-            $this->db->commit();
-            return $newProduct;
-
-        } catch (\Exception $e) {
-            Logger::log(
-                'db', 'error',
-                "Failed to create full product $name, rolled back transaction",
-                $e
-            );
-            $this->db->rollBack();
+    public function createProductDiscount(int $prodId, float $amount)
+    {
+        $sql = "INSERT INTO product_discount(prodId, amount) VALUES (?, ?)";
+        $stmt = $this->db->prepare($sql);
+        if ($stmt->execute([$prodId, $amount])) {
+            return new Discount($amount);
+        } else {
             return false;
         }
+    }
+
+    public function createProductPic(int $prodId, string $path)
+    {
+        $sql = "INSERT INTO product_pics(prodId, path) VALUES (?, ?)";
+        $stmt = $this->db->prepare($sql);
+        if ($stmt->execute([$prodId, $path])) {
+            return new Picture($path);
+        } else {
+            return false;
+        }
+    }
+
+    public function addSpecToProduct(int $prodId, int $specId, string $value)
+    {
+        $sql = "INSERT INTO product_specs(prodId, specId, value)
+                VALUES (?, ?, ?)";
+        $stmt = $this->db->prepare($sql);
+        if ($stmt->execute([$prodId, $specId, $value])) {
+            return (new Reader())->getProductSpec($prodId, $specId);
+        } else {
+            return false;
+        }
+    }
+
+    public function createCategory(
+        string  $name,
+        string  $description,
+        string  $uri
+    ) {
+        $sql = "INSERT INTO categories(name, description, uri)
+                VALUES (?, ?, ?)";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$name, $description, $uri]);
+
+        return (new Reader())->getCategoryByName($name);
     }
 }

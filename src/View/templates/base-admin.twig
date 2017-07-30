@@ -12,8 +12,11 @@
         {% block stylesheets %}{% endblock %}
     </head>
     <body>
-        {% include 'dlg/delete.twig' %}
-        {% include 'dlg/delete-all.twig' %}
+        {% block dialogues %}
+            {% include 'dlg/reset-db.twig' %}
+            {% include 'dlg/delete.twig' %}
+            {% include 'dlg/delete-all.twig' %}
+        {% endblock %}
         {% block header %}{% include "admin/inc/header.twig" %}{% endblock %}
         <div class="container-fluid">
             <div class="row">

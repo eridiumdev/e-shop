@@ -10,6 +10,14 @@ body {
     color: #2c3e50;
 }
 
+.management-header {
+    display: inline-block;
+}
+
+.management-header-buttons {
+    margin-top: 14px;
+}
+
 .affix {
     top: 5px;
 }
@@ -94,16 +102,26 @@ form > div.tab-content {
     border-bottom: 1px solid #2c3e50;
 }}
 
+/* Outline for selected pictures */
+.outline {
+    outline: 3px solid #2c3e50;
+}
+
+/* Product view */
+#price, #discount, #discountedPrice {
+    width: 102px;
+}
+
+#price, #discount {
+    margin-right: 10px;
+}
+
 /* Uploads */
 .tab-content {
     padding: 7px;
     margin-top: 30px;
 }
 
-.outline {
-    outline: 3px solid #2c3e50;
-}
-
-.btn {
+table .btn {
     min-width: 65px;
 }

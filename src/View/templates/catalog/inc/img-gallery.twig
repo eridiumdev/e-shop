@@ -1,14 +1,13 @@
 <div class="clearfix">
-    <img class="xzoom img-responsive center-block" src="/img/kb2.jpg" xoriginal="/img/kb2.jpg">
+    <img class="xzoom img-responsive center-block" src="{{product.mainPic.path}}" xoriginal="{{product.mainPic.path}}">
 </div>
 <div class="xzoom-thumbs">
-    <a href="/img/kb2.jpg">
-        <img class="xzoom-gallery" width="80" src="/img/kb2.jpg">
+    <a href="{{product.mainPic.path}}">
+        <img class="xzoom-gallery" width="80" src="{{product.mainPic.path}}">
     </a>
-    <a href="/img/kb2_2.jpg">
-        <img class="xzoom-gallery" width="80" src="/img/kb2_2.jpg">
+    {% for pic in product.pics %}
+    <a href="{{ pic.path }}">
+        <img class="xzoom-gallery" width="80" src="{{ pic.path }}">
     </a>
-    <a href="/img/kb2_3.jpg">
-        <img class="xzoom-gallery" width="80" src="/img/kb2_3.jpg">
-    </a>
+    {% endfor %}
 </div>
