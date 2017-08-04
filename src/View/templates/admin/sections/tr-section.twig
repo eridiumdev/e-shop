@@ -1,13 +1,11 @@
 <tr>
-    <td>11</td>
-    <td>Best Sellers</td>
-    <td>Most sold products of all time.</td>
-    <td>order-count</td>
-    <td>20</td>
+    <td>{{ section.id }}</td>
+    <td>{{ section.name }}</td>
+    <td>{{ section.uri }}</td>
+    <td>{{ short(section.description, 60) }}</td>
+    <td>{{ section.param.name }}</td>
+    <td>{{ section.maxProducts }}</td>
     <td class="col-xs-1 col-xs-offset-10">
-        <a class="btn btn-sm btn-primary" role="button" href="/admin/sections/view/">View</a>
-    </td>
-    <td class="col-xs-1">
-        <input class="btn btn-sm btn-danger" type="submit" name="delete" value="Delete">
+        <a class="btn btn-sm btn-primary" role="button" href="/admin/sections/view/{{section.id}}">View</a>
     </td>
 </tr>

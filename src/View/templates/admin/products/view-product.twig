@@ -4,6 +4,7 @@
 
 {% block scripts %}
     <script src="/js/discounts.js"></script>
+    <script src="/js/change-specs.js"></script>
     <script src="/js/main-pic-select.js"></script>
     <script src="/js/pics-select.js"></script>
 {% endblock %}
@@ -37,15 +38,6 @@
                         <input type="text" class="form-control" id="name" name="name" placeholder="Name" value="{{product.name}}" required>
                     </div>
                     <div class="form-group">
-                        <label for="category">Category</label>
-                        <select class="form-control" id="category" name="category" required>
-                            <option disabled selected value="">Select category</option>
-                            {% for category in categories %}
-                                <option value="{{category.id}}" {{ (category.id == product.category.id) ? 'selected' : ''}}>{{category.name}}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="form-group">
                         <label for="description">Description</label>
                         <textarea rows="4" cols="50" class="form-control" id="description" name="description" placeholder="Product description">{{product.description}}</textarea>
                     </div>
@@ -65,11 +57,26 @@
                     </div>
                 </div>
                 <div class="tab-pane fade in" id="specsTab">
-                    {% for spec in specs %}
                     <div class="form-group">
-                        <label>{{ spec.name }}</label>
-                        <input type="text" class="form-control" name="specs[{{spec.id}}]" {% if spec.isRequired %}required{% endif %} value="{% for prodSpec in product.specs %}{% if prodSpec.id == spec.id %}{{prodSpec.value}}{% endif %}{% endfor %}">
+                        <label for="category">Category</label>
+                        <select class="form-control" id="category" name="category" required>
+                            <option disabled selected>Select a category to view available specs</option>
+                            {% for category in categories %}
+                                <option value="{{category.id}}"{% if product.category.id == category.id %} selected{% endif %}>{{category.name}}</option>
+                            {% endfor %}
+                        </select>
                     </div>
+                    {% for category in categories %}
+                        <div id="categorySpecs-{{category.id}}" class="form-horizontal category-specs"{% if product.category.id != category.id %} hidden{% endif %}>
+                            {% for spec in category.specs %}
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{{ spec.name }}</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control category-spec" name="specs[{{category.id}}][{{spec.id}}]"{% if spec.isRequired %} required{% endif %}{% if product.hasSpec(spec.id) %} value="{{product.specs[spec.id].value}}"{% endif %}>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
                     {% endfor %}
                 </div>
                 <div class="tab-pane fade in" id="picsTab">

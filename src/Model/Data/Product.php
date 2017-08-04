@@ -111,14 +111,6 @@ class Product
         $this->pics = $pics;
     }
 
-    public function hasPic(string $picPath)
-    {
-        foreach ($this->pics as $pic) {
-            if ($pic->getPath() == $picPath) return true;
-        }
-        return false;
-    }
-
     public function getSpecs() : array
     {
         return $this->specs;
@@ -134,9 +126,34 @@ class Product
         $this->specs[$spec->getId()] = $spec;
     }
 
+    public function hasPic(string $picPath)
+    {
+        foreach ($this->pics as $pic) {
+            if ($pic->getPath() == $picPath) return true;
+        }
+        return false;
+    }
+
+    public function hasSpec(int $specId)
+    {
+        foreach ($this->specs as $spec) {
+            if ($spec->getId() == $specId) return true;
+        }
+        return false;
+    }
+
+    public function getSpec(int $specId)
+    {
+        if ($this->hasSpec($specId)) {
+            return $this->specs[$specId];
+        } else {
+            return false;
+        }
+    }
+
     public function onSale() : bool
     {
-        if (!empty($this->discount)) {
+        if (($this->discount->getAmount() > 0.00)) {
             return true;
         } else {
             return false;

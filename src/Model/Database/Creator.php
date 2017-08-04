@@ -7,6 +7,7 @@ use App\Model\Data\Discount;
 use App\Model\Data\Order;
 use App\Model\Data\OrderItem;
 use App\Model\Data\Payment;
+use App\Model\Data\Param;
 use App\Model\Data\Picture;
 use App\Model\Data\Product;
 use App\Model\Data\Section;
@@ -140,6 +141,40 @@ class Creator extends Connection
         $stmt = $this->db->prepare($sql);
         $stmt->execute([$name, $description, $uri]);
 
-        return (new Reader())->getCategoryByName($name);
+        if ($newId = $this->db->lastInsertId()) {
+            return (new Reader())->getCategoryById($newId);
+        } else {
+            return false;
+        }
+    }
+
+    public function createSpec(
+        string  $name,
+        string  $type,
+        bool    $isRequired,
+        bool    $isFilter
+    ) {
+        $sql = "INSERT INTO specs(name, type, isRequired, isFilter)
+                VALUES (?, ?, ?)";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$name, $type, $isRequired, $isFilter]);
+
+        if ($newId = $this->db->lastInsertId()) {
+            return (new Reader())->getSpecById($newId);
+        } else {
+            return false;
+        }
+    }
+
+    public function addCategoryToSpec(int $specId, int $catId)
+    {
+        $sql = "INSERT INTO spec_cats(specId, catId)
+                VALUES (?, ?)";
+        $stmt = $this->db->prepare($sql);
+        if ($stmt->execute([$specId, $catId])) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

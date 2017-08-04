@@ -1,41 +1,19 @@
 <ul class="nav nav-tabs nav-justified">
-  <li class="active"><a href="#featured" data-toggle="tab">Featured</a></li>
-  <li><a href="#new" data-toggle="tab">New Arrivals</a></li>
-  <li><a href="#best" data-toggle="tab">Best Sellers</a></li>
-  <li><a href="#sale" data-toggle="tab">On Sale</a></li>
+    {% for section in sections %}
+    <li{% if loop.first %} class="active"{% endif %}><a href="#{{section.uri}}" data-toggle="tab">{{section.name}}</a></li>
+    {% endfor %}
 </ul>
 <div id="myTabContent" class="tab-content">
-  <div class="tab-pane fade active in" id="featured">
-      <div class="row product-cards">
-          <!-- for item in featured include card..  -->
-        {% include 'catalog/inc/ms/card10.twig' %}
-        {% include 'catalog/inc/ms/card4.twig' %}
-        {% include 'catalog/inc/kb/card2.twig' %}
-        {% include 'catalog/card-more.twig' %}
-      </div>
-  </div>
-  <div class="tab-pane fade" id="new">
-      <div class="row product-cards">
-          {% include 'catalog/inc/ms/card1.twig' %}
-          {% include 'catalog/inc/kb/card4.twig' %}
-          {% include 'catalog/inc/kb/card7.twig' %}
-        {% include 'catalog/card-more.twig' %}
-      </div>
-  </div>
-  <div class="tab-pane fade" id="best">
-      <div class="row product-cards">
-          {% include 'catalog/inc/kb/card3.twig' %}
-          {% include 'catalog/inc/ms/card6.twig' %}
-          {% include 'catalog/inc/kb/card12.twig' %}
-        {% include 'catalog/card-more.twig' %}
-      </div>
-  </div>
-  <div class="tab-pane fade" id="sale">
-      <div class="row product-cards">
-          {% include 'catalog/inc/kb/card2.twig' %}
-          {% include 'catalog/inc/kb/card8.twig' %}
-          {% include 'catalog/inc/ms/card9.twig' %}
-        {% include 'catalog/card-more.twig' %}
-      </div>
-  </div>
+    {% for section in sections %}
+    <div class="tab-pane fade in{% if loop.first %} active{% endif %}" id="{{section.uri}}">
+        <div class="row product-cards">
+            {% for product in section.products %}
+                {% if loop.index0 < 3 %}
+                    {% include 'catalog/card.twig' %}
+                {% endif %}
+            {% endfor %}
+            {% include 'catalog/card-more.twig' %}
+        </div>
+    </div>
+    {% endfor %}
 </div>

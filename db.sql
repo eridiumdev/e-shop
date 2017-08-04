@@ -63,9 +63,10 @@ CREATE TABLE categories (
 
 CREATE TABLE specs (
     id          int(10) NOT NULL AUTO_INCREMENT,
-    name        varchar(60) NOT NULL UNIQUE,
+    name        varchar(60) NOT NULL,
     type        varchar(15) NOT NULL,
     isRequired  boolean NOT NULL,
+    isFilter    boolean NOT NULL,
     PRIMARY KEY (id)
 );
 
@@ -88,28 +89,29 @@ CREATE TABLE products (
 CREATE TABLE sections (
     id          int(10) NOT NULL AUTO_INCREMENT,
     name        varchar(50) NOT NULL UNIQUE,
+    uri         varchar(40) NOT NULL UNIQUE,
     description varchar(100) NULL,
-    maxProducts int(2) NULL,
-    paramId     int(10) NOT NULL,
+    maxProducts int(4) NULL,
     PRIMARY KEY (id)
 );
 
 CREATE TABLE section_params (
-    paramId int(10) NOT NULL AUTO_INCREMENT,
-    name    varchar(10) NOT NULL UNIQUE,
+    sectId      int(10) NOT NULL,
+    paramId     int(10) NOT NULL AUTO_INCREMENT,
+    paramName   varchar(20) NOT NULL UNIQUE,
     PRIMARY KEY (paramId)
 );
 
 CREATE TABLE order_items (
     orderId int(10) NOT NULL,
     prodId  int(10) NOT NULL,
+    qty     int(3) NOT NULL,
     PRIMARY KEY (orderId, prodId)
 );
 
 CREATE TABLE featured_products (
-    sectionId   int(10) NOT NULL,
     prodId      int(10) NOT NULL,
-    PRIMARY KEY (sectionId, prodId)
+    PRIMARY KEY (prodId)
 );
 
 CREATE TABLE product_pics (
@@ -174,13 +176,41 @@ INSERT INTO product_discount VALUES
     (23, 0.05);
 
 INSERT INTO specs VALUES
-    (1, 'Model', 'text', true),
-    (2, 'Brand', 'text', true),
-    (3, 'Color', 'text', true),
-    (4, 'Connection', 'text', false),
-    (5, 'Length', 'text', false),
-    (6, 'Height', 'text', false),
-    (7, 'Weight', 'text', false);
+    (1, 'Model', 'text', 1, 0),
+    (2, 'Brand', 'text', 1, 1),
+    (3, 'Color', 'text', 1, 1),
+    (4, 'Connection', 'text', 0, 1),
+    (5, 'Length', 'text', 0, 0),
+    (6, 'Height', 'text', 0, 0),
+    (7, 'Weight', 'text', 0, 0),
+    (8, 'Hand', 'text', 0, 1),
+    (9, 'Layout', 'text', 0, 1);
+
+INSERT INTO spec_cats VALUES
+    (1, 1),
+    (2, 1),
+    (3, 1),
+    (4, 1),
+    (5, 1),
+    (6, 1),
+    (7, 1),
+    (9, 1),
+
+    (1, 2),
+    (2, 2),
+    (3, 2),
+    (4, 2),
+    (5, 2),
+    (6, 2),
+    (7, 2),
+    (8, 2),
+
+    (1, 3),
+    (2, 3),
+    (3, 3),
+    (5, 3),
+    (6, 3),
+    (7, 3);
 
 INSERT INTO product_specs VALUES
     (1, 1, 'ABC-01'),
@@ -188,22 +218,53 @@ INSERT INTO product_specs VALUES
     (1, 3, 'Black'),
     (1, 4, 'USB'),
 
-    (2, 1, 'ABC-01'),
-    (2, 2, 'Ergo Pro'),
+    (2, 1, 'CVB-21'),
+    (2, 2, 'Microsoft'),
     (2, 3, 'Black'),
     (2, 4, 'USB'),
 
-    (3, 1, 'ABC-01'),
-    (3, 2, 'Ergo Pro'),
-    (3, 3, 'Black'),
-    (3, 4, 'USB'),
+    (3, 1, 'ASD-42'),
+    (3, 2, 'Microsoft'),
+    (3, 3, 'White'),
+    (3, 4, 'Wifi'),
 
-    (4, 1, 'ABC-01'),
-    (4, 2, 'Ergo Pro'),
-    (4, 3, 'Black'),
-    (4, 4, 'USB'),
+    (4, 1, 'SDF-53'),
+    (4, 2, 'Evoluent'),
+    (4, 3, 'White'),
+    (4, 4, 'Wifi'),
 
-    (14, 1, 'ABC-01'),
-    (14, 2, 'Ergo Pro'),
-    (14, 3, 'Black'),
-    (14, 4, 'USB');
+    (5, 1, 'HDF-51'),
+    (5, 2, 'Perixx'),
+    (5, 3, 'Black&White'),
+    (5, 4, 'USB');
+
+INSERT INTO sections VALUES
+    (1, 'Featured', 'featured', 'Currently featured products', 100),
+    (2, 'New Arrivals', 'new', 'Selection of newest products on the market', 10),
+    (3, 'Best Sellers', 'best', 'Our shop best-sellers', 10),
+    (4, 'On Sale', 'sale', 'Currently on sale', 10);
+
+INSERT INTO section_params VALUES
+    (1, 1, 'featured'),
+    (2, 2, 'new'),
+    (3, 3, 'best'),
+    (4, 4, 'sale');
+
+INSERT INTO featured_products VALUES
+    (1),
+    (2),
+    (3),
+    (4),
+    (5);
+
+INSERT INTO order_items VALUES
+    (1, 1, 1),
+    (2, 1, 2),
+    (3, 1, 3),
+    (4, 1, 1),
+    (5, 2, 2),
+    (6, 2, 3),
+    (7, 2, 1),
+    (8, 3, 2),
+    (9, 3, 3),
+    (10, 4, 10)

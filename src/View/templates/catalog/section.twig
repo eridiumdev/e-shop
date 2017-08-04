@@ -1,6 +1,6 @@
 {% extends 'base.twig' %}
 
-{% block title %}{{parent()}} | {{ category.name }}{% endblock %}
+{% block title %}{{parent()}} | {{ section.name }}{% endblock %}
 
 {% block stylesheets %}
 <link rel="stylesheet" href="/css/catalog.css">
@@ -17,10 +17,10 @@
         {% include "catalog/inc/sidebar.twig" %}
         </div>
         <div class="col-sm-9 col-lg-10">
-            <h1>{{ category.description }}</h1>
+            <h1>{{ section.description }}</h1>
             <ol class="breadcrumb">
                 <li><a href="/catalog">Catalog</a></li>
-                <li class="active">{{ category.name }}</li>
+                <li class="active">{{ section.name }}</li>
             </ol>
             {% include "inc/flashes.twig" %}
             <div class="row hidden-xs">

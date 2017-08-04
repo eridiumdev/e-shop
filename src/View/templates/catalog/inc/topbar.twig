@@ -1,0 +1,21 @@
+<div class="well" style="margin-top:20px">
+    <div class="form-inline">
+        <div class="form-group">
+            <label for="sortBy">Sort by price: </label>
+            <select class="form-control" id="sortBy" name="sortBy" form="filterForm">
+                <option disabled{{ sortBy ? '' : ' selected' }} value="">Select option</option>
+                <option value="priceAsc"{{ (sortBy == 'priceAsc')? ' selected' : '' }}>Low to High</option>
+                <option value="priceDesc"{{ (sortBy == 'priceDesc')? ' selected' : '' }}>High to Low</option>
+            </select>
+        </div>
+        <div class="form-group col-sm-offset-1">
+            <label for='groupBy'>Group by: </label>
+            <select class="form-control" id="groupBy" name="groupBy" form="filterForm">
+                <option disabled{{ groupBy ? '' : ' selected' }} value="">Select option</option>
+                {% for spec in specs if spec.isFilter and spec.values is not empty %}
+                    <option value="{{spec.id}}"{{ (spec.id == groupBy)? ' selected' : '' }}>{{spec.name}}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+</div>

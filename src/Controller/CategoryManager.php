@@ -7,7 +7,7 @@ use App\Model\Database\Reader;
 use App\Model\Database\Updater;
 
 /**
- * Admin controller for managing orders
+ * Admin controller for managing categories
  */
 class CategoryManager extends AdminController
 {
@@ -87,7 +87,7 @@ class CategoryManager extends AdminController
     {
         try {
             $dbReader = new Reader();
-            $category = $dbReader->getFullCategoryById($catId);
+            $category = $dbReader->getCategoryById($catId);
         } catch (\Exception $e) {
             Logger::log('db', 'error', "Failed to get category by id '$catId'", $e);
             $this->flash('danger', 'Database operation failed');
@@ -120,7 +120,7 @@ class CategoryManager extends AdminController
             $dbUpdater = new Updater();
 
             // need to get old data to resolve conflicting uniques and nulls
-            $old = $dbReader->getFullCategoryById($catId);
+            $old = $dbReader->getCategoryById($catId);
 
             if (empty($old)) {
                 $this->flash('danger', 'Some problem occurred, please try again');

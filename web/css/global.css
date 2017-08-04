@@ -19,8 +19,20 @@ grey:  #95a5a6
   flex-direction: column;
 }
 
-/* Cursor on links */
-a { cursor: pointer; }
+/* Cursor pointers */
+a, input[type="checkbox"], input[type="radio"] {
+    cursor: pointer;
+}
+
+.form-inline > label, .form-group > label {
+    cursor: pointer;
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none;   /* Safari */
+    -khtml-user-select: none;    /* Konqueror HTML */
+    -moz-user-select: none;      /* Firefox */
+    -ms-user-select: none;       /* Internet Explorer/Edge */
+    user-select: none;           /* Chrome and Opera */
+}
 
 /* Textarea only resizable virtically */
 textarea { resize: vertical; }

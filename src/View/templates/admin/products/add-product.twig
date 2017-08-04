@@ -4,6 +4,7 @@
 
 {% block scripts %}
     <script src="/js/discounts.js"></script>
+    <script src="/js/change-specs.js"></script>
     <script src="/js/main-pic-select.js"></script>
     <script src="/js/pics-select.js"></script>
 {% endblock %}
@@ -33,15 +34,6 @@
                         <input type="text" class="form-control" id="name" name="name" placeholder="Name" required>
                     </div>
                     <div class="form-group">
-                        <label for="category">Category</label>
-                        <select class="form-control" id="category" name="category" required>
-                            <option disabled selected>Select category</option>
-                            {% for category in categories %}
-                                <option value="{{category.id}}">{{category.name}}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="form-group">
                         <label for="description">Description</label>
                         <textarea rows="4" cols="50" class="form-control" id="description" name="description" placeholder="Product description"></textarea>
                     </div>
@@ -61,11 +53,26 @@
                     </div>
                 </div>
                 <div class="tab-pane fade in" id="specsTab">
-                    {% for spec in specs %}
                     <div class="form-group">
-                        <label>{{ spec.name }}</label>
-                        <input type="text" class="form-control" name="specs[{{spec.id}}]" {% if spec.isRequired %}required{% endif %}>
+                        <label for="category">Category</label>
+                        <select class="form-control" id="category" name="category" required>
+                            <option disabled selected>Select a category to view available specs</option>
+                            {% for category in categories %}
+                                <option value="{{category.id}}">{{category.name}}</option>
+                            {% endfor %}
+                        </select>
                     </div>
+                    {% for category in categories %}
+                        <div id="categorySpecs-{{category.id}}" class="form-horizontal category-specs" hidden>
+                            {% for spec in category.specs %}
+                            <div class="form-group">
+                                <label class="col-sm-2 control-label">{{ spec.name }}</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control category-spec" name="specs[{{category.id}}][{{spec.id}}]"{% if spec.isRequired %} required{% endif %}>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
                     {% endfor %}
                 </div>
                 <div class="tab-pane fade in" id="picsTab">
@@ -101,7 +108,7 @@
             </div>
         </form>
         <br>
-        <button class="btn btn-lg btn-primary btn-block" type="submit" form="productDetailsForm">Confirm changes</button>
+        <button class="btn btn-lg btn-primary btn-block" type="submit" form="productDetailsForm">Create new product</button>
     </div>
 </div>
 {% endblock %}

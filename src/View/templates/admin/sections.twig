@@ -13,10 +13,12 @@
 {% block content %}
 <div class="col-sm-9">
     <div class="well">
-        <h2>Section Management</h2>
+        <h2 class="management-header">Section Management</h2>
+        <div class="pull-right management-header-buttons">
+            <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#resetDbModal" title="Reset database to initial state"><span class="glyphicon glyphicon-exclamation-sign"></span></button>
+        </div>
         <br>
         {% include "inc/flashes.twig" %}
-        <a class="btn btn-primary" role="button" href="/admin/sections/add-single">Create new</a>
     </div>
     <div class="well table-responsive">
         <form action="/admin/sections/delete" method="post">
@@ -25,15 +27,15 @@
                 <tr>
                     <th role="button">ID</th>
                     <th role="button">Name</th>
+                    <th role="button">URI</th>
                     <th role="button">Description</th>
-                    <th role="button">Parameter</th>
+                    <th role="button">Param</th>
                     <th role="button">Max Products</th>
-                    <th></th>
                     <th></th>
                 </tr>
             </thead>
             <tbody id="tableTBody">
-                {% for i in 1..10 %}
+                {% for section in sections %}
                     {% include "admin/sections/tr-section.twig" %}
                 {% endfor %}
             </tbody>

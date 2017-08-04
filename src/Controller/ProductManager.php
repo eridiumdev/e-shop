@@ -62,7 +62,7 @@ class ProductManager extends AdminController
         $catId = $post['category'];
         $discount = $post['discount'];
         $mainPic = PIC_DIRECTORY . $post['mainPic'];
-        $specs = $post['specs'];
+        $specs = $post['specs'][$catId];
         $pics = $post['pics'];
 
         // if pics is empty, no pics are uploaded, check if any existing are selected
@@ -73,6 +73,12 @@ class ProductManager extends AdminController
                 unset($pics[$key]); // remove nulls from array
             } else {
                 $pics[$key] = PIC_DIRECTORY . $pic; // append full path
+            }
+        }
+
+        foreach ($specs as $key => $spec) {
+            if (empty($spec)) {
+                unset($specs[$key]); // remove nulls from array
             }
         }
 
@@ -170,7 +176,7 @@ class ProductManager extends AdminController
         $catId = $post['category'];
         $discount = $post['discount'];
         $mainPic = PIC_DIRECTORY . $post['mainPic'];
-        $specs = $post['specs'];
+        $specs = $post['specs'][$catId];
         $pics = $post['pics'];
 
         // if pics is empty, no pics are uploaded, check if any existing are selected

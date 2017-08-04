@@ -18,6 +18,11 @@ body {
     margin-top: 14px;
 }
 
+.management-header-buttons + .alert {
+    margin-top: 8px;
+    margin-bottom: 0px;
+}
+
 .affix {
     top: 5px;
 }

@@ -7,6 +7,7 @@ use App\Model\Data\Discount;
 use App\Model\Data\Order;
 use App\Model\Data\OrderItem;
 use App\Model\Data\Payment;
+use App\Model\Data\Param;
 use App\Model\Data\Picture;
 use App\Model\Data\Product;
 use App\Model\Data\Section;
@@ -101,7 +102,7 @@ class Deleter extends Connection
 
     public function deleteCategory(int $catId)
     {
-        $old = (new Reader())->getFullCategoryById($catId);
+        $old = (new Reader())->getCategoryById($catId);
 
         $sql = "DELETE FROM categories WHERE id = ?";
         $stmt = $this->db->prepare($sql);
@@ -112,5 +113,44 @@ class Deleter extends Connection
         }
 
         return $old;
+    }
+
+    public function deleteSpec(int $specId)
+    {
+        $old = (new Reader())->getSpecById($specId);
+
+        $this->db->beginTransaction();
+
+        try {
+            $this->deleteSpecCategories($specId);
+
+            $sql = "DELETE FROM specs WHERE id = ?";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([$specId]);
+
+            if ($stmt->rowCount() == 0) {
+                return false;
+            }
+
+            $this->db->commit();
+            return $old;
+
+        } catch (\Exception $e) {
+            Logger::log(
+                'db',
+                'error',
+                "Failed to delete spec '$specId', rolled back transaction",
+                $e
+            );
+            $this->db->rollBack();
+            return false;
+        }
+    }
+
+    public function deleteSpecCategories(int $specId)
+    {
+        $sql = "DELETE FROM spec_cats WHERE specId = ?";
+        $stmt = $this->db->prepare($sql);
+        return ($stmt->execute([$specId]));
     }
 }

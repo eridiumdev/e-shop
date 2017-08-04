@@ -1,0 +1,30 @@
+<form id="filterForm" action="" method="post">
+    <div class="well">
+        <h4>Price</h4>
+        <div class="form-inline">
+            <div class="form-group">
+                <label>Min&nbsp;</label>
+                <input type="number" id="priceMin" class="form-control" name="priceMin" min="0" max="10000" step="10" value="{{priceMin ?? 100}}">
+            </div>
+            <div class="form-group">
+                <label>Max</label>
+                <input type="number" id="priceMax" class="form-control" name="priceMax" min="0" max="10000" step="10" value="{{priceMax ?? 1000}}">
+            </div>
+        </div>
+    </div>
+    <div class="well">
+        {% for spec in specs if spec.isFilter and spec.values is not empty %}
+            <h4>{{ spec.name }}</h4>
+            {% for value in spec.values %}
+                <div class="form-inline">
+                    <input type="checkbox" id="specVals[{{spec.id}}]_{{value}}" name="specVals[{{spec.id}}][]" value="{{value}}"{{(value in specVals[spec.id])? ' checked' : ''}}><label for="specVals[{{spec.id}}]_{{value}}">&nbsp;{{ value }}</label>
+                </div>
+            {% endfor %}
+        {% endfor %}
+    </div>
+    <input class="btn btn-primary btn-block" type="submit" value="Filter">
+    {% if pageIsFiltered %}
+        <a href="/catalog/{{ (category)? category.uri : section.uri }}" class="btn btn-default btn-block">Clear filters</a>
+    {% endif %}
+
+</form>

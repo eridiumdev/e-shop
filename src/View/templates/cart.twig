@@ -6,6 +6,10 @@
 <link rel="stylesheet" href="/css/cart.css">
 {% endblock %}
 
+{% block scripts %}
+<script type="text/javascript" src="/js/cart.js"></script>
+{% endblock %}
+
 {% block content %}
 <div class="container">
     <h1>Shopping Cart</h1>
@@ -15,36 +19,42 @@
     </ol>
     {% include 'inc/flashes.twig' %}
     <hr>
-    <form action="/cart" method="post">
-    <div class="row item-row">
-        <div class="col-xs-2">
-            <img class="img-responsive" src="/uploads/kb/kb2.jpg" width="120" height="120">
+    <form action="/cart/update" method="post">
+        <!-- arr = [product => qty] -->
+        {% for prodId, arr in cart if prodId matches '/^\\d+$/' %}
+        <!-- check above is whether prodId is numeric
+            (to exclude other cart variables, such as cart['total'])-->
+        <div class="row item-row">
+            <div class="col-xs-4 col-sm-2 col-md-3">
+                <img class="img-responsive" src="{{arr['prod'].mainPic.path}}" width="120" height="120">
+            </div>
+            <div class="col-xs-8 col-sm-5 col-md-9">
+                <p>{{ arr['prod'].name }}</p>
+            </div>
+            <div class="col-xs-4 col-sm-2 col-md-2">
+                <input type="number" class="qty-selector form-control" name="qty[{{prodId}}]" min="0" max="10" step="1" value="{{arr['qty']}}">
+            </div>
+            <div class="col-xs-4 col-sm-2 col-md-2">
+                <p class="price">¥<span class="subtotal">{{arr['prod'].discountedPrice * arr['qty']}}</span></p>
+                <input type="hidden" value="{{arr['prod'].discountedPrice}}">
+            </div>
+            <div class="col-xs-4 col-sm-1 col-md-1">
+                <a role="button" href="/cart/remove/{{prodId}}"><span class="glyphicon glyphicon-remove"></span></a>
+            </div>
         </div>
-        <div class="col-xs-4 col-md-5">
-            <p>Full Size Ergonomic Backlit Hub Keyboard</p>
+        <hr>
+        {% endfor %}
+        <div class="row">
+            <div class="checkout-btn pull-right">
+                <a href="/checkout" role="button" class="btn btn-lg btn-success">Checkout</a>
+            </div>
+            <div class="pull-right">
+                <input type="submit" class="btn btn-lg btn-primary" value="Update">
+            </div>
+            <div class="total pull-right">
+                <p>Total: &nbsp;&nbsp;¥<span id="total">{{cart['total']}}</span></p>
+            </div>
         </div>
-        <div class="col-xs-2">
-            <input type="number" class="qty-selector form-control" name="qty[]" min="0" max="10" step="1" value="1">
-        </div>
-        <div class="col-xs-2">
-            <p class="price">¥160</p>
-        </div>
-        <div class="col-xs-2">
-            <a role="button" href="#"><span class="glyphicon glyphicon-remove"></span></a>
-        </div>
-    </div>
-    <hr>
-    <div class="row">
-        <div class="checkout-btn pull-right">
-            <a href="/checkout" role="button" class="btn btn-lg btn-success">Checkout</a>
-        </div>
-        <div class="pull-right">
-            <input type="submit" class="btn btn-lg btn-primary" value="Update">
-        </div>
-        <div class="total pull-right">
-            <p>Total: &nbsp;&nbsp;¥160</p>
-        </div>
-    </div>
     </form>
 </div>
 {% endblock %}

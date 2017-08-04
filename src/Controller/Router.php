@@ -17,6 +17,7 @@ class Router
     public static $files;
 
     public static $cookies = [];
+    public static $clearedCookies = [];
 
     /**
      * Finds appropriate controller based on request uri
@@ -46,6 +47,11 @@ class Router
                 $controller->showHomepage();
                 break;
 
+            case 'admin' :
+
+                self::routeAdmin();
+                break;
+
             case 'account' :
 
                 self::routeAccount();
@@ -57,22 +63,53 @@ class Router
                 Security::logout();
                 break;
 
-            case 'account' :
+            case 'catalog' :
 
-                Security::requireAuth();
-                $controller = new AccountController();
+                $controller = new CatalogController();
 
-                if (empty($post)) {
-                    $controller->showChangePasswordPage();
+                if (!empty($route['section'])) {
+                    if (is_numeric($route['page']) && !empty($route['action'])) {
+                        $controller->showProductPage(
+                            $route['page'], $route['section']
+                        );
+                    } else {
+                        $controller->showCatalogPage($route['section'], $post);
+                    }
                 } else {
-                    $controller->changePassword($post);
+                    self::redirect('/');
                 }
+
                 break;
 
             case 'cart':
 
                 $controller = new CartController();
-                $controller->showCartPage();
+
+                if (!is_numeric($route['page']) &&
+                    in_array($route['section'], ['add', 'remove'])
+                ) {
+                    self::redirect('/cart');
+                } else {
+                    $prodId = $route['page'];
+                }
+
+                switch ($route['section']) {
+                    case 'add' :
+                        $controller->addToCart($prodId);
+                        break;
+
+                    case 'remove' :
+                        $controller->removeFromCart($prodId);
+                        break;
+
+                    case 'update' :
+                        $controller->updateCart($post);
+                        break;
+
+                    case '' :
+                    default :
+                        $controller->showCartPage();
+                }
                 break;
 
             case 'checkout' :
@@ -93,49 +130,11 @@ class Router
                 }
                 break;
 
-            case 'admin' :
-
-                self::routeAdmin();
-                break;
-
-            case 'catalog' :
-
-                $controller = new CatalogController();
-                if (!empty($route['section'])) {
-                    if (is_numeric($route['page']) && !empty($route['action'])) {
-                        $controller->showProductPage(
-                            $route['page'], $route['section']
-                        );
-                    } else {
-                        if (!empty($post)) {
-                            $controller->showFilteredPage('filtered');
-                        } else {
-                            $controller->showCategoryPage($route['section']);
-                        }
-                    }
-                } else {
-                    $controller->showCatalogPage();
-                }
-                break;
-
             default:
                 self::redirect('/');
                 // 404 NOT_FOUND
         }
     }
-
-    /**
-     *               uri                   action              tepmlate
-     * -------------------------------------------------------------------------
-     * /                                homepage            homepage.twig
-     * /login                           login               login.twig
-     * /catalog/1                       show product 1      product.twig
-     * /catalog?s=                      search              catalog.twig
-     * /admin/products                  manage products     admin_prod.twig
-     * /admin/products/1                view product 1      view_prod.twig
-     * /admin/products/change/1         change product 1    change_prod.twig
-     *
-     */
 
     /**
      * Extracts route from the request uri
@@ -157,18 +156,82 @@ class Router
         return $route;
     }
 
-    /**
-     * Adds cookie to put in the response
-     * @param  string $name
-     * @param  any $value
-     * @return void
-     */
-    public static function addCookie(string $name, $value)
+    public static function addCookie(string $cookieName, $cookieData)
     {
-        self::$cookies[] = [
-            'name'  => $name,
-            'value' => $value
-        ];
+        // e.g.: $cookieName = 'cart'
+        //       $cookieData = ['key' => prodId, 'val' => qty]
+
+        if ($cookie = self::getCookie($cookieName)) {
+            // if cookie (e.g. 'cart') already exists
+            foreach ($cookie as $key => $val) {
+                // copy it to pass to response
+                self::$cookies[$cookieName][$key] = $val;
+            }
+        }
+
+        if (is_array($cookieData)) {
+            // add a new key-val pair to the cookie
+            if (isset(self::$cookies[$cookieName][$cookieData['key']]) &&
+                is_numeric(self::$cookies[$cookieName][$cookieData['key']])
+            ) {
+                // We want to add + 1 (val)
+                self::$cookies[$cookieName][$cookieData['key']] += $cookieData['val'];
+            } else {
+                self::$cookies[$cookieName][$cookieData['key']] = $cookieData['val'];
+            }
+        } else {
+            // add a string val to the end of the cookie?
+            self::$cookies[$cookieName][] = $cookieData;
+        }
+    }
+
+    public static function deleteCookie(string $cookieName, $cookieData)
+    {
+        // e.g.: $cookieName = 'cart'
+        //       $cookieData = ['key' => prodId]
+        if ($cookie = self::getCookie($cookieName)) {
+            foreach ($cookie as $key => $val) {
+                // rewrite everything, except for the key we want to delete
+                if ($cookieData['key'] != $key) {
+                    self::$cookies[$cookieName][$key] = $val;
+                }
+            }
+            self::$clearedCookies[] = $cookieName;
+        }
+    }
+
+    public static function updateCookie(string $cookieName, $cookieData)
+    {
+        // e.g.: $cookieName = 'cart'
+        //       $cookieData = ['key' => prodId, 'val' => qty]
+
+        if ($cookie = self::getCookie($cookieName)) {
+            foreach ($cookie as $key => $val) {
+                // rewrite everything, except for the key we want to update
+                if ($cookieData['key'] != $key) {
+                    self::$cookies[$cookieName][$key] = $val;
+                } else {
+                    self::$cookies[$cookieName][$key] = $cookieData['val'];
+                }
+            }
+            self::$clearedCookies[] = $cookieName;
+        }
+    }
+
+    public static function getCookie(string $name)
+    {
+        global $req;
+
+        if (isset(self::$cookies[$name])) {
+            // When adding/updating multiple cookies,
+            // this should already be initialized
+            // and $decoded would be outdated
+            return self::$cookies[$name];
+        } elseif ($decoded = json_decode($req->cookies->get($name), true)) {
+            return $decoded;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -187,15 +250,25 @@ class Router
     ) {
         $response = new Response($html, $httpCode, $headers);
 
-        $response->headers->clearCookie('file_to_overwrite');
-
         if ($authToken) {
             $response->headers->setCookie($authToken);
         }
 
-        foreach (self::$cookies as $cookie) {
+        // Replace old cookies
+        foreach (self::$clearedCookies as $name) {
+            $response->headers->clearCookie($name);
+        }
+
+        $expireTime = time() + 24 * 60 * 60;    // one day
+        foreach (self::$cookies as $name => $value) {
+            if (is_array($value)) {
+                $encoded = json_encode($value);
+            } else {
+                $encoded = $value;
+            }
+
             $newCookie = new \Symfony\Component\HttpFoundation\Cookie(
-                $cookie['name'], $cookie['value']
+                $name, $encoded, $expireTime
             );
 
             $response->headers->setCookie($newCookie);
@@ -297,7 +370,8 @@ class Router
 
             case 'reset' :
 
-                $controller->resetDatabase();
+                // $controller->resetDatabase();
+                self::redirect('/admin');
                 break;
 
             case 'products' :
@@ -474,12 +548,11 @@ class Router
 
                 $controller = new SectionManager();
 
-                // Check if user id in uri is valid
-                if (in_array($route['action'], ['view']) && (
-                    empty($route['page']) ||
-                    !is_numeric($route['page'])
-                )) {
-                    self::redirect('/admin/categories');
+                if (!empty($route['page']) &&
+                    is_numeric($route['page']) &&
+                    in_array($route['action'], ['view', 'delete'])
+                ) {
+                    $sectId = $route['page'];
                 }
 
                 switch ($route['action']) {
@@ -488,25 +561,22 @@ class Router
                         break;
 
                     case 'view' :
-                        if (empty($post)) {
-                            $controller->showChangeAccountPage($route['page']);
-                        } else {
-                            $controller->changeAccount($route['page'], $post);
+                        if (!isset($sectId)) {
+                            self::redirect('/admin/sections');
                         }
+                        $controller->showViewSectionPage($sectId);
                         break;
 
-                    case 'delete' :
-                        if (empty($post['id'])) {
-                            $controller->showAccountListPage();
-                        } elseif (count($post['id']) == 1){
-                            $controller->deleteAccount($post['id'][0]);
+                    case 'update' :
+                        if (empty($post)) {
+                            self::redirect('/admin/sections');
                         } else {
-                            $controller->deleteAccounts($post['id']);
+                            $controller->updateSection($post);
                         }
                         break;
 
                     default :
-                        self::redirect('/admin/accounts');
+                        self::redirect('/admin/sections');
                 }
                 break;
 
@@ -514,12 +584,11 @@ class Router
 
                 $controller = new SpecManager();
 
-                // Check if user id in uri is valid
-                if (in_array($route['action'], ['view']) && (
-                    empty($route['page']) ||
-                    !is_numeric($route['page'])
-                )) {
-                    self::redirect('/admin/categories');
+                if (!empty($route['page']) &&
+                    is_numeric($route['page']) &&
+                    in_array($route['action'], ['view', 'delete'])
+                ) {
+                    $specId = $route['page'];
                 }
 
                 switch ($route['action']) {
@@ -527,26 +596,43 @@ class Router
                         $controller->showSpecsListPage();
                         break;
 
-                    case 'view' :
+                    case 'add' :
+                        $controller->showAddSpecPage();
+                        break;
+
+                    case 'add-single' :
                         if (empty($post)) {
-                            $controller->showChangeAccountPage($route['page']);
+                            self::redirect('/admin/specs/add');
                         } else {
-                            $controller->changeAccount($route['page'], $post);
+                            $controller->addSpec($post);
+                        }
+                        break;
+
+                    case 'view' :
+                        if (!isset($specId)) {
+                            self::redirect('/admin/specs');
+                        }
+                        $controller->showViewSpecPage($specId);
+                        break;
+
+                    case 'update' :
+                        if (empty($post)) {
+                            self::redirect('/admin/specs');
+                        } else {
+                            $controller->updateSpec($post['id'], $post);
                         }
                         break;
 
                     case 'delete' :
                         if (empty($post['id'])) {
-                            $controller->showAccountListPage();
-                        } elseif (count($post['id']) == 1){
-                            $controller->deleteAccount($post['id'][0]);
+                            self::redirect('/admin/specs');
                         } else {
-                            $controller->deleteAccounts($post['id']);
+                            $controller->deleteSpec($post['id'][0]);
                         }
                         break;
 
                     default :
-                        self::redirect('/admin/accounts');
+                        self::redirect('/admin/specs');
                 }
                 break;
 

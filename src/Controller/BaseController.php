@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
 use App\Model\Database\Reader;
+use App\Model\Data\OrderItem;
 
 const TEMPLATES_DIR = __DIR__ . '/../View/templates';
 
@@ -87,19 +88,43 @@ class BaseController
         $this->addTwigFunc('activeSection', 'activeSection', $this);
         $this->addTwigFunc('activeAction', 'activeAction', $this);
 
-        $this->twig->addFilter(new \Twig_Filter(
-            'name', [$this, 'name']
-        ));
+        $this->twig->addFilter(new \Twig_Filter('name', [$this, 'name']));
 
         try {
             $dbReader = new Reader();
             $categories = $dbReader->getAllCategories();
+            $sections = $dbReader->getAllSections();
+
+            // Shopping cart cookie init
+            $cart = [];
+            $cartTotal = 0.0;
+            $cartSize = 0;  // how many products
+            if (!empty($cartProducts = Router::getCookie('cart'))) {
+                foreach ($cartProducts as $prodId => $qty) {
+                    if ($product = $dbReader->getProductById($prodId)) {
+                        $cart[$prodId] = ['prod' => $product, 'qty' => $qty];
+                        $cartTotal += ($product->getDiscountedPrice()*$qty);
+                        $cartSize += $qty;
+                    }
+                }
+            }
+            $cart['total'] = $cartTotal;
+            $cart['size'] = $cartSize;
+
         } catch (\Exception $e) {
-            Logger::log('db', 'error', 'Failed to get all categories', $e);
+            Logger::log('db', 'error', 'Database failure', $e);
         }
 
         if (!empty($categories)) {
             $this->addTwigVar('categories', $categories);
+        }
+
+        if (!empty($sections)) {
+            $this->addTwigVar('sections', $sections);
+        }
+
+        if (!empty($cart)) {
+            $this->addTwigVar('cart', $cart);
         }
     }
 
@@ -227,6 +252,7 @@ class BaseController
                     case 'description' :
                         $val = trim(filter_var($val, FILTER_SANITIZE_STRING));
                         break;
+                    case 'id' :
                     case 'number' :
                         $val = trim(filter_var($val, FILTER_SANITIZE_NUMBER_INT));
                         break;

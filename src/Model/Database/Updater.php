@@ -7,6 +7,7 @@ use App\Model\Data\Discount;
 use App\Model\Data\Order;
 use App\Model\Data\OrderItem;
 use App\Model\Data\Payment;
+use App\Model\Data\Param;
 use App\Model\Data\Picture;
 use App\Model\Data\Product;
 use App\Model\Data\Section;
@@ -105,5 +106,33 @@ class Updater extends Connection
                 WHERE id = ?";
         $stmt = $this->db->prepare($sql);
         return $stmt->execute([$name, $description, $uri, $catId]);
+    }
+
+    public function updateSection(
+        int     $sectId,
+        string  $name,
+        string  $uri,
+        string  $description,
+        int     $maxProducts
+    ) {
+        $sql = "UPDATE sections
+                SET name = ?, uri = ?, description = ?, maxProducts = ?
+                WHERE id = ?";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([$name, $uri, $description, $maxProducts, $sectId]);
+    }
+
+    public function updateSpec(
+        int     $specId,
+        string  $name,
+        string  $type,
+        bool    $isRequired,
+        bool    $isFilter
+    ) {
+        $sql = "UPDATE specs
+                SET name = ?, type = ?, isRequired = ?, isFilter = ?
+                WHERE id = ?";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([$name, $type, $isRequired, $isFilter, $specId]);
     }
 }

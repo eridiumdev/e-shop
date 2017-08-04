@@ -13,10 +13,13 @@
 {% block content %}
 <div class="col-sm-9">
     <div class="well">
-        <h2>Specification Management</h2>
+        <h2 class="management-header">Specification Management</h2>
+        <div class="pull-right management-header-buttons">
+            <a class="btn btn-primary" role="button" href="/admin/specs/add"><span class="glyphicon glyphicon-plus"></span> <span class="hidden-xs hidden-sm">New spec</span></a>
+            <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#resetDbModal" title="Reset database to initial state"><span class="glyphicon glyphicon-exclamation-sign"></span></button>
+        </div>
         <br>
         {% include "inc/flashes.twig" %}
-        <a class="btn btn-primary" role="button" href="/admin/specs/add-single">Create new</a>
     </div>
     <div class="well table-responsive">
         <form action="/admin/specs/delete" method="post">
@@ -27,14 +30,14 @@
                     <th role="button">Name</th>
                     <th role="button">Categories</th>
                     <th role="button">Type</th>
-                    <th role="button">Values</th>
                     <th role="button">Required</th>
+                    <th role="button">Filter</th>
                     <th></th>
                     <th></th>
                 </tr>
             </thead>
             <tbody id="tableTBody">
-                {% for i in 1..10 %}
+                {% for spec in specs %}
                     {% include "admin/specs/tr-spec.twig" %}
                 {% endfor %}
             </tbody>

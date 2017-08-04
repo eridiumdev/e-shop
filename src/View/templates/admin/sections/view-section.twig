@@ -1,0 +1,41 @@
+{% extends 'base-admin.twig' %}
+
+{% block title %}{{parent()}} | Section Details{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="well col-sm-6 col-sm-offset-3">
+        <form method="post" action="/admin/sections/update/{{section.id}}">
+            <h2>Section Details</h2>
+            <br>
+            {% include "inc/flashes.twig" %}
+            <div class="form-group">
+                <label for="id">ID</label>
+                <input type="text" class="form-control" id="id" name="id" value="{{section.id}}" readonly>
+            </div>
+            <div class="form-group">
+                <label for="paramName">Param</label>
+                <input type="text" class="form-control" id="paramName" name="paramName" value="{{section.param.name}}" readonly>
+            </div>
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="name" name="name" placeholder="Section name" value="{{section.name}}" required autofocus>
+            </div>
+            <div class="form-group">
+                <label for="uri">URI</label>
+                <input type="text" class="form-control" id="uri" name="uri" placeholder="Section URI address" value="{{section.uri}}" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea rows="4" cols="50" class="form-control" id="description" name="description" placeholder="Product description">{{section.description}}</textarea>
+            </div>
+            <div class="form-group">
+                <label for="maxProducts">Max products displayed</label>
+                <input type="number" class="form-control" id="maxProducts" name="maxProducts" min="0" max="100" step="1" value="{{section.maxProducts}}" required>
+            </div>
+            <br>
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Update section</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

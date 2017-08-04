@@ -1,0 +1,58 @@
+{% extends 'base-admin.twig' %}
+
+{% block title %}{{parent()}} | Add Spec{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="well col-sm-6 col-sm-offset-3">
+        <form method="post" action="/admin/specs/add-single">
+            <h2>Add Spec</h2>
+            <br>
+            {% include "inc/flashes.twig" %}
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="name" name="name" placeholder="Spec name" required autofocus>
+            </div>
+            <div class="form-group">
+                <label for="type">Type</label>
+                <select class="form-control" id="type" name="type" required>
+                    <option value="text" selected>text</option>
+                    <option value="checkbox">checkbox</option>
+                    <option value="radio">radio</option>
+                </select>
+            </div>
+            <label>Always required</label>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="isRequired" value="0" checked> No
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="isRequired" value="1"> Yes
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="isFilter" value="0" checked> No
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" name="isFilter" value="1"> Yes
+                </label>
+            </div>
+            <label>Categories</label>
+            {% for category in categories %}
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" name="categories[]" value="{{category.id}}"> {{category.name}}
+                </label>
+            </div>
+            {% endfor %}
+            <br>
+            <button class="btn btn-lg btn-primary btn-block" type="submit">Create new spec</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
