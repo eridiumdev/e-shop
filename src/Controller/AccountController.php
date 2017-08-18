@@ -16,11 +16,6 @@ class AccountController extends BaseController
      */
     public function showAccountPage(string $input = null)
     {
-        $user = $this->getCurrentUser();
-        if ($user) {
-            $this->addTwigVar('user', $user);
-        }
-
         if ($input) $this->addTwigVar('input', $input);
         $this->render();
     }
@@ -36,7 +31,6 @@ class AccountController extends BaseController
 
     public function showOrdersPage()
     {
-        $user = $this->getCurrentUser();
         // try {
         //     $dbReader = new Reader();
         //     $orders = $dbReader->getUserOrders($user->getId());
@@ -47,25 +41,18 @@ class AccountController extends BaseController
         //     return $this->showAccountPage();
         // }
 
-        $this->addTwigVar('user', $user);
         $this->setTemplate('account/orders.twig');
         $this->render();
     }
 
     public function showShippingPage()
     {
-        $user = $this->getCurrentUser();
-
-        $this->addTwigVar('user', $user);
         $this->setTemplate('account/shipping.twig');
         $this->render();
     }
 
     public function showDetailsPage()
     {
-        $user = $this->getCurrentUser();
-
-        $this->addTwigVar('user', $user);
         $this->setTemplate('account/details.twig');
         $this->render();
     }

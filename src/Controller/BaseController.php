@@ -3,7 +3,8 @@ namespace App\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
 use App\Model\Database\Reader;
-use App\Model\Data\OrderItem;
+use App\Model\Data\Cart;
+use App\Model\Data\CartItem;
 
 const TEMPLATES_DIR = __DIR__ . '/../View/templates';
 
@@ -24,6 +25,7 @@ class BaseController
     protected $vars = [];
 
     protected $logger;
+    protected $uid;     // current session user
 
     public function __construct()
     {
@@ -35,47 +37,24 @@ class BaseController
 
     public function showHomepage()
     {
-        // $limit = 3;
-        // try {
-        //     $dbReader = new Reader();
-        //     $featured = $dbReader->getProducts('featured', $limit);
-        // } catch (\Exception $e) {
-        //     Logger::log('db', 'error', 'Failed to get all users', $e);
-        //     $this->flash('danger', 'Database operation failed');
-        //     $this->showDashboardPage();
-        // }
-        //
-        // $ymls = Uploader::getFiles(YML_DIRECTORY, ['yml']);
-        // $this->addTwigVar('files', $ymls);
-        //
-        // $this->setTemplate('admin/users.twig');
-        // $this->addTwigVar('users', $users);
         $this->render();
     }
 
     /**
-     * Returns current session user (from cookies) or false if no user logged in
-     * @return User OR false
+     * Init current session user id (using auth token)
+     * No effect if noone has logged in
      */
     public function getCurrentUser()
     {
         $userId = Security::getUserId();
-        if ($userId) {
-            try {
-                $dbReader = new Reader();
-                $user = $dbReader->getUserById($userId);
-                return $user;
-            } catch (\Exception $e) {
-                return false;
-            }
-        } else {
-            return false;
+        if (!empty($userId)) {
+            $this->uid = $userId;
         }
     }
 
     /**
-     * Prepares twig environment and loads default functions to twig,
-     * e.g. auth functions
+     * Prepares twig environment and loads default functions
+     * and variables to twig, e.g. auth functions or cart contents
      */
     public function loadTwig()
     {
@@ -90,42 +69,69 @@ class BaseController
 
         $this->twig->addFilter(new \Twig_Filter('name', [$this, 'name']));
 
+        // Catalog pages require cart, categories, sections always
+        // (to at least display in the header nav)
+        // Admin pages don't require these however
+        if (!($this instanceOf AdminController)) {
+            // Initialize current session user, if it exists
+            if ($user = $this->getCurrentUser()) {
+                $this->addTwigVar('user', $user);
+            }
+
+            // Populate nav with sections and categories
+            try {
+                $dbReader = new Reader();
+                $categories = $dbReader->getAllCategories();
+                $sections = $dbReader->getAllSections();
+            } catch (\Exception $e) {
+                Logger::log(
+                    'db', 'error',
+                    "Failed to get categories/sections from database",
+                    $e
+                );
+            }
+
+            if (!empty($categories)) {
+                $this->addTwigVar('categories', $categories);
+            }
+
+            if (!empty($sections)) {
+                $this->addTwigVar('sections', $sections);
+            }
+
+            // Initialize cart (get from database/cookie)
+            $cart = $this->initCart();
+
+            if (!empty($cart)) {
+                $this->addTwigVar('cart', $cart);
+            }
+        }
+    }
+
+    public function initCart()
+    {
         try {
             $dbReader = new Reader();
-            $categories = $dbReader->getAllCategories();
-            $sections = $dbReader->getAllSections();
+            $userId = $this->uid;
+            $cart = new Cart();
 
-            // Shopping cart cookie init
-            $cart = [];
-            $cartTotal = 0.0;
-            $cartSize = 0;  // how many products
-            if (!empty($cartProducts = Router::getCookie('cart'))) {
+            if (!empty($userId)) {
+                // User is not a guest, get cart from database
+                $cart = $dbReader->getUserCart($userId);
+
+            } elseif (!empty($cartProducts = Router::getCookie('cart'))) {
+                // User is a guest, get cart from cookie
                 foreach ($cartProducts as $prodId => $qty) {
                     if ($product = $dbReader->getProductById($prodId)) {
-                        $cart[$prodId] = ['prod' => $product, 'qty' => $qty];
-                        $cartTotal += ($product->getDiscountedPrice()*$qty);
-                        $cartSize += $qty;
+                        $cart->addItem(new CartItem($product, $qty));
                     }
                 }
             }
-            $cart['total'] = $cartTotal;
-            $cart['size'] = $cartSize;
-
         } catch (\Exception $e) {
-            Logger::log('db', 'error', 'Database failure', $e);
+            Logger::log('db', 'error', "Failed to initialize cart", $e);
         }
 
-        if (!empty($categories)) {
-            $this->addTwigVar('categories', $categories);
-        }
-
-        if (!empty($sections)) {
-            $this->addTwigVar('sections', $sections);
-        }
-
-        if (!empty($cart)) {
-            $this->addTwigVar('cart', $cart);
-        }
+        return $cart;
     }
 
     /**
@@ -212,61 +218,6 @@ class BaseController
         //exit;
 
         $this->addTwigVar('messages', $messages);
-    }
-
-    /**
-     * Cleans up input data and returns true if it has not changed
-     * @param  array $vars - by reference -> possibly changed after cleanup
-     * @return bool
-     */
-    public function isClean(array &$vars) : bool
-    {
-        $beforeCleanup = $vars;
-        $this->cleanupVars($vars);
-        // pe($vars);
-        return $beforeCleanup == $vars;
-    }
-
-    public function cleanupVars(array &$vars)
-    {
-        foreach ($vars as $key => &$val) {
-            if (is_array($val)) {
-                // p($val);
-                $this->cleanupVars($val);
-            } else {
-                // p($val); n();
-                switch (strtolower($key)) {
-                    case 'password' :
-                        $val = trim(filter_var($val, FILTER_SANITIZE_STRING));
-                        $vars[$key] = str_replace(' ', '', $val);
-                        break;
-                    case 'email' :
-                        $val = trim(filter_var($val, FILTER_SANITIZE_EMAIL));
-                        break;
-                    case 'input' :
-                    case 'username' :
-                        $val = trim(filter_var($val, FILTER_SANITIZE_STRING));
-                        $vars[$key] = str_replace(' ', '', $val);
-                        break;
-                    case 'text' :
-                    case 'description' :
-                        $val = trim(filter_var($val, FILTER_SANITIZE_STRING));
-                        break;
-                    case 'id' :
-                    case 'number' :
-                        $val = trim(filter_var($val, FILTER_SANITIZE_NUMBER_INT));
-                        break;
-                    case 'price' :
-                        $val = trim(filter_var($val, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION));
-                        break;
-                    case 'uri' :
-                        $val = trim(filter_var($val, FILTER_SANITIZE_URL));
-                        break;
-                    default :
-                        $vars[$key] = trim(filter_var($val, FILTER_SANITIZE_STRING));
-                }
-            }
-        }
     }
 
     /**
@@ -463,5 +414,63 @@ class BaseController
             }
         }
         return $out;
+    }
+
+    /**
+     * Cleans up input data and returns true if it has not changed
+     * @param  array $vars - by reference -> possibly changed after cleanup
+     * @return bool
+     */
+    public function isClean(array &$vars) : bool
+    {
+        $beforeCleanup = $vars;
+        $this->cleanupVars($vars);
+        // pe($vars);
+        return $beforeCleanup == $vars;
+    }
+
+    public function cleanupVars(array &$vars)
+    {
+        foreach ($vars as $key => &$val) {
+            if (is_array($val)) {
+                // p($val);
+                $this->cleanupVars($val);
+            } else {
+                // p($val); n();
+                switch (strtolower($key)) {
+                    case 'password' :
+                        $val = trim(filter_var($val, FILTER_SANITIZE_STRING));
+                        $vars[$key] = str_replace(' ', '', $val);
+                        break;
+                    case 'email' :
+                        $val = trim(filter_var($val, FILTER_SANITIZE_EMAIL));
+                        if (!filter_var($val, FILTER_VALIDATE_EMAIL)) {
+                            $val = '';
+                        }
+                        break;
+                    case 'input' :
+                    case 'username' :
+                        $val = trim(filter_var($val, FILTER_SANITIZE_STRING));
+                        $vars[$key] = str_replace(' ', '', $val);
+                        break;
+                    case 'text' :
+                    case 'description' :
+                        $val = trim(filter_var($val, FILTER_SANITIZE_STRING));
+                        break;
+                    case 'id' :
+                    case 'number' :
+                        $val = trim(filter_var($val, FILTER_SANITIZE_NUMBER_INT));
+                        break;
+                    case 'price' :
+                        $val = trim(filter_var($val, FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION));
+                        break;
+                    case 'uri' :
+                        $val = trim(filter_var($val, FILTER_SANITIZE_URL));
+                        break;
+                    default :
+                        $vars[$key] = trim(filter_var($val, FILTER_SANITIZE_STRING));
+                }
+            }
+        }
     }
 }

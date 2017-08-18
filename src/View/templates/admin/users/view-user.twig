@@ -10,14 +10,18 @@
             <span class="hidden-sm"> Reset form</button>
         </h2>
         <br>
+        {% include "inc/flashes.twig" %}
         <ul class="nav nav-tabs nav-justified">
             <li class="active"><a href="#details" data-toggle="tab">Account details</a></li>
             <li><a href="#shipping" data-toggle="tab">Shipping details</a></li>
         </ul>
-        {% include "inc/flashes.twig" %}
-        <form id="form" method="post" action="/admin/accounts/change/{{user.id}}">
+        <form id="form" method="post" action="/admin/users/update/{{user.id}}">
             <div class="tab-content">
                 <div class="tab-pane fade active in" id="details">
+                    <div class="form-group">
+                        <label for="id">Username</label>
+                        <input type="text" class="form-control" id="id" name="id" placeholder="ID" value="{{user.id}}" readonly>
+                    </div>
                     <div class="form-group">
                         <label for="username">Username</label>
                         <input type="text" class="form-control" id="username" name="username" placeholder="Username" value="{{user.username}}" required>
@@ -33,27 +37,27 @@
                     <label>Privileges</label>
                     <div class="radio">
                         <label>
-                            <input type="radio" name="type" value="user"{% if user.type == 'user' %} checked{% endif %}>User
+                            <input type="radio" name="type" value="user"{{user.type == 'user' ? 'checked' : ''}}>User
                         </label>
                     </div>
                     <div class="radio">
                         <label>
-                            <input type="radio" name="type" value="admin"{% if user.type == 'admin' %} checked{% endif %}>Admin
+                            <input type="radio" name="type" value="admin"{{user.type == 'admin' ? 'checked' : ''}}>Admin
                         </label>
                     </div>
                 </div>
                 <div class="tab-pane fade in" id="shipping">
                     <div class="form-group">
                         <label for="name">Name</label>
-                        <input type="text" class="form-control" id="name" name="name" placeholder="Full name" value="安东" required>
+                        <input type="text" class="form-control" id="name" name="name" placeholder="Full name" value="{{user.shipping ? user.shipping.name : ''}}">
                     </div>
                     <div class="form-group">
                         <label for="phone">Phone</label>
-                        <input type="text" class="form-control" id="phone" name="phone" placeholder="Phone number" value="123456789" required>
+                        <input type="text" class="form-control" id="phone" name="phone" placeholder="Phone number" value="{{user.shipping ? user.shipping.phone : ''}}">
                     </div>
                     <div class="form-group">
                         <label for="address">Address</label>
-                        <textarea rows="4" cols="50" class="form-control" id="address" name="address" placeholder="Full address" required>华东师范大学</textarea>
+                        <textarea rows="4" cols="50" class="form-control" id="address" name="address" placeholder="Full address">{{user.shipping ? user.shipping.address : ''}}</textarea>
                     </div>
                 </div>
             </div>

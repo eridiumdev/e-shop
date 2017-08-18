@@ -1,13 +1,17 @@
 $("#delivery").change(function (){
-    $("#deliveryDesc").html(delivery);
+    var $deliveryId = $("#delivery").val();
+    var $deliveryDescription = $("#deliveryDesc_" + $deliveryId).val();
     $("#deliveryDesc").hide();
     $("#deliveryDesc").fadeIn();
+    $("#deliveryDesc").html($deliveryDescription)
 });
 
 $("#payment").change(function (){
-    $("#paymentDesc").html(payment);
+    var $paymentId = $("#payment").val();
+    var $paymentDescription = $("#paymentDesc_" + $paymentId).val();
     $("#paymentDesc").hide();
     $("#paymentDesc").fadeIn();
+    $("#paymentDesc").html($paymentDescription)
 });
 
 // Processing payment

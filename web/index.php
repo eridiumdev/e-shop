@@ -12,10 +12,13 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 require_once __DIR__ . '/config.php';
 
+// use Symfony\Component\Dotenv\Dotenv;
 
 // Environment init
 $dotenv = new Dotenv\Dotenv(__DIR__);
 $dotenv->load();
+// $dotenv = new Dotenv();
+// $dotenv->load(__DIR__ . '/.env');
 
 $session = new Symfony\Component\HttpFoundation\Session\Session();
 $session->start();

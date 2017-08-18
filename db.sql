@@ -133,6 +133,13 @@ CREATE TABLE product_specs (
     PRIMARY KEY (prodId, specId)
 );
 
+CREATE TABLE cart (
+    userId  int(10) NOT NULL,
+    prodId  int(10) NOT NULL,
+    qty     int(3) NOT NULL,
+    PRIMARY KEY(userId, prodId)
+);
+
 
 INSERT INTO categories VALUES
     (1, 'Keyboards', 'Ergonomic keyboards', 'keyboards'),
@@ -267,4 +274,13 @@ INSERT INTO order_items VALUES
     (7, 2, 1),
     (8, 3, 2),
     (9, 3, 3),
-    (10, 4, 10)
+    (10, 4, 10);
+
+INSERT INTO deliveries VALUES
+    (1, 'China Post', 'Deliver using regular post service. Cheaper than express delivery, but also slower', 10.0),
+    (2, 'Express delivery', 'Deliver goods using fast express service. Delivery time is two to three days', 20.0);
+
+INSERT INTO payments VALUES
+    (1, 'Union Pay', 'Pay using your debit or credit bank card'),
+    (2, 'Alipay', 'Pay using your ALipay account'),
+    (3, 'Wechat Payments', 'Pay using your Wechat account');

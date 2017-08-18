@@ -20,26 +20,23 @@
     {% include 'inc/flashes.twig' %}
     <hr>
     <form action="/cart/update" method="post">
-        <!-- arr = [product => qty] -->
-        {% for prodId, arr in cart if prodId matches '/^\\d+$/' %}
-        <!-- check above is whether prodId is numeric
-            (to exclude other cart variables, such as cart['total'])-->
+        {% for item in cart.items %}
         <div class="row item-row">
             <div class="col-xs-4 col-sm-2 col-md-3">
-                <img class="img-responsive" src="{{arr['prod'].mainPic.path}}" width="120" height="120">
+                <img class="img-responsive" src="{{item.mainPic.path}}" width="120" height="120">
             </div>
             <div class="col-xs-8 col-sm-5 col-md-9">
-                <p>{{ arr['prod'].name }}</p>
+                <p>{{ item.name }}</p>
             </div>
             <div class="col-xs-4 col-sm-2 col-md-2">
-                <input type="number" class="qty-selector form-control" name="qty[{{prodId}}]" min="0" max="10" step="1" value="{{arr['qty']}}">
+                <input type="number" class="qty-selector form-control" name="qty[{{item.id}}]" min="0" max="10" step="1" value="{{item.qty}}">
             </div>
             <div class="col-xs-4 col-sm-2 col-md-2">
-                <p class="price">¥<span class="subtotal">{{arr['prod'].discountedPrice * arr['qty']}}</span></p>
-                <input type="hidden" value="{{arr['prod'].discountedPrice}}">
+                <p class="price">¥<span class="subtotal">{{item.subtotal}}</span></p>
+                <input type="hidden" value="{{item.discountedPrice}}">
             </div>
             <div class="col-xs-4 col-sm-1 col-md-1">
-                <a role="button" href="/cart/remove/{{prodId}}"><span class="glyphicon glyphicon-remove"></span></a>
+                <a role="button" href="/cart/remove/{{item.id}}"><span class="glyphicon glyphicon-remove"></span></a>
             </div>
         </div>
         <hr>
@@ -52,7 +49,7 @@
                 <input type="submit" class="btn btn-lg btn-primary" value="Update">
             </div>
             <div class="total pull-right">
-                <p>Total: &nbsp;&nbsp;¥<span id="total">{{cart['total']}}</span></p>
+                <p>Total: &nbsp;&nbsp;¥<span id="total">{{cart.total}}</span></p>
             </div>
         </div>
     </form>

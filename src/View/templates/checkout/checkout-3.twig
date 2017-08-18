@@ -13,19 +13,7 @@
 {% block content %}
 {% include 'dlg/payment-gateway.twig' %}
 <div class="container">
-    <div class="checkout-steps">
-        <div class="checkout-step checkout-active">
-            <a href="/checkout/step-one"><div class="checkout-step-num">1</div><span class="checkout-step-text hidden-xs">Fill in Shipping Details</span></a>
-        </div>
-        <div class="checkout-step checkout-active">
-            <span class="glyphicon glyphicon-menu-right"></span>
-            <a href="/checkout/step-two"><div class="checkout-step-num">2</div><span class="checkout-step-text hidden-xs">Select Delivery and Payment Methods</span></a>
-        </div>
-        <div class="checkout-step checkout-active">
-            <span class="glyphicon glyphicon-menu-right"></span>
-            <a href="/checkout/step-three"><div class="checkout-step-num">3</div><span class="checkout-step-text hidden-xs">Confirm Order</span></a>
-        </div>
-    </div>
+    {% include 'checkout/inc/checkout-steps.twig' %}
     <div class="well col-sm-6 col-sm-offset-3">
         <h2 class="form-signin-heading">Review Order</h2>
         <br>
@@ -34,37 +22,39 @@
             <table class="table table-striped order-details">
                 <tr>
                     <th>Name</th>
-                    <td>安东</td>
+                    <td>{{ shipping.name }}</td>
                 </tr>
                 <tr>
                     <th>Phone</th>
-                    <td>123456789</td>
+                    <td>{{ shipping.phone }}</td>
                 </tr>
                 <tr>
                     <th>Address</th>
-                    <td>华东师范大学</td>
+                    <td>{{ shipping.address }}</td>
                 </tr>
                 <tr>
                     <th>Delivery</th>
-                    <td>Post (¥10)</td>
+                    <td>{{ delivery.name }} (¥{{ delivery.price }})</td>
                 </tr>
                 <tr>
                     <th>Payment</th>
-                    <td>Wechat</td>
+                    <td>{{ payment.name }}</td>
                 </tr>
                 <tr>
                     <th>Items</th>
-                    <td>
-                        <div class="item-row">
-                            <img class="img-responsive" src="/uploads/kb/kb2.jpg" width="60" height="60">
-                            <span class="item-qty">x1</span>
-                            <span class="item-subtotal">(¥160)</span>
-                        </div>
-                    </td>
+                    {% for prodId, arr in cart if prodId matches '/^\\d+$/' %}
+                        <td>
+                            <div class="item-row">
+                                <img class="img-responsive" src="{{arr['prod'].mainPic.path}}" width="60" height="60">
+                                <span class="item-qty">x{{arr['qty']}}</span>
+                                <span class="item-subtotal">(¥{{arr['prod'].discountedPrice * arr['qty']}})</span>
+                            </div>
+                        </td>
+                    {% endfor %}
                 </tr>
                 <tr>
                     <th>Total</th>
-                    <td>¥170</td>
+                    <td>¥{{cart['total']}}</td>
                 </tr>
             </table>
         </div>

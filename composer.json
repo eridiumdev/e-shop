@@ -1,6 +1,7 @@
 {
     "require": {
         "symfony/http-foundation" : "~3.2",
+        "symfony/dotenv" : "~3.3.6",
         "twig/twig" : "~2.0",
 
         "phpdocumentor/graphviz" : "~1.0",

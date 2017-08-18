@@ -38,7 +38,6 @@ class Router
 
         $route = self::getRoute();
         self::$route = $route;
-        // pe($route);
 
         switch ($route['base']) {
             case '' :
@@ -115,16 +114,36 @@ class Router
             case 'checkout' :
 
                 $controller = new CheckoutController();
+
                 switch($route['section']) {
                     case 'step-one' :
                         $controller->showStepOnePage();
                         break;
+
+                    case 'add-shipping' :
+                        if (!empty($post)) {
+                            $controller->addShipping($post);
+                        } else {
+                            self::redirect('/checkout/step-one');
+                        }
+                        break;
+
                     case 'step-two' :
                         $controller->showStepTwoPage();
                         break;
+
+                    case 'prepare-order' :
+                        if (!empty($post)) {
+                            $controller->prepareOrder($post);
+                        } else {
+                            self::redirect('/checkout/step-two');
+                        }
+                        break;
+
                     case 'step-three' :
                         $controller->showStepThreePage();
                         break;
+
                     default :
                         self::redirect('/checkout/step-one');
                 }
@@ -171,14 +190,12 @@ class Router
 
         if (is_array($cookieData)) {
             // add a new key-val pair to the cookie
-            if (isset(self::$cookies[$cookieName][$cookieData['key']]) &&
-                is_numeric(self::$cookies[$cookieName][$cookieData['key']])
-            ) {
-                // We want to add + 1 (val)
-                self::$cookies[$cookieName][$cookieData['key']] += $cookieData['val'];
-            } else {
-                self::$cookies[$cookieName][$cookieData['key']] = $cookieData['val'];
-            }
+            // if (isset(self::$cookies[$cookieName][$cookieData['key']]) &&
+            //     is_numeric(self::$cookies[$cookieName][$cookieData['key']])
+            // ) {
+            //     self::$cookies[$cookieName][$cookieData['key']] = $cookieData['val'];
+            // }
+            self::$cookies[$cookieName][$cookieData['key']] = $cookieData['val'];
         } else {
             // add a string val to the end of the cookie?
             self::$cookies[$cookieName][] = $cookieData;
@@ -360,16 +377,17 @@ class Router
         $files = self::$files;
 
         Security::requireAdmin();
-        $controller = new AdminController();
 
         switch ($route['section']) {
             case '' :
 
+                $controller = new AdminController();
                 $controller->showDashboardPage();
                 break;
 
             case 'reset' :
 
+                $controller = new AdminController();
                 // $controller->resetDatabase();
                 self::redirect('/admin');
                 break;
@@ -636,46 +654,6 @@ class Router
                 }
                 break;
 
-            case 'deliveries' :
-
-                $controller = new DeliveryManager();
-
-                // Check if user id in uri is valid
-                if (in_array($route['action'], ['view']) && (
-                    empty($route['page']) ||
-                    !is_numeric($route['page'])
-                )) {
-                    self::redirect('/admin/categories');
-                }
-
-                switch ($route['action']) {
-                    case '' :
-                        $controller->showDeliveriesListPage();
-                        break;
-
-                    case 'view' :
-                        if (empty($post)) {
-                            $controller->showChangeAccountPage($route['page']);
-                        } else {
-                            $controller->changeAccount($route['page'], $post);
-                        }
-                        break;
-
-                    case 'delete' :
-                        if (empty($post['id'])) {
-                            $controller->showAccountListPage();
-                        } elseif (count($post['id']) == 1){
-                            $controller->deleteAccount($post['id'][0]);
-                        } else {
-                            $controller->deleteAccounts($post['id']);
-                        }
-                        break;
-
-                    default :
-                        self::redirect('/admin/accounts');
-                }
-                break;
-
             case 'users' :
 
                 $controller = new UserManager();
@@ -694,19 +672,16 @@ class Router
                         $controller->showUsersListPage();
                         break;
 
+                    case 'add' :
+                        $controller->showAddUserPage();
+                        break;
+
                     case 'add-single' :
                         if (empty($post)) {
-                            $controller->showAddUserPage();
+                            self::redirect('/admin/users/add');
                         } else {
                             $controller->addUser($post);
                         }
-                        break;
-
-                    case 'add-many' :
-                        $accs = Uploader::readYml(
-                            $controller, $post['yml'], '/admin/users'
-                        );
-                        $controller->batchAddUsers($accs);
                         break;
 
                     case 'view' :
@@ -775,16 +750,71 @@ class Router
                 }
                 break;
 
+            case 'deliveries' :
+
+                $controller = new DeliveryManager();
+
+                if (!empty($route['page']) &&
+                    is_numeric($route['page']) &&
+                    in_array($route['action'], ['view', 'delete'])
+                ) {
+                    $deliveryId = $route['page'];
+                }
+
+                switch ($route['action']) {
+                    case '' :
+                        $controller->showDeliveriesListPage();
+                        break;
+
+                    case 'add' :
+                        $controller->showAddDeliveryPage();
+                        break;
+
+                    // case 'add-single' :
+                    //     if (empty($post)) {
+                    //         self::redirect('/admin/deliveries/add');
+                    //     } else {
+                    //         $controller->addDelivery($post);
+                    //     }
+                    //     break;
+                    //
+                    // case 'view' :
+                    //     if (!isset($deliveryId)) {
+                    //         self::redirect('/admin/deliveries');
+                    //     }
+                    //     $controller->showViewDeliveryPage($deliveryId);
+                    //     break;
+                    //
+                    // case 'update' :
+                    //     if (empty($post)) {
+                    //         self::redirect('/admin/deliveries');
+                    //     } else {
+                    //         $controller->updateDelivery($post['id'], $post);
+                    //     }
+                    //     break;
+                    //
+                    // case 'delete' :
+                    //     if (empty($post['id'])) {
+                    //         self::redirect('/admin/deliveries');
+                    //     } else {
+                    //         $controller->deleteDelivery($post['id'][0]);
+                    //     }
+                    //     break;
+
+                    default :
+                        self::redirect('/admin/deliveries');
+                }
+                break;
+
             case 'payments' :
 
                 $controller = new PaymentManager();
 
-                // Check if user id in uri is valid
-                if (in_array($route['action'], ['view']) && (
-                    empty($route['page']) ||
-                    !is_numeric($route['page'])
-                )) {
-                    self::redirect('/admin/categories');
+                if (!empty($route['page']) &&
+                    is_numeric($route['page']) &&
+                    in_array($route['action'], ['view', 'delete'])
+                ) {
+                    $paymentId = $route['page'];
                 }
 
                 switch ($route['action']) {
@@ -792,26 +822,43 @@ class Router
                         $controller->showPaymentsListPage();
                         break;
 
-                    case 'view' :
-                        if (empty($post)) {
-                            $controller->showChangeAccountPage($route['page']);
-                        } else {
-                            $controller->changeAccount($route['page'], $post);
-                        }
+                    case 'add' :
+                        $controller->showAddPaymentPage();
                         break;
 
-                    case 'delete' :
-                        if (empty($post['id'])) {
-                            $controller->showAccountListPage();
-                        } elseif (count($post['id']) == 1){
-                            $controller->deleteAccount($post['id'][0]);
-                        } else {
-                            $controller->deleteAccounts($post['id']);
-                        }
-                        break;
+                    // case 'add-single' :
+                    //     if (empty($post)) {
+                    //         self::redirect('/admin/payments/add');
+                    //     } else {
+                    //         $controller->addPayment($post);
+                    //     }
+                    //     break;
+                    //
+                    // case 'view' :
+                    //     if (!isset($paymentId)) {
+                    //         self::redirect('/admin/payments');
+                    //     }
+                    //     $controller->showViewPaymentPage($paymentId);
+                    //     break;
+                    //
+                    // case 'update' :
+                    //     if (empty($post)) {
+                    //         self::redirect('/admin/payments');
+                    //     } else {
+                    //         $controller->updatePayment($post['id'], $post);
+                    //     }
+                    //     break;
+                    //
+                    // case 'delete' :
+                    //     if (empty($post['id'])) {
+                    //         self::redirect('/admin/payments');
+                    //     } else {
+                    //         $controller->deletePayment($post['id'][0]);
+                    //     }
+                    //     break;
 
                     default :
-                        self::redirect('/admin/accounts');
+                        self::redirect('/admin/payments');
                 }
                 break;
 

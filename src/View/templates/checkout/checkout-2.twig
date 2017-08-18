@@ -1,6 +1,6 @@
 {% extends 'base.twig' %}
 
-{% block title %}{{parent()}} | Checkout{% endblock %}
+{% block title %}{{parent()}} | Step 2{% endblock %}
 
 {% block stylesheets %}
 <link rel="stylesheet" href="/css/checkout.css">
@@ -11,52 +11,41 @@
 {% endblock %}
 
 {% block content %}
-<script>
-    var delivery = {{ (delivery|json_encode|raw) }};
-    var payment = {{ (payment|json_encode|raw) }};
-</script>
-
 <div class="container">
-    <div class="checkout-steps">
-        <div class="checkout-step checkout-active">
-            <a href="/checkout/step-one"><div class="checkout-step-num">1</div><span class="checkout-step-text hidden-xs">Fill in Shipping Details</span></a>
-        </div>
-        <div class="checkout-step checkout-active">
-            <span class="glyphicon glyphicon-menu-right"></span>
-            <a href="/checkout/step-two"><div class="checkout-step-num">2</div><span class="checkout-step-text hidden-xs">Select Delivery and Payment Methods</span></a>
-
-        </div>
-        <div class="checkout-step">
-            <span class="glyphicon glyphicon-menu-right"></span>
-            <span><div class="checkout-step-num">3</div><span class="checkout-step-text hidden-xs">Confirm Order</span></span>
-        </div>
-    </div>
+    {% include 'checkout/inc/checkout-steps.twig' %}
     <div class="well col-sm-6 col-sm-offset-3">
-        <form id="form" method="post" action="/checkout/step-three">
+        <form id="form" method="post" action="/checkout/prepare-order">
             <h2 class="form-signin-heading">Checkout<small class="pull-right"><a href="/account/register">Register first?</a></small></h2>
             <br>
             {% include "inc/flashes.twig" %}
             <div class="form-group">
                 <label for="delivery">Delivery</label>
                 <select id="delivery" class="form-control" name="delivery" required>
-                    <option disabled selected value="">Select delivery method</option>
-                    <option value="post">Post (¥10)</option>
-                    <option value="express">Express Delivery (¥20)</option>
+                    <option disabled selected value="">Choose delivery method</option>
+                    {% for delivery in deliveries %}
+                        <option value="{{delivery.id}}"{{delivery.id == selectedDelivery ? ' selected' : ''}}>{{delivery.name}} (¥{{delivery.price}})</option>
+                    {% endfor %}
                 </select>
+                {% for delivery in deliveries %}
+                    <input type="hidden" id="deliveryDesc_{{delivery.id}}" value="{{delivery.description}}">
+                {% endfor %}
                 <br>
-                <p id="deliveryDesc">Select a delivery method to view its description.</p>
+                <p id="deliveryDesc"></p>
             </div>
             <br>
             <div class="form-group">
                 <label for="payment">Payment</label>
                 <select id="payment" class="form-control" name="payment" required>
-                    <option disabled selected value="">Select payment method</option>
-                    <option value="card">Credit Card</option>
-                    <option value="alipay">Alipay</option>
-                    <option value="wechat">Wechat</option>
+                    <option disabled selected value="">Choose payment method</option>
+                    {% for payment in payments %}
+                        <option value="{{payment.id}}"{{payment.id == selectedPayment ? ' selected' : ''}}>{{payment.name}}</option>
+                    {% endfor %}
                 </select>
+                {% for payment in payments %}
+                    <input type="hidden" id="paymentDesc_{{payment.id}}" value="{{payment.description}}">
+                {% endfor %}
                 <br>
-                <p id="paymentDesc">Select a delivery method to view its description.</p>
+                <p id="paymentDesc"></p>
             </div>
             <br>
             <button class="btn btn-lg btn-primary btn-block" type="submit" form="form">Next</button>

@@ -13,23 +13,12 @@
 {% block content %}
 <div class="col-sm-9">
     <div class="well">
-        <h2>User Management</h2>
-        <br>
+        <h2 class="management-header">User Management</h2>
+        <div class="pull-right management-header-buttons">
+            <a class="btn btn-primary" role="button" href="/admin/users/add"><span class="glyphicon glyphicon-plus"></span> <span class="hidden-xs hidden-sm">New user</span></a>
+            <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#resetDbModal" title="Reset database to initial state"><span class="glyphicon glyphicon-exclamation-sign"></span></button>
+        </div>
         {% include "inc/flashes.twig" %}
-        <h4>Add new users:</h4>
-        <form class="form-inline" action="/admin/users/add-many" method="post">
-            <div class="form-group">
-                <a class="btn btn-primary" role="button" href="/admin/users/add-single">Add one</a>
-                <span style="margin: 0 10px"> OR </span>
-                <select class="form-control" name="yml" required>
-                    <option disabled selected value="">Select YML file</option>
-                    {% for file in files %}
-                        <option value="{{file|name}}">{{ file|name }}</option>
-                    {% endfor %}
-                </select>
-                <input type="submit" class="btn btn-primary" value="Add many">
-            </div>
-        </form>
     </div>
     <div class="well table-responsive">
         <form action="/admin/users/delete" method="post">

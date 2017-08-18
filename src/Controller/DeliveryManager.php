@@ -13,16 +13,17 @@ class DeliveryManager extends AdminController
 {
     public function showDeliveriesListPage()
     {
-        $this->setTemplate('admin/deliveries.twig');
-        $this->render();
-    }
+        try {
+            $dbReader = new Reader();
+            $deliveries = $dbReader->getAllDeliveries();
+        } catch (\Exception $e) {
+            Logger::log('db', 'error', 'Failed to get all deliveries', $e);
+            $this->flash('danger', 'Database operation failed');
+            $this->showDashboardPage();
+        }
 
-    public function showAddAccountPage(
-        string $email = null, string $type = null
-    ) {
-        $this->setTemplate('admin/inc/add-account.twig');
-        $this->addTwigVar('email', $email);
-        $this->addTwigVar('type', $type);
+        $this->addTwigVar('deliveries', $deliveries);
+        $this->setTemplate('admin/deliveries.twig');
         $this->render();
     }
 }

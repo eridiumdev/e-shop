@@ -1,6 +1,6 @@
 {% extends 'base.twig' %}
 
-{% block title %}{{parent()}} | Checkout{% endblock %}
+{% block title %}{{parent()}} | Step 1{% endblock %}
 
 {% block stylesheets %}
 <link rel="stylesheet" href="/css/checkout.css">
@@ -8,35 +8,23 @@
 
 {% block content %}
 <div class="container">
-    <div class="checkout-steps">
-        <div class="checkout-step checkout-active">
-            <a href="/checkout/step-one"><div class="checkout-step-num">1</div><span class="checkout-step-text hidden-xs">Fill in Shipping Details</span></a>
-        </div>
-        <div class="checkout-step">
-            <!-- <span class="glyphicon glyphicon-menu-right"></span> -->
-            <span><div class="checkout-step-num">2</div><span class="checkout-step-text hidden-xs">Select Delivery and Payment Methods</span></span>
-        </div>
-        <div class="checkout-step">
-            <!-- <span class="glyphicon glyphicon-menu-right"></span> -->
-            <span><div class="checkout-step-num">3</div><span class="checkout-step-text hidden-xs">Confirm Order</span></span>
-        </div>
-    </div>
+    {% include 'checkout/inc/checkout-steps.twig' %}
     <div class="well col-sm-6 col-sm-offset-3">
         <h2 class="form-signin-heading">Checkout<small class="pull-right"><a href="/account/register">Register first?</a></small></h2>
         <br>
         {% include "inc/flashes.twig" %}
-        <form id="form" method="post" action="/checkout/step-two">
+        <form id="form" method="post" action="/checkout/add-shipping">
             <div class="form-group">
                 <label for="name">Name</label>
-                <input type="text" class="form-control" id="name" name="name" placeholder="Full name" value="" required>
+                <input type="text" class="form-control" id="name" name="name" placeholder="Full name" value="{{shipping.name ?? ''}}" required>
             </div>
             <div class="form-group">
                 <label for="phone">Phone</label>
-                <input type="text" class="form-control" id="phone" name="phone" placeholder="Phone number" value="" required>
+                <input type="text" class="form-control" id="phone" name="phone" placeholder="Phone number" value="{{shipping.phone ?? ''}}" required>
             </div>
             <div class="form-group">
                 <label for="address">Address</label>
-                <textarea rows="4" cols="50" class="form-control" id="address" name="address" placeholder="Full address" required></textarea>
+                <textarea rows="4" cols="50" class="form-control" id="address" name="address" placeholder="Full address" required>{{shipping.address ?? ''}}</textarea>
             </div>
             <button class="btn btn-lg btn-primary btn-block" type="submit" form="form">Next</button>
         </form>

@@ -2,6 +2,8 @@
 namespace App\Model\Database;
 
 use App\Model\Data\Category;
+use App\Model\Data\Cart;
+use App\Model\Data\CartItem;
 use App\Model\Data\Delivery;
 use App\Model\Data\Discount;
 use App\Model\Data\Order;
@@ -60,8 +62,7 @@ class Creator extends Connection
         string  $phone,
         string  $address
     ) {
-        $sql = "INSERT INTO
-                user_shipping(userId, name, phone, address)
+        $sql = "INSERT INTO shipping(userId, name, phone, address)
                 VALUES (?, ?, ?, ?)";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([$userId, $name, $phone, $address]);
@@ -172,6 +173,17 @@ class Creator extends Connection
                 VALUES (?, ?)";
         $stmt = $this->db->prepare($sql);
         if ($stmt->execute([$specId, $catId])) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function addCartItem(int $userId, int $prodId, int $qty)
+    {
+        $sql = "INSERT INTO cart(userId, prodId, qty) VALUES (?, ?, ?)";
+        $stmt = $this->db->prepare($sql);
+        if ($stmt->execute([$userId, $prodId, $qty])) {
             return true;
         } else {
             return false;

@@ -2,6 +2,8 @@
 namespace App\Model\Database;
 
 use App\Model\Data\Category;
+use App\Model\Data\Cart;
+use App\Model\Data\CartItem;
 use App\Model\Data\Delivery;
 use App\Model\Data\Discount;
 use App\Model\Data\Order;
@@ -29,15 +31,42 @@ class Deleter extends Connection
     {
         $old = (new Reader())->getUserById($userId);
 
-        $sql = "DELETE FROM users WHERE id = ?";
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute([$userId]);
+        $this->db->beginTransaction();
 
-        if ($stmt->rowCount() == 0) {
+        try {
+            // Delete shipping
+            $this->deleteUserShipping($userId);
+
+            // Delete user
+            $sql = "DELETE FROM users WHERE id = ?";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([$userId]);
+
+            if ($stmt->rowCount() == 0) {
+                return false;
+            }
+
+            // Commit transaction
+            $this->db->commit();
+            return $old;
+
+        } catch (\Exception $e) {
+            Logger::log(
+                'db',
+                'error',
+                "Failed to delete user '$userId', rolled back transaction",
+                $e
+            );
+            $this->db->rollBack();
             return false;
         }
+    }
 
-        return $old;
+    public function deleteUserShipping(int $userId)
+    {
+        $sql = "DELETE FROM shipping WHERE userId = ?";
+        $stmt = $this->db->prepare($sql);
+        return ($stmt->execute([$userId]));
     }
 
     public function deleteProduct(int $prodId)
@@ -152,5 +181,12 @@ class Deleter extends Connection
         $sql = "DELETE FROM spec_cats WHERE specId = ?";
         $stmt = $this->db->prepare($sql);
         return ($stmt->execute([$specId]));
+    }
+
+    public function removeCartItem(int $userId, int $prodId)
+    {
+        $sql = "DELETE FROM cart WHERE userId = ? AND prodId = ?";
+        $stmt = $this->db->prepare($sql);
+        return ($stmt->execute([$userId, $prodId]));
     }
 }

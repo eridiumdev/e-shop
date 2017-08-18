@@ -2,6 +2,8 @@
 namespace App\Model\Database;
 
 use App\Model\Data\Category;
+use App\Model\Data\Cart;
+use App\Model\Data\CartItem;
 use App\Model\Data\Delivery;
 use App\Model\Data\Discount;
 use App\Model\Data\Order;
@@ -34,21 +36,14 @@ class Reader extends Connection
 
         if (!$row) {
             return false;
+        } else {
+            return $this->getFullUserById($row['id']);
         }
-
-        return new User(
-            $row['id'],
-            $row['username'],
-            $row['email'],
-            $row['password'],
-            $row['type'],
-            $row['registeredAt']
-        );
     }
 
     public function getUserShipping(int $userId)
     {
-        $sql = "SELECT * FROM user_shipping WHERE userId = ?";
+        $sql = "SELECT * FROM shipping WHERE userId = ?";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([$userId]);
         $row = $stmt->fetch(\PDO::FETCH_ASSOC);
@@ -57,11 +52,7 @@ class Reader extends Connection
             return false;
         }
 
-        return [
-            $row['name'],
-            $row['phone'],
-            $row['address']
-        ];
+        return new Shipping($row['name'], $row['phone'], $row['address']);
     }
 
     /**
@@ -78,16 +69,9 @@ class Reader extends Connection
 
         if (!$row) {
             return false;
+        } else {
+            return $this->getFullUserById($row['id']);
         }
-
-        return new User(
-            $row['id'],
-            $row['username'],
-            $row['email'],
-            $row['password'],
-            $row['type'],
-            $row['registeredAt']
-        );
     }
 
     /**
@@ -116,6 +100,33 @@ class Reader extends Connection
         );
     }
 
+    public function getFullUserById(int $userId)
+    {
+        $sql = "SELECT * FROM users WHERE id = ?";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$userId]);
+        $row = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        if (!$row) {
+            return false;
+        }
+
+        $user = new User(
+            $row['id'],
+            $row['username'],
+            $row['email'],
+            $row['password'],
+            $row['type'],
+            $row['registeredAt']
+        );
+
+        if ($shipping = $this->getUserShipping($row['id'])) {
+            $user->setShipping($shipping);
+        }
+
+        return $user;
+    }
+
     /**
      * Returns array with all users, full details
      * @return array of Users, empty or not
@@ -129,14 +140,9 @@ class Reader extends Connection
         $users = [];
 
         while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)){
-            $users[] = new User(
-                $row['id'],
-                $row['username'],
-                $row['email'],
-                $row['password'],
-                $row['type'],
-                $row['registeredAt']
-            );
+            if ($user = $this->getFullUserById($row['id'])) {
+                $users[] = $user;
+            }
         }
 
         return $users;
@@ -737,5 +743,120 @@ class Reader extends Connection
         }
 
         return $values;
+    }
+
+    public function getAllDeliveries() : array
+    {
+        $sql = "SELECT * FROM deliveries";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+
+        $deliveries = [];
+
+        while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)){
+            $deliveries[] = new Delivery(
+                $row['id'],
+                $row['name'],
+                $row['description'],
+                $row['price']
+            );
+        }
+
+        return $deliveries;
+    }
+
+    public function getAllPayments() : array
+    {
+        $sql = "SELECT * FROM payments";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+
+        $payments = [];
+
+        while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)){
+            $payments[] = new Payment(
+                $row['id'],
+                $row['name'],
+                $row['description']
+            );
+        }
+
+        return $payments;
+    }
+
+    public function getDeliveryById(int $deliveryId)
+    {
+        $sql = "SELECT * FROM deliveries WHERE id = ?";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$deliveryId]);
+
+        if ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+            $delivery = new Delivery(
+                $row['id'],
+                $row['name'],
+                $row['description'],
+                $row['price']
+            );
+            return $delivery;
+        } else {
+            return false;
+        }
+    }
+
+    public function getPaymentById(int $paymentId)
+    {
+        $sql = "SELECT * FROM payments WHERE id = ?";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$paymentId]);
+
+        if ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+            $payment = new Payment(
+                $row['id'],
+                $row['name'],
+                $row['description']
+            );
+            return $payment;
+        } else {
+            return false;
+        }
+    }
+
+    public function getUserCart(int $userId)
+    {
+        $sql = "SELECT * FROM cart WHERE userId = ?";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$userId]);
+
+        if ($user = $this->getUserById($userId)) {
+            $cart = new Cart($user);
+        } else {
+            return false;
+        }
+
+        while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+            if ($item = $this->getCartItem($userId, $row['prodId'])) {
+                $cart->addItem($item);
+            }
+        }
+
+        return $cart;
+    }
+
+    public function getCartItem(int $userId, int $prodId)
+    {
+        $sql = "SELECT * FROM cart WHERE userId = ? AND prodId = ?";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$userId, $prodId]);
+        $row = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        if (!$row) {
+            return false;
+        }
+
+        if ($product = $this->getProductById($row['prodId'])) {
+            return new CartItem($product, $row['qty']);
+        } else {
+            return false;
+        }
     }
 }

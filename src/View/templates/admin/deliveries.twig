@@ -1,6 +1,6 @@
 {% extends 'base-admin.twig' %}
 
-{% block title %}{{parent()}} | Delivery Details{% endblock %}
+{% block title %}{{parent()}} | Delivery Methods{% endblock %}
 
 {% block scripts %}
     <script src="/js/dialogues.js"></script>
@@ -13,10 +13,12 @@
 {% block content %}
 <div class="col-sm-9">
     <div class="well">
-        <h2>Delivery Methods Management</h2>
-        <br>
+        <h2 class="management-header">Delivery Methods Management</h2>
+        <div class="pull-right management-header-buttons">
+            <a class="btn btn-primary" role="button" href="#" disabled><span class="glyphicon glyphicon-plus"></span> <span class="hidden-xs hidden-sm">New delivery method</span></a>
+            <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#resetDbModal" title="Reset database to initial state"><span class="glyphicon glyphicon-exclamation-sign"></span></button>
+        </div>
         {% include "inc/flashes.twig" %}
-        <a class="btn btn-primary" role="button" href="/admin/deliveries/add-single">Create new</a>
     </div>
     <div class="well table-responsive">
         <form action="/admin/deliveries/delete" method="post">
@@ -32,7 +34,7 @@
                 </tr>
             </thead>
             <tbody id="tableTBody">
-                {% for i in 1..10 %}
+                {% for delivery in deliveries %}
                     {% include "admin/deliveries/tr-deliv.twig" %}
                 {% endfor %}
             </tbody>

@@ -89,7 +89,7 @@ class User
         $this->registeredAt = $registeredAt;
     }
 
-    public function getShipping() : Shipping
+    public function getShipping()
     {
         return $this->shipping;
     }
@@ -104,8 +104,24 @@ class User
         return $this->orders;
     }
 
+    public function getOrder(int $orderId)
+    {
+        if (in_array($orderId, array_keys($this->orders))) {
+            return $this->orders[$orderId];
+        } else {
+            return false;
+        }
+    }
+
     public function setOrders(array $orders)
     {
-        $this->orders = $orders;
+        foreach ($orders as $order) {
+            $this->addOrder($order);
+        }
+    }
+
+    public function addOrder(Order $order)
+    {
+        $this->orders[$order->getId()] = $order;
     }
 }

@@ -1,0 +1,23 @@
+<div class="checkout-steps">
+    <div class="checkout-step checkout-active">
+        <a href="/checkout/step-one"><div class="checkout-step-num">1</div><span class="checkout-step-text hidden-xs">Fill in Shipping Details</span></a>
+    </div>
+    {% if step >= 2 %}
+        <div class="checkout-step checkout-active">
+            <a href="/checkout/step-two"><div class="checkout-step-num">2</div><span class="checkout-step-text hidden-xs">Select Delivery and Payment Methods</span></a>
+        </div>
+    {% else %}
+        <div class="checkout-step">
+            <span><div class="checkout-step-num">2</div><span class="checkout-step-text hidden-xs">Select Delivery and Payment Methods</span></span>
+        </div>
+    {% endif %}
+    {% if step >= 3 %}
+        <div class="checkout-step checkout-active">
+            <a href="/checkout/step-three"><div class="checkout-step-num">3</div><span class="checkout-step-text hidden-xs">Confirm Order</span></a>
+        </div>
+    {% else %}
+        <div class="checkout-step">
+            <span><div class="checkout-step-num">3</div><span class="checkout-step-text hidden-xs">Confirm Order</span></span>
+        </div>
+    {% endif %}
+</div>

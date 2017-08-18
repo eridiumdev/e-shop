@@ -24,28 +24,25 @@ class UserManager extends AdminController
             $this->showDashboardPage();
         }
 
-        $ymls = Uploader::getFiles(YML_DIRECTORY, ['yml']);
-        $this->addTwigVar('files', $ymls);
-
-        $this->setTemplate('admin/users.twig');
         $this->addTwigVar('users', $users);
+        $this->setTemplate('admin/users.twig');
         $this->render();
     }
 
     public function showAddUserPage(
         string $email = null, string $type = null
     ) {
-        $this->setTemplate('admin/users/add-user.twig');
         $this->addTwigVar('email', $email);
         $this->addTwigVar('type', $type);
+        $this->setTemplate('admin/users/add-user.twig');
         $this->render();
     }
 
     public function addUser(array $post)
     {
         if (!$this->isClean($post)) {
-            $this->flash('danger', 'Password contains invalid characters');
-            return $this->showAddUserPage($post['email'], $post['type']);
+            $this->flash('danger', 'Some field contain invalid characters');
+            Router::redirect('/admin/users/add');
         }
 
         $username = $post['username'];
@@ -55,11 +52,17 @@ class UserManager extends AdminController
 
         try {
             $dbReader = new Reader();
-            $user = $dbReader->getUserByEmail($email);
 
-            if (!empty($user)) {
-                $this->flash('danger', "Email [$email] is already registered");
-                return $this->showAddUserPage($email, $type);
+            // Duplicate username
+            if ($user = $dbReader->getUserByUsername($username)) {
+                $this->flash('danger', "User '$username' is already registered");
+                Router::redirect('/admin/users/add');
+            }
+
+            // Duplicate email
+            if ($user = $dbReader->getUserByEmail($email)) {
+                $this->flash('danger', "Email '$email' is already registered");
+                Router::redirect('/admin/users/add');
             }
 
             $hashed = password_hash($password, PASSWORD_DEFAULT);
@@ -67,13 +70,13 @@ class UserManager extends AdminController
             $dbCreator = new Creator();
             $user = $dbCreator->createUser($username, $email, $hashed, $type);
 
-            $this->flash('success', "New user [$email] added successfully");
-            return Router::redirect('/admin/users');
+            $this->flash('success', "New user '$username' added successfully");
+            Router::redirect('/admin/users');
 
         } catch (\Exception $e) {
-            Logger::log('db', 'error', 'Failed to create user (single)', $e);
+            Logger::log('db', 'error', "Failed to create user '$username'", $e);
             $this->flash('danger', 'Database operation failed');
-            return $this->showAddUserPage($email, $type);
+            Router::redirect('/admin/users/add');
         }
     }
 
@@ -139,7 +142,7 @@ class UserManager extends AdminController
     {
         try {
             $dbReader = new Reader();
-            $user = $dbReader->getUserById($userId);
+            $user = $dbReader->getFullUserById($userId);
         } catch (\Exception $e) {
             Logger::log('db', 'error', 'Failed to find user by id', $e);
             $this->flash('danger', 'Database operation failed');
@@ -156,11 +159,11 @@ class UserManager extends AdminController
         $this->render();
     }
 
-    public function changeUser(int $userId, array $post)
+    public function updateUser(int $userId, array $post)
     {
         if (!$this->isClean($post)) {
             $this->flash('danger', 'Password contains invalid characters');
-            return $this->showUserPage($userId);
+            Router::redirect("/admin/users/view/$userId");
         }
 
         $username = $post['username'];
@@ -174,19 +177,28 @@ class UserManager extends AdminController
 
         try {
             $dbReader = new Reader();
-            $old = $dbReader->getUserById($userId);
+            $old = $dbReader->getFullUserById($userId);
 
             if (empty($old)) {
                 $this->flash('danger', 'Some problem occurred, please try again');
                 return $this->showUserPage($userId);
             }
 
+            if ($old->getUsername() != $username) {
+                // check for duplicate username, only if username is being updated
+                $duplicate = $dbReader->getUserByUsername($username);
+                if (!empty($duplicate)) {
+                    $this->flash('danger', "User [$username] is already registered");
+                    Router::redirect("/admin/users/view/$userId");
+                }
+            }
+
             if ($old->getEmail() != $email) {
-                // check for duplicate email
+                // check for duplicate email, only if email is being updated
                 $duplicate = $dbReader->getUserByEmail($email);
                 if (!empty($duplicate)) {
                     $this->flash('danger', "Email [$email] is already registered");
-                    return $this->showUserPage($userId);
+                    Router::redirect("/admin/users/view/$userId");
                 }
             }
 
@@ -197,21 +209,30 @@ class UserManager extends AdminController
             $dbUpdater = new Updater();
             $dbUpdater->updateUser(
                 $userId,
+                $username,
                 $email,
                 $password,
                 $type,
                 $old->getRegisteredAt()
             );
 
-            if (empty($old->getShipping())) {
+            if (empty($old->getShipping()) &&
+                (!empty($name) || !empty($phone) || !empty($address))
+            ) {
+                // Create new shipping for the user
                 $dbCreator = new Creator();
                 $dbCreator->createUserShipping($userId, $name, $phone, $address);
+            } elseif (empty($name) && empty($phone) && empty($address)) {
+                // Remove shipping from the user
+                $dbDeleter = new Deleter();
+                $dbDeleter->deleteUserShipping($userId);
             } else {
-                $dbUpdater->updateUserShipping($name, $phone, $address);
+                // Update existing shipping
+                $dbUpdater->updateUserShipping($userId, $name, $phone, $address);
             }
 
             $this->flash('success', "[$username] updated successfully");
-            return Router::redirect('/admin/users');
+            Router::redirect('/admin/users');
 
         } catch (\Exception $e) {
             Logger::log('db', 'error',
@@ -220,7 +241,7 @@ class UserManager extends AdminController
                 'username' => $email,
             ]);
             $this->flash('danger', 'Database operation failed');
-            return $this->showUserPage($userId);
+            Router::redirect("/admin/users/view/$userId");
         }
     }
 

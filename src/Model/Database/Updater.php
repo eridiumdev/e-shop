@@ -2,6 +2,8 @@
 namespace App\Model\Database;
 
 use App\Model\Data\Category;
+use App\Model\Data\Cart;
+use App\Model\Data\CartItem;
 use App\Model\Data\Delivery;
 use App\Model\Data\Discount;
 use App\Model\Data\Order;
@@ -60,6 +62,21 @@ class Updater extends Connection
                 WHERE id = ?";
         $stmt = $this->db->prepare($sql);
         return $stmt->execute([$username, $email, $password, $type, $registeredAt, $id]);
+    }
+
+    public function updateUserShipping(
+        int     $userId,
+        string  $name,
+        string  $phone,
+        string  $address
+    ) {
+        $sql = "UPDATE shipping
+        		SET name = ?,
+                    phone = ?,
+                    address = ?
+                WHERE userId = ?";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([$name, $phone, $address, $userId]);
     }
 
     public function updateProduct(
@@ -134,5 +151,11 @@ class Updater extends Connection
                 WHERE id = ?";
         $stmt = $this->db->prepare($sql);
         return $stmt->execute([$name, $type, $isRequired, $isFilter, $specId]);
+    }
+
+    public function updateCartItem(int $userId, int $prodId, int $qty) {
+        $sql = "UPDATE cart SET qty = ? WHERE userId = ? AND prodId = ?";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([$qty, $userId, $prodId]);
     }
 }

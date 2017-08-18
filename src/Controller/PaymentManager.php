@@ -13,16 +13,17 @@ class PaymentManager extends AdminController
 {
     public function showPaymentsListPage()
     {
-        $this->setTemplate('admin/payments.twig');
-        $this->render();
-    }
+        try {
+            $dbReader = new Reader();
+            $payments = $dbReader->getAllPayments();
+        } catch (\Exception $e) {
+            Logger::log('db', 'error', 'Failed to get all payments', $e);
+            $this->flash('danger', 'Database operation failed');
+            $this->showDashboardPage();
+        }
 
-    public function showAddAccountPage(
-        string $email = null, string $type = null
-    ) {
-        $this->setTemplate('admin/inc/add-account.twig');
-        $this->addTwigVar('email', $email);
-        $this->addTwigVar('type', $type);
+        $this->addTwigVar('payments', $payments);
+        $this->setTemplate('admin/payments.twig');
         $this->render();
     }
 }

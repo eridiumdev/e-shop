@@ -47,9 +47,9 @@
           <li><a href="/account"><span class="glyphicon glyphicon-user"></span><span class="hidden-sm"> My Account</span></a></li>
         {% endif %}
         <li><a href="/cart"><span class="glyphicon glyphicon-shopping-cart"></span>
-        {% if cart['size'] > 0 %}
-          <span class="cart-badge-total">¥{{cart['total']}}</span>
-          <span class="badge cart-badge-products">{{cart['size']}}</span>
+        {% if cart.size > 0 %}
+          <span class="cart-badge-total">¥{{cart.total}}</span>
+          <span class="badge cart-badge-products">{{cart.size}}</span>
         {% else %}
           <span class="hidden-sm cart-badge-total">Shopping Cart</span>
           <span class="badge cart-badge-products">0</span>
