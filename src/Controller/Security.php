@@ -54,13 +54,13 @@ class Security
     public static function decodeToken(string $field = null)
     {
         global $req;
-        JWT::$leeway = 60;   // for sync issues
+        JWT::$leeway = 10;   // for sync issues
 
         try {
             $jwt = JWT::decode(
                 $req->cookies->get('auth_token'),
-                // 'oihdjgnoiashngoirshngNKLJSDNgfSlksDNGklZsdnglksngsNLDKNGksdngkNs',
-                self::env('SECRET_KEY'),
+                'oihdjgnoiashngoirshngNKLJSDNgfSlksDNGklZsdnglksngsNLDKNGksdngkNs',
+                // self::env('SECRET_KEY'),
                 ['HS256']
             );
 
@@ -102,7 +102,7 @@ class Security
             'Expired',
             time() - 24 * 60 * 60,
             '/',
-            self::env('SECRET_KEY')
+            self::env('COOKIE_DOMAIN')
         );
     }
 
@@ -157,7 +157,7 @@ class Security
         // stub for tests
         if (ACCESS_RIGHTS == 0) {
             // $token = self::killToken('auth_token');
-            $session->getFlashBag()->add('success', 'Please sign in first');
+            $session->getFlashBag()->add('warning', 'Please sign in first');
             return Router::redirect('/account/login', $token);
         } elseif (ACCESS_RIGHTS > 0) {
             return true;
@@ -166,7 +166,7 @@ class Security
         if (!self::isAuthenticated()) {
             // BUG ? might need to comment out
             // $token = self::killToken('auth_token');
-            $session->getFlashBag()->add('success', 'Please sign in first');
+            $session->getFlashBag()->add('warning', 'Please sign in first');
             return Router::redirect('/account/login', $token);
         }
 
