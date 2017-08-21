@@ -10,8 +10,8 @@
 {% block header %}{% include 'inc/banner.twig' %}{% endblock %}
 
 {% block content %}
-{% include "inc/flashes.twig" %}
 <div class="container">
+    {% include "inc/flashes.twig" %}
     {% include "home/carousel.twig" %}
     {% include "home/tabs.twig" %}
 </div>

@@ -115,9 +115,18 @@ class Router
 
                 $controller = new CheckoutController();
 
+                if (!empty($userId = $controller->getUserId())) {
+                    $curStep = Router::getCookie('checkout-step')[$userId] ?? 1;
+                } else {
+                    $curStep = Router::getCookie('checkout-step')['guest'] ?? 1;
+                }
+
                 switch($route['section']) {
                     case 'step-one' :
-                        $controller->showStepOnePage();
+                        if ($controller->getCart()->isEmpty()) {
+                            self::redirect('/cart');
+                        }
+                        $controller->showStepOnePage($curStep);
                         break;
 
                     case 'add-shipping' :
@@ -129,10 +138,16 @@ class Router
                         break;
 
                     case 'step-two' :
-                        $controller->showStepTwoPage();
+                        if ($curStep < 2) {
+                            self::redirect('/checkout/step-one');
+                        }
+                        $controller->showStepTwoPage($curStep);
                         break;
 
                     case 'prepare-order' :
+                        if ($curStep < 2) {
+                            self::redirect('/checkout/step-one');
+                        }
                         if (!empty($post)) {
                             $controller->prepareOrder($post);
                         } else {
@@ -141,7 +156,17 @@ class Router
                         break;
 
                     case 'step-three' :
-                        $controller->showStepThreePage();
+                        if ($curStep < 3) {
+                            self::redirect('/checkout/step-two');
+                        }
+                        $controller->showStepThreePage($curStep);
+                        break;
+
+                    case 'submit-order' :
+                        if ($curStep < 3) {
+                            self::redirect('/checkout/step-two');
+                        }
+                        $controller->submitOrder($post);
                         break;
 
                     default :
@@ -202,15 +227,17 @@ class Router
         }
     }
 
-    public static function deleteCookie(string $cookieName, $cookieData)
+    public static function deleteCookie(string $cookieName, $cookieData = null)
     {
         // e.g.: $cookieName = 'cart'
         //       $cookieData = ['key' => prodId]
         if ($cookie = self::getCookie($cookieName)) {
-            foreach ($cookie as $key => $val) {
-                // rewrite everything, except for the key we want to delete
-                if ($cookieData['key'] != $key) {
-                    self::$cookies[$cookieName][$key] = $val;
+            if (isset($cookieData)) {
+                foreach ($cookie as $key => $val) {
+                    // rewrite everything, except for the key we want to delete
+                    if ($cookieData['key'] != $key) {
+                        self::$cookies[$cookieName][$key] = $val;
+                    }
                 }
             }
             self::$clearedCookies[] = $cookieName;
@@ -291,6 +318,15 @@ class Router
             $response->headers->setCookie($newCookie);
         }
 
+        // Disable cache for security reasons (temporary solution)
+        $response->headers->addCacheControlDirective('must-revalidate', true);
+        $response->headers->addCacheControlDirective('public', true);
+        $response->headers->addCacheControlDirective('no-cache', true);
+        $response->headers->addCacheControlDirective('no-store', true);
+        $response->headers->addCacheControlDirective('max-age', 0);
+        $response->headers->addCacheControlDirective('post-check', 0);
+        $response->headers->addCacheControlDirective('pre-check', 0);
+
         $response->send();
         exit;   // close current script execution after redirect
     }
@@ -351,9 +387,27 @@ class Router
                 $controller->showShippingPage();
                 break;
 
+            case 'update-shipping' :
+                Security::requireAuth();
+                if (!empty($post)) {
+                    $controller->updateUserShipping($post);
+                } else {
+                    self::redirect('/account/shipping');
+                }
+                break;
+
             case 'details' :
                 Security::requireAuth();
                 $controller->showDetailsPage();
+                break;
+
+            case 'update-details' :
+                Security::requireAuth();
+                if (!empty($post)) {
+                    $controller->updateUserDetails($post);
+                } else {
+                    self::redirect('/account/details');
+                }
                 break;
 
             default :
@@ -714,12 +768,11 @@ class Router
 
                 $controller = new OrderManager();
 
-                // Check if user id in uri is valid
-                if (in_array($route['action'], ['view']) && (
-                    empty($route['page']) ||
-                    !is_numeric($route['page'])
-                )) {
-                    self::redirect('/admin/orders');
+                if (!empty($route['page']) &&
+                    is_numeric($route['page']) &&
+                    in_array($route['action'], ['view', 'delete'])
+                ) {
+                    $orderId = $route['page'];
                 }
 
                 switch ($route['action']) {
@@ -727,26 +780,44 @@ class Router
                         $controller->showOrdersListPage();
                         break;
 
-                    case 'view' :
-                        if (empty($post)) {
-                            $controller->showChangeAccountPage($route['page']);
+                    case 'add' :
+                        $controller->showAddOrderPage();
+                        break;
+
+                    case 'change-status' :
+                        if (!empty($post)) {
+                            $controller->changeStatus($post);
                         } else {
-                            $controller->changeAccount($route['page'], $post);
+                            self::redirect('/admin/orders');
+                            break;
                         }
                         break;
 
-                    case 'delete' :
-                        if (empty($post['id'])) {
-                            $controller->showAccountListPage();
-                        } elseif (count($post['id']) == 1){
-                            $controller->deleteAccount($post['id'][0]);
-                        } else {
-                            $controller->deleteAccounts($post['id']);
-                        }
-                        break;
+                    // case 'view' :
+                    //     if (!isset($orderId)) {
+                    //         self::redirect('/admin/orders');
+                    //     }
+                    //     $controller->showViewOrderPage($orderId);
+                    //     break;
+                    //
+                    // case 'update' :
+                    //     if (empty($post)) {
+                    //         self::redirect('/admin/orders');
+                    //     } else {
+                    //         $controller->updateOrder($post['id'], $post);
+                    //     }
+                    //     break;
+                    //
+                    // case 'delete' :
+                    //     if (empty($post['id'])) {
+                    //         self::redirect('/admin/orders');
+                    //     } else {
+                    //         $controller->deleteOrder($post['id'][0]);
+                    //     }
+                    //     break;
 
                     default :
-                        self::redirect('/admin/accounts');
+                        self::redirect('/admin/orders');
                 }
                 break;
 

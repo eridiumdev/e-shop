@@ -1,18 +1,24 @@
 <tr>
-    <td>145</td>
-    <td>2017-03-04</td>
-    <td>userr</td>
-    <td>¥250</td>
-    <td>Post</td>
-    <td>Alipay</td>
-    <td>paid</td>
+    <td>{{ order.id }}</td>
+    <td>{{ order.date }}</td>
+    <td>{{ order.user.username }} (id:{{ order.user.id }})</td>
+    <td>¥{{ order.total }}</td>
+    <td>{{ order.delivery.name }}</td>
+    <td>{{ order.payment.name }}</td>
+    <td><select class="statusUpdater" name="status[{{order.id}}]">
+        {% for status in statuses %}
+            <option value="{{status.id}}"{{status.id == order.status.id ? ' selected' : ''}}>{{ status.name }}</option>
+        {% endfor %}
+        </select>
+        <input type="hidden" value="{{order.id}}">
+    </td>
     <td class="col-xs-1 col-xs-offset-10">
-        <a class="btn btn-sm btn-primary" role="button" href="/admin/orders/view/">View</a>
+        <a class="btn btn-sm btn-primary" role="button" href="/admin/orders/view/{{order.id}}">View</a>
     </td>
     <td class="col-xs-1">
         <input class="btn btn-sm btn-danger" type="submit" name="delete" value="Delete">
     </td>
     <td class="col-xs-1 checkable" role="button">
-        <input type="checkbox" name="id[]" role="button" value="order id">
+        <input type="checkbox" name="id[]" role="button" value="{{order.id}}">
     </td>
 </tr>

@@ -31,4 +31,12 @@ $(document).ready(function() {
             8: { sorter: false }
         }
     });
+
+    $("#tableToSort_7-9").tablesorter({
+        headers: {
+            7: { sorter: false },
+            8: { sorter: false },
+            9: { sorter: false }
+        }
+    });
 });

@@ -25,6 +25,9 @@ const DB_DATA = '/yml/products.yml';
 // Chinese characters pattern for regular expression
 const PATTERN_CHINESE = "/[\p{Han}]/simu";
 
+// Default status for submitted orders (1 = pending)
+const DEFAULT_STATUS = 1;
+
 // Global debug helper-shortcuts
 // print $obj
 function p($obj)

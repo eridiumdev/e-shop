@@ -1,3 +1,4 @@
+// Step 2: Deliveries & payments
 $("#delivery").change(function (){
     var $deliveryId = $("#delivery").val();
     var $deliveryDescription = $("#deliveryDesc_" + $deliveryId).val();
@@ -14,7 +15,7 @@ $("#payment").change(function (){
     $("#paymentDesc").html($paymentDescription)
 });
 
-// Processing payment
+// Step 3: Processing payment
 $('#confirmOrderBtn').on('click', function(e) {
 	$('#paymentModal').modal();
     $('#paymentModal').preventDefault();
@@ -30,6 +31,28 @@ $('#confirm_button').on('click', function(e) {
         $('#paymentSuccess').fadeIn('slow');
         $('#confirmOrderBtn').remove();
         $('#successBtn').show();
-        setTimeout(function() {$('#paymentModal').modal('hide');}, 1500);
+        setTimeout(function() {
+            window.location.replace('/checkout/submit-order');
+        }, 1500);
     }, 2300);
 });
+
+
+// $('#confirmOrderBtn').on('click', function(e) {
+// 	$('#paymentModal').modal();
+//     $('#paymentModal').preventDefault();
+// });
+//
+// $('#confirm_button').on('click', function(e) {
+//     $('#paymentPassword').hide();
+//     $('#paymentProcessing').fadeIn('slow');
+//     $('#modal_footer').hide();
+//
+//     setTimeout(function() {
+//         $('#paymentProcessing').hide();
+//         $('#paymentSuccess').fadeIn('slow');
+//         $('#confirmOrderBtn').remove();
+//         $('#successBtn').show();
+//         setTimeout(function() {$('#paymentModal').modal('hide');}, 1500);
+//     }, 2300);
+// });

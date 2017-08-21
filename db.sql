@@ -21,20 +21,33 @@ CREATE TABLE users (
 );
 
 CREATE TABLE shipping (
-    userId  int(10) NOT NULL AUTO_INCREMENT,
+    id      int(10) NOT NULL AUTO_INCREMENT,
     name    varchar(30) NOT NULL,
     phone   varchar(15) NOT NULL,
     address varchar(100) NOT NULL,
-    PRIMARY KEY (userId)
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE user_shipping (
+    userId  int(10) NOT NULL,
+    shipId  int(10) NOT NULL,
+    PRIMARY KEY (userId, shipId)
 );
 
 CREATE TABLE orders (
     id          int(10) NOT NULL AUTO_INCREMENT,
     userId      int(10) NOT NULL,
+    shipId      int(10) NOT NULL,
     date        datetime DEFAULT CURRENT_TIMESTAMP,
-    status      varchar(10) NOT NULL,
+    statusId    int(10) NOT NULL,
     deliveryId  int(10) NOT NULL,
     paymentId   int(10) NOT NULL,
+    PRIMARY KEY (id)
+);
+
+CREATE TABLE order_statuses (
+    id     int(10) NOT NULL AUTO_INCREMENT,
+    name   varchar(30) NOT NULL UNIQUE,
     PRIMARY KEY (id)
 );
 
@@ -264,17 +277,25 @@ INSERT INTO featured_products VALUES
     (4),
     (5);
 
-INSERT INTO order_items VALUES
-    (1, 1, 1),
-    (2, 1, 2),
-    (3, 1, 3),
-    (4, 1, 1),
-    (5, 2, 2),
-    (6, 2, 3),
-    (7, 2, 1),
-    (8, 3, 2),
-    (9, 3, 3),
-    (10, 4, 10);
+-- INSERT INTO order_items VALUES
+--     (1, 1, 1),
+--     (2, 1, 2),
+--     (3, 1, 3),
+--     (4, 1, 1),
+--     (5, 2, 2),
+--     (6, 2, 3),
+--     (7, 2, 1),
+--     (8, 3, 2),
+--     (9, 3, 3),
+--     (10, 4, 10);
+
+INSERT INTO order_statuses VALUES
+    (1, 'pending'),
+    (2, 'confirmed'),
+    (3, 'sent'),
+    (4, 'delivered'),
+    (5, 'finished'),
+    (6, 'cancelled');
 
 INSERT INTO deliveries VALUES
     (1, 'China Post', 'Deliver using regular post service. Cheaper than express delivery, but also slower', 10.0),

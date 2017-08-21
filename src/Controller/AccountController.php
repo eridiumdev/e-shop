@@ -4,6 +4,7 @@ namespace App\Controller;
 use App\Model\Database\Reader;
 use App\Model\Database\Creator;
 use App\Model\Database\Updater;
+use App\Model\Database\Deleter;
 
 class AccountController extends BaseController
 {
@@ -31,30 +32,151 @@ class AccountController extends BaseController
 
     public function showOrdersPage()
     {
-        // try {
-        //     $dbReader = new Reader();
-        //     $orders = $dbReader->getUserOrders($user->getId());
-        //     $user->setOrders($orders);
-        // } catch (\Exception $e) {
-        //     Logger::log('db', 'error', 'Failed to get user orders', $e);
-        //     $this->flash('danger', 'Database operation failed');
-        //     return $this->showAccountPage();
-        // }
+        try {
+            $dbReader = new Reader();
+            if ($userId = $this->getUserId()) {
+                $orders = $dbReader->getUserOrders($userId);
+            }
+            krsort($orders);
+        } catch (\Exception $e) {
+            Logger::log('db', 'error', 'Failed to get user orders', $e);
+            $this->flash('danger', 'Database operation failed');
+            Router::redirect('/account');
+        }
 
+        $this->addTwigVar('orders', $orders);
         $this->setTemplate('account/orders.twig');
         $this->render();
     }
 
     public function showShippingPage()
     {
+        try {
+            $dbReader = new Reader();
+            if ($userId = $this->getUserId()) {
+                $shipping = $dbReader->getUserShipping($userId);
+            }
+        } catch (\Exception $e) {
+            Logger::log('db', 'error', "Failed to get user's '$userId' shipping", $e);
+            $this->flash('danger', 'Database operation failed');
+            Router::redirect('/account');
+        }
+
+        $this->addTwigVar('shipping', $shipping);
         $this->setTemplate('account/shipping.twig');
         $this->render();
     }
 
+    public function updateUserShipping(array $post)
+    {
+        if (!$this->isClean($post)) {
+            $this->flash('danger', 'Some field contains invalid characters');
+            Router::redirect('/account/shipping');
+        }
+
+        $name = $post['name'];
+        $phone = $post['phone'];
+        $address = $post['address'];
+
+        try {
+            $dbCreator = new Creator();
+            $dbDeleter = new Deleter();
+
+            if (!empty($userId = $this->getUserId())) {
+                // Replace old shipping with new shipping
+                $dbDeleter->deleteUserShipping($userId);
+                $dbCreator->createUserShipping($userId, $name, $phone, $address);
+
+                $this->flash('success', 'Shipping details updated successfully');
+                Router::redirect('/account/shipping');
+            } else {
+                throw new \Exception;
+            }
+        } catch (\Exception $e) {
+            Logger::log('db', 'error', "Failed to update user '$userId' shipping", $e);
+            $this->flash('danger', 'Database operation failed');
+            Router::redirect("/account/shipping");
+        }
+    }
+
     public function showDetailsPage()
     {
+        try {
+            $dbReader = new Reader();
+            if ($userId = $this->getUserId()) {
+                $user = $dbReader->getUserById($userId);
+            }
+        } catch (\Exception $e) {
+            Logger::log('db', 'error', "Failed to get user '$userId'", $e);
+            $this->flash('danger', 'Database operation failed');
+            Router::redirect('/account');
+        }
+
+        $this->addTwigVar('user', $user);
         $this->setTemplate('account/details.twig');
         $this->render();
+    }
+
+    public function updateUserDetails(array $post)
+    {
+        if (!$this->isClean($post)) {
+            $this->flash('danger', 'Some field contains invalid characters');
+            Router::redirect('/account/details');
+        }
+
+        $userId = $post['id'];
+        $username = $post['username'];
+        $email = $post['email'];
+        $oldPassword = $post['oldPassword'];
+        $newPassword = $post['newPassword'];
+        $confirmPassword = $post['confirmPassword'];
+
+        try {
+            $dbReader = new Reader();
+            $user = $dbReader->getUserById($userId);
+
+            if (empty($user)) {
+                $this->flash('danger', 'Something went wrong. Please re-login and try again');
+                Router::redirect('/account/details');
+            }
+
+            if (!empty($oldPassword)) {
+                if ($newPassword != $confirmPassword) {
+                    $this->flash('danger', "Passwords do not match");
+                    Router::redirect('/account/details');
+                }
+
+                if (!password_verify($oldPassword, $user->getPassword())) {
+                    $this->flash('danger', 'Incorrect current password');
+                    Router::redirect('/account/details');
+                }
+
+                $hashed = password_hash($newPassword, PASSWORD_DEFAULT);
+            } else {
+                $hashed = $user->getPassword();
+            }
+
+            $type = $user->getType();
+            $registeredAt = $user->getRegisteredAt();
+
+            $dbUpdater = new Updater();
+            $dbUpdater->updateUser(
+                $userId,
+                $username,
+                $email,
+                $hashed,
+                $type,
+                $registeredAt
+            );
+
+            $this->flash('success', 'Details updated successfully');
+            Router::redirect('/account/details');
+
+        } catch (\Exception $e) {
+            Logger::log('db', 'error', 'Failed to change user password', $e);
+            $this->flash('danger', 'Operation failed, please try again');
+            Router::redirect('/account/details');
+        }
     }
 
     /**
@@ -97,7 +219,8 @@ class AccountController extends BaseController
 
         $this->flash('success', "Welcome back, $input");
         $authToken = Security::encodeToken($user->getId(), $user->getType());
-        return Router::redirect('/account', $authToken);
+        $redirect = ($user->getType() == 'admin')? '/admin' : '/account';
+        return Router::redirect($redirect, $authToken);
     }
 
     /**
@@ -150,67 +273,6 @@ class AccountController extends BaseController
             Logger::log('db', 'error', 'Failed to register new user' . $username, $e);
             $this->flash('danger', 'Registration failed, please try again');
             return $this->showRegisterPage($username, $email);
-        }
-    }
-
-    public function showChangePasswordPage()
-    {
-        $this->render();
-    }
-
-    public function changePassword(array $post)
-    {
-        if (!$this->isClean($post)) {
-            $this->flash('danger', 'Invalid password, try another');
-            return $this->showChangePasswordPage();
-        }
-
-        $curPassword = $post['curPassword'];
-        $newPassword = $post['newPassword'];
-        $confirmPassword = $post['confirmPassword'];
-
-        if ($newPassword != $confirmPassword) {
-            $this->flash('danger', "Passwords do not match");
-            return $this->showChangePasswordPage();
-        }
-
-        $userId = Security::getUserId();
-
-        if ($userId === false) {
-            $this->flash(
-                'danger', 'Something went wrong. Please re-login and try again'
-            );
-            return $this->showChangePasswordPage();
-        }
-
-        try {
-            $dbReader = new Reader();
-            $user = $dbReader->getUserById($userId);
-
-            if (empty($user)) {
-                $this->flash(
-                    'danger', 'Something went wrong. Please re-login and try again'
-                );
-                return $this->showChangePasswordPage();
-            }
-
-            if (!password_verify($curPassword, $user->getPassword())) {
-                $this->flash('danger', 'Incorrect current password');
-                return $this->showChangePasswordPage();
-            }
-
-            $hashed = password_hash($newPassword, PASSWORD_DEFAULT);
-
-            $dbUpdater = new Updater();
-            $dbUpdater->changePassword($userId, $hashed);
-
-            $this->flash('success', 'Password changed successfully');
-            return Router::redirect('/account');
-
-        } catch (\Exception $e) {
-            Logger::log('db', 'error', 'Failed to change user password', $e);
-            $this->flash('danger', 'Operation failed, please try again');
-            return $this->showChangePasswordPage();
         }
     }
 }

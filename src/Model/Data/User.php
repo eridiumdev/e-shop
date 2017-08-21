@@ -15,16 +15,16 @@ class User
 
     public function __construct(
         $id           = -1,
-        $username     = '',
-        $email        = '',
-        $password     = '',
+        $username     = '-',
+        $email        = '-',
+        $password     = '-',
         $type         = 'guest',
         $registeredAt = '2017-01-01 00:00:00'
     ) {
         $this->setId($id);
-        $this->setUsername($username);
-        $this->setEmail($email);
-        $this->setPassword($password);
+        $this->setUsername($username ?? '-');
+        $this->setEmail($email ?? '-');
+        $this->setPassword($password ?? '-');
         $this->setType($type);
         $this->setRegisteredAt($registeredAt);
     }
@@ -106,7 +106,7 @@ class User
 
     public function getOrder(int $orderId)
     {
-        if (in_array($orderId, array_keys($this->orders))) {
+        if ($this->hasOrder($orderId)) {
             return $this->orders[$orderId];
         } else {
             return false;
@@ -123,5 +123,14 @@ class User
     public function addOrder(Order $order)
     {
         $this->orders[$order->getId()] = $order;
+    }
+
+    public function hasOrder(int $orderId)
+    {
+        if (key_exists($orderId, array_keys($this->orders))) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

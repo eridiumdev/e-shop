@@ -15,21 +15,21 @@
         <h1>Shipping Details</h1>
         <br>
         {% include "inc/flashes.twig" %}
-        <form class="well">
+        <form class="well" action="/account/update-shipping" method="post">
+            <input type="hidden" name="id" value="{{shipping.id}}">
             <div class="form-group">
                 <label for="name">Name</label>
-                <input type="text" class="form-control" id="name" name="name" placeholder="Full name" value="asd" required>
+                <input type="text" class="form-control" id="name" name="name" placeholder="Full name" value="{{shipping.name}}" required>
             </div>
             <div class="form-group">
                 <label for="phone">Phone</label>
-                <input type="text" class="form-control" id="phone" name="phone" placeholder="Phone number" value="1231232" required>
+                <input type="text" class="form-control" id="phone" name="phone" placeholder="Phone number" value="{{shipping.phone}}" required>
             </div>
             <div class="form-group">
                 <label for="address">Address</label>
-                <textarea rows="4" cols="50" class="form-control" id="address" name="address" placeholder="Full address" required>asdadsdas
-                asdasds</textarea>
+                <textarea rows="4" cols="50" class="form-control" id="address" name="address" placeholder="Full address" required>{{shipping.address}}</textarea>
             </div>
-            <button class="btn btn-lg btn-primary btn-block" type="submit">Apply Changes</button>
+            <input type="submit" class="btn btn-lg btn-primary btn-block" value="Apply Changes">
         </form>
     </div>
 </div>

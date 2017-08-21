@@ -8,6 +8,7 @@ use App\Model\Data\Delivery;
 use App\Model\Data\Discount;
 use App\Model\Data\Order;
 use App\Model\Data\OrderItem;
+use App\Model\Data\OrderStatus;
 use App\Model\Data\Payment;
 use App\Model\Data\Param;
 use App\Model\Data\Picture;
@@ -43,7 +44,7 @@ class Reader extends Connection
 
     public function getUserShipping(int $userId)
     {
-        $sql = "SELECT * FROM shipping WHERE userId = ?";
+        $sql = "SELECT shipId FROM user_shipping WHERE userId = ?";
         $stmt = $this->db->prepare($sql);
         $stmt->execute([$userId]);
         $row = $stmt->fetch(\PDO::FETCH_ASSOC);
@@ -52,7 +53,48 @@ class Reader extends Connection
             return false;
         }
 
-        return new Shipping($row['name'], $row['phone'], $row['address']);
+        return $this->getShippingById($row['shipId']);
+    }
+
+    public function getExactUserShipping(
+        int     $userId,
+        string  $name,
+        string  $phone,
+        string  $address
+    ) {
+        $sql = "SELECT shipping.id as id, name, phone, address
+                FROM user_shipping JOIN shipping
+                ON shipping.id = user_shipping.shipId
+                WHERE userId = ?
+                AND name = ? AND phone = ? AND address = ?";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$userId, $name, $phone, $address]);
+        $row = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        if (!$row) {
+            return false;
+        }
+
+        return $this->getShippingById($row['id']);
+    }
+
+    public function getShippingById(int $shipId)
+    {
+        $sql = "SELECT * FROM shipping WHERE id = ?";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$shipId]);
+        $row = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        if (!$row) {
+            return false;
+        }
+
+        return new Shipping(
+            $row['id'],
+            $row['name'],
+            $row['phone'],
+            $row['address']
+        );
     }
 
     /**
@@ -858,5 +900,138 @@ class Reader extends Connection
         } else {
             return false;
         }
+    }
+
+    public function getAllOrders()
+    {
+        $sql = "SELECT id FROM orders";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+
+        $orders = [];
+
+        while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)){
+            if ($order = $this->getFullOrderById($row['id'])) {
+                $orders[] = $order;
+            }
+        }
+
+        return $orders;
+    }
+
+    public function getUserOrders(int $userId)
+    {
+        $sql = "SELECT id FROM orders WHERE userId = ?";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$userId]);
+
+        $orders = [];
+
+        while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)){
+            if ($order = $this->getFullOrderById($row['id'])) {
+                $orders[] = $order;
+            }
+        }
+
+        return $orders;
+    }
+
+    public function getFullOrderById(int $id)
+    {
+        $sql = "SELECT * FROM orders WHERE id = ?";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$id]);
+
+        if ($row = $stmt->fetch(\PDO::FETCH_ASSOC)) {
+            $order = new Order($row['id'], $row['date']);
+
+            $status = $this->getStatusById($row['statusId']);
+            $order->setStatus($status);
+
+            if ($user = $this->getUserById($row['userId'])) {
+                $order->setUser($user);
+            }
+
+            if ($shipping = $this->getShippingById($row['shipId'])) {
+                $order->setShipping($shipping);
+            }
+
+            if ($delivery = $this->getDeliveryById($row['deliveryId'])) {
+                $order->setDelivery($delivery);
+            }
+
+            if ($payment = $this->getPaymentById($row['paymentId'])) {
+                $order->setPayment($payment);
+            }
+
+            if ($items = $this->getOrderItems($row['id'])) {
+                foreach ($items as $item) {
+                    $order->addItem($item);
+                }
+            }
+
+            return $order;
+        } else {
+            return false;
+        }
+    }
+
+    public function getOrderItems(int $orderId)
+    {
+        $sql = "SELECT * FROM order_items WHERE orderId = ?";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$orderId]);
+
+        $items = [];
+
+        while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)){
+            if ($product = $this->getProductById($row['prodId'])) {
+                $items[] = new OrderItem($product, $row['qty']);
+            }
+        }
+
+        return $items;
+    }
+
+    public function getStatusByName(string $name)
+    {
+        $sql = "SELECT * FROM order_statuses WHERE name = ?";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$name]);
+
+        if (!$row) {
+            return false;
+        }
+
+        return new OrderStatus($row['id'], $row['name']);
+    }
+
+    public function getStatusById(string $id)
+    {
+        $sql = "SELECT * FROM order_statuses WHERE id = ?";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$id]);
+        $row = $stmt->fetch(\PDO::FETCH_ASSOC);
+
+        if (!$row) {
+            return false;
+        }
+
+        return new OrderStatus($row['id'], $row['name']);
+    }
+
+    public function getAllStatuses() : array
+    {
+        $sql = "SELECT * FROM order_statuses";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+
+        $statuses = [];
+
+        while ($row = $stmt->fetch(\PDO::FETCH_ASSOC)){
+            $statuses[] = new OrderStatus($row['id'], $row['name']);
+        }
+
+        return $statuses;
     }
 }

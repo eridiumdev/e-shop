@@ -15,7 +15,7 @@
     {% include 'checkout/inc/checkout-steps.twig' %}
     <div class="well col-sm-6 col-sm-offset-3">
         <form id="form" method="post" action="/checkout/prepare-order">
-            <h2 class="form-signin-heading">Checkout<small class="pull-right"><a href="/account/register">Register first?</a></small></h2>
+            <h2 class="form-signin-heading">Checkout{% if not authenticated() %}<small class="pull-right"><a href="/account/register">Register first?</a></small>{% endif %}</h2>
             <br>
             {% include "inc/flashes.twig" %}
             <div class="form-group">

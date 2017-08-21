@@ -24,96 +24,48 @@ $(function () {
         <br>
         {% include "inc/flashes.twig" %}
         <hr>
-        <div class="order">
-            <div class="row order-header">
-                <div class="col-xs-4">
-                    <p>2017-05-14</p>
+        {% for order in orders %}
+            <div class="order">
+                <div class="row order-header">
+                    <div class="col-xs-4">
+                        <p>{{ order.date }}</p>
+                    </div>
+                    <div class="col-xs-4">
+                        <p>Order #{{ order.id }}</p>
+                    </div>
+                    <div class="col-xs-4">
+                        <p>Status: <span class="order-status">{{ order.status.name }}</span></p>
+                    </div>
                 </div>
-                <div class="col-xs-4">
-                    <p>Order #142</p>
-                </div>
-                <div class="col-xs-4">
-                    <p>Status: <span class="order-status">in-progress</span></p>
-                </div>
-            </div>
-            <div class="row order-item">
-                <div class="col-xs-3">
-                    <img class="img-responsive" src="/uploads/kb/kb2.jpg" width="120" height="120">
-                </div>
-                <div class="col-xs-3">
-                    <p>Full Size Ergonomic Backlit Hub Keyboard</p>
-                </div>
-                <div class="col-xs-3">
-                    <p>1<span class="qty-price-separator">x</span>¥160</p>
-                </div>
-                <div class="col-xs-3">
-                    <p>¥160</p>
-                </div>
-            </div>
-            <div class="row order-footer">
-                <div class="col-xs-9 col-md-9">
-                    <p><strong>Delivery: </strong>Post (¥10)</p>
-                    <p><strong>Payment: </strong>Wechat</p>
-                    <p><strong>Shipping Details: </strong><a tabindex="0" class="badge" data-placement="right" role="button" data-toggle="popover" data-trigger="focus" data-html="true" data-content="<b>Name: </b>asdasd<br><b>Phone: </b>12312312<br><b>Address: </b>dsfsdfsdfs 8228">?</a></p>
-                </div>
-                <div class="col-xs-2">
-                    <p class="order-total">¥170</p>
-                </div>
-            </div>
-        </div>
-        <hr>
-        <div class="order">
-            <div class="row order-header">
-                <div class="col-xs-4">
-                    <p>2017-05-14</p>
-                </div>
-                <div class="col-xs-4">
-                    <p>Order #141</p>
-                </div>
-                <div class="col-xs-4">
-                    <p>Status: <span class="order-status">finished</span></p>
+                {% for item in order.items %}
+                    <div class="row order-item">
+                        <div class="col-xs-3">
+                            <img class="img-responsive" src="{{item.mainPic.path}}" width="120" height="120">
+                        </div>
+                        <div class="col-xs-3">
+                            <p>{{ item.name }}</p>
+                        </div>
+                        <div class="col-xs-3">
+                            <p>{{item.qty}}<span class="qty-price-separator">x</span>¥{{item.discountedPrice}}</p>
+                        </div>
+                        <div class="col-xs-3">
+                            <p>¥{{item.subtotal}}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+                <div class="row order-footer">
+                    <div class="col-xs-9 col-md-9">
+                        <p><strong>Delivery: </strong>{{order.delivery.name}} (¥{{order.delivery.price}})</p>
+                        <p><strong>Payment: </strong>{{order.payment.name}}</p>
+                        <p><strong>Shipping Details: </strong><a tabindex="0" class="badge" data-placement="right" role="button" data-toggle="popover" data-trigger="focus" data-html="true" data-content="<b>Name: </b>{{order.shipping.name}}<br><b>Phone: </b>{{order.shipping.phone}}<br><b>Address: </b>{{order.shipping.address}}">?</a></p>
+                    </div>
+                    <div class="col-xs-2">
+                        <p class="order-total">¥{{order.total + order.delivery.price}}</p>
+                    </div>
                 </div>
             </div>
-            <div class="row order-item">
-                <div class="col-xs-3">
-                    <img class="img-responsive" src="/uploads/ms/ms1.jpg" width="120" height="120">
-                </div>
-                <div class="col-xs-3">
-                    <p>Evoluent Vertical Mouse White</p>
-                </div>
-                <div class="col-xs-3">
-                    <p>1<span class="qty-price-separator">x</span>¥250</p>
-                </div>
-                <div class="col-xs-3">
-                    <p>¥250</p>
-                </div>
-            </div>
-            <div class="row order-item">
-                <div class="col-xs-3">
-                    <img class="img-responsive" src="/uploads/ms/ms6.jpg" width="120" height="120">
-                </div>
-                <div class="col-xs-3">
-                    <p>Logitech Wireless Trackball M570</p>
-                </div>
-                <div class="col-xs-3">
-                    <p>2<span class="qty-price-separator">x</span>¥160</p>
-                </div>
-                <div class="col-xs-3">
-                    <p>¥320</p>
-                </div>
-            </div>
-            <div class="row order-footer">
-                <div class="col-xs-9 col-md-9">
-                    <p><strong>Delivery: </strong>Express (¥20)</p>
-                    <p><strong>Payment: </strong>Alipay</p>
-                    <p><strong>Shipping Details: </strong><a tabindex="0" class="badge" data-placement="right" role="button" data-toggle="popover" data-trigger="focus" data-html="true" data-content="<b>Name: </b>asdasd<br><b>Phone: </b>12312312<br><b>Address: </b>dsfsdfsdfs 8228">?</a></p>
-                </div>
-                <div class="col-xs-2">
-                    <p class="order-total">¥590</p>
-                </div>
-            </div>
-        </div>
-        <hr>
+            <hr>
+        {% endfor %}
     </div>
 </div>
 {% endblock %}

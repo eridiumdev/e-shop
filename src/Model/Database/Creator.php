@@ -33,10 +33,10 @@ class Creator extends Connection
      * @return User OR false
      */
     public function createUser(
-        string  $username,
-        string  $email,
+        string  $username = null,
+        string  $email = null,
         string  $password = null,
-                $type = 'user',
+                $type = 'guest',
         string  $registeredAt = null
     ) {
         if ($password == null) {
@@ -53,7 +53,7 @@ class Creator extends Connection
         $stmt = $this->db->prepare($sql);
         $stmt->execute([$username, $email, $password, $type, $registeredAt]);
 
-        return (new Reader())->getUserByEmail($email);
+        return (new Reader())->getUserById($this->db->lastInsertId());
     }
 
     public function createUserShipping(
@@ -62,26 +62,28 @@ class Creator extends Connection
         string  $phone,
         string  $address
     ) {
-        $sql = "INSERT INTO shipping(userId, name, phone, address)
-                VALUES (?, ?, ?, ?)";
-        $stmt = $this->db->prepare($sql);
-        $stmt->execute([$userId, $name, $phone, $address]);
+        if ($shipping = $this->createShipping($name, $phone, $address)) {
+            $sql = "INSERT INTO user_shipping(shipId, userId)
+                    VALUES (?, ?)";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([$shipping->getId(), $userId]);
 
-        return (new Reader())->getUserById($userId);
+            return $shipping;
+        } else {
+            return false;
+        }
     }
 
-    /**
-     * Creates and returns full product, rolls back transaction in case of failure
-     * @param  string $name
-     * @param  string $description
-     * @param  float  $price
-     * @param  int    $catId       category id
-     * @param  string $mainPic
-     * @param  float  $discount    can be null
-     * @param  array  $pics
-     * @param  array  $specs
-     * @return Product
-     */
+    public function createShipping(string $name, string $phone, string $address)
+    {
+        $sql = "INSERT INTO shipping(name, phone, address)
+                VALUES (?, ?, ?)";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$name, $phone, $address]);
+
+        return (new Reader())->getShippingById($this->db->lastInsertId());
+    }
+
     public function createProduct(
         string   $name,
         string   $description,
@@ -184,6 +186,69 @@ class Creator extends Connection
         $sql = "INSERT INTO cart(userId, prodId, qty) VALUES (?, ?, ?)";
         $stmt = $this->db->prepare($sql);
         if ($stmt->execute([$userId, $prodId, $qty])) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function createOrder(
+        int     $userId,
+        int     $shipId,
+        int     $deliveryId,
+        int     $paymentId,
+        array   $items,
+        string  $date = null,
+        $statusId = null
+    ) {
+        // Either all items and order itself are generated
+        // or none of the actions take place
+        $this->db->beginTransaction();
+
+        if ($date == null) {
+            $date = date("Y-m-d H:i:s");
+        }
+
+        if (!isset($statusId)) {
+            $statusId = DEFAULT_STATUS;
+        }
+
+        try {
+            $sql = "INSERT INTO
+                    orders(userId, shipId, date, statusId, deliveryId, paymentId)
+                    VALUES (?, ?, ?, ?, ?, ?)";
+            $stmt = $this->db->prepare($sql);
+            $stmt->execute([
+                $userId,
+                $shipId,
+                $date,
+                $statusId,
+                $deliveryId,
+                $paymentId
+            ]);
+
+            $orderId = $this->db->lastInsertId();
+
+            foreach ($items as $item) {
+                $this->addOrderItem($orderId, $item->getId(), $item->getQty());
+            }
+
+            $this->db->commit();
+            return $orderId;
+
+        } catch (\Exception $e) {
+            Logger::log('db', 'error', "Failed to create order", $e);
+            $this->db->rollBack();
+            return false;
+        }
+    }
+
+    public function addOrderItem(int $orderId, int $prodId, int $qty)
+    {
+        $sql = "INSERT INTO order_items(orderId, prodId, qty)
+                VALUES (?, ?, ?)";
+        $stmt = $this->db->prepare($sql);
+        if ($stmt->execute([$orderId, $prodId, $qty])) {
             return true;
         } else {
             return false;

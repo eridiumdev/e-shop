@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use Firebase\JWT\JWT;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Handles authentication & authorization

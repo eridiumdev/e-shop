@@ -16,9 +16,8 @@ class CartController extends BaseController
 
     public function addToCart(int $prodId, $qty = 1)
     {
-        if (isset($this->uid)) {
+        if ($userId = $this->getUserId()) {
             // Working with database
-            $userId = $this->uid;
 
             try {
                 // Check if item is already in the cart
@@ -61,9 +60,7 @@ class CartController extends BaseController
 
     public function removeFromCart(int $prodId)
     {
-        if (isset($this->uid)) {
-            $userId = $this->uid;
-
+        if ($userId = $this->getUserId()) {
             // Working with database
             try {
                 $dbDeleter = new Deleter();
@@ -90,9 +87,7 @@ class CartController extends BaseController
         $array = $post['qty'] ?? [];
         $userId;
 
-        if (isset($this->uid)) {
-            $userId = $this->uid;
-
+        if ($userId = $this->getUserId()) {
             try {
                 // Database init
                 $dbUpdater = new Updater();

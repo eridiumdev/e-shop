@@ -59,4 +59,9 @@ class Cart
         }
         return $size;
     }
+
+    public function isEmpty() : bool
+    {
+        return $this->getSize() == 0;
+    }
 }

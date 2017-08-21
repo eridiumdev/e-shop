@@ -42,19 +42,19 @@
                 </tr>
                 <tr>
                     <th>Items</th>
-                    {% for prodId, arr in cart if prodId matches '/^\\d+$/' %}
-                        <td>
-                            <div class="item-row">
-                                <img class="img-responsive" src="{{arr['prod'].mainPic.path}}" width="60" height="60">
-                                <span class="item-qty">x{{arr['qty']}}</span>
-                                <span class="item-subtotal">(¥{{arr['prod'].discountedPrice * arr['qty']}})</span>
-                            </div>
-                        </td>
+                    <td>
+                    {% for item in cart.items %}
+                        <div class="item-row">
+                            <img class="img-responsive" src="{{item.mainPic.path}}" width="60" height="60">
+                            <span class="item-qty">x{{item.qty}}</span>
+                            <span class="item-subtotal">(¥{{item.subtotal}})</span>
+                        </div>
                     {% endfor %}
+                    </td>
                 </tr>
                 <tr>
                     <th>Total</th>
-                    <td>¥{{cart['total']}}</td>
+                    <td>¥{{ cart.total + delivery.price }}</td>
                 </tr>
             </table>
         </div>

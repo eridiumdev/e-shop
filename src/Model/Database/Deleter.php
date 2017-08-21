@@ -64,7 +64,7 @@ class Deleter extends Connection
 
     public function deleteUserShipping(int $userId)
     {
-        $sql = "DELETE FROM shipping WHERE userId = ?";
+        $sql = "DELETE FROM user_shipping WHERE userId = ?";
         $stmt = $this->db->prepare($sql);
         return ($stmt->execute([$userId]));
     }
@@ -188,5 +188,12 @@ class Deleter extends Connection
         $sql = "DELETE FROM cart WHERE userId = ? AND prodId = ?";
         $stmt = $this->db->prepare($sql);
         return ($stmt->execute([$userId, $prodId]));
+    }
+
+    public function clearCart(int $userId)
+    {
+        $sql = "DELETE FROM cart WHERE userId = ?";
+        $stmt = $this->db->prepare($sql);
+        return ($stmt->execute([$userId]));
     }
 }

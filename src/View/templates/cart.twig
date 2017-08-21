@@ -19,6 +19,9 @@
     </ol>
     {% include 'inc/flashes.twig' %}
     <hr>
+    {% if cart.isEmpty() %}
+        <h3>You cart is currently empty...</h3>
+    {% else %}
     <form action="/cart/update" method="post">
         {% for item in cart.items %}
         <div class="row item-row">
@@ -53,5 +56,6 @@
             </div>
         </div>
     </form>
+    {% endif %}
 </div>
 {% endblock %}

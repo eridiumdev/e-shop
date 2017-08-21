@@ -8,18 +8,21 @@
     <script src="/js/check_all.js"></script>
     <script src="/js/jquery.tablesorter.min.js"></script>
     <script src="/js/tablesorter.js"></script>
+    <script src="/js/order-status.js"></script>
 {% endblock %}
 
 {% block content %}
 <div class="col-sm-9">
     <div class="well">
-        <h2>Order Management</h2>
-        <br>
+        <h2 class="management-header">Order Management</h2>
+        <div class="pull-right management-header-buttons">
+            <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#resetDbModal" title="Reset database to initial state"><span class="glyphicon glyphicon-exclamation-sign"></span></button>
+        </div>
         {% include "inc/flashes.twig" %}
     </div>
     <div class="well table-responsive">
-        <form action="/admin/orders/delete" method="post">
-        <table id="tableToSort_6-8" class="table table-striped">
+        <form id="statusUpdateForm" action="/admin/orders/delete" method="post">
+        <table id="tableToSort_7-9" class="table table-striped">
             <thead>
                 <tr>
                     <th role="button">ID</th>
@@ -37,7 +40,7 @@
                 </tr>
             </thead>
             <tbody id="tableTBody">
-                {% for i in 1..10 %}
+                {% for order in orders %}
                     {% include "admin/orders/tr-order.twig" %}
                 {% endfor %}
             </tbody>
@@ -47,6 +50,7 @@
                 </td>
             </tfoot>
         </table>
+        <input type="hidden" id="statusUpdateOrderId" name="orderId" value="">
         </form>
     </div>
 </div>

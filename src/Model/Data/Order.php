@@ -8,18 +8,18 @@ class Order
     private $status;
 
     private $user;
+    private $shipping;
     private $delivery;
     private $payment;
     private $items = [];
 
     public function __construct(
         $id     = -1,
-        $date   = '2017-01-01 00:00:00',
-        $status = 'not_paid'
+        $date   = '2017-01-01 00:00:00'
     ) {
         $this->setId($id);
         $this->setDate($date);
-        $this->setStatus($status);
+        $this->setStatus(new OrderStatus());
     }
 
     public function getId() : int
@@ -42,12 +42,12 @@ class Order
     	$this->date = $date;
     }
 
-    public function getStatus() : string
+    public function getStatus() : OrderStatus
     {
     	return $this->status;
     }
 
-    public function setStatus(string $status)
+    public function setStatus(OrderStatus $status)
     {
     	$this->status = $status;
     }
@@ -60,6 +60,16 @@ class Order
     public function setUser(User $user)
     {
         $this->user = $user;
+    }
+
+    public function getShipping()
+    {
+        return $this->shipping;
+    }
+
+    public function setShipping(Shipping $shipping)
+    {
+        $this->shipping = $shipping;
     }
 
     public function getDelivery() : Delivery
@@ -92,12 +102,37 @@ class Order
         $this->items = $items;
     }
 
+    public function addItem(OrderItem $item)
+    {
+        $this->items[$item->getId()] = $item;
+    }
+
+    public function getItem(int $itemId)
+    {
+        if ($this->hasItem($itemId)) {
+            return $this->items[$itemId];
+        } else {
+            return false;
+        }
+    }
+
+    public function hasItem(int $itemId)
+    {
+        if (key_exists($itemId, array_keys($this->items))) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public function getTotal() : float
     {
         $total = 0.0;
         foreach ($this->items as $item) {
             $total += $item->getSubtotal();
         }
+
+        // $total += $this->delivery->getPrice();
         return $total;
     }
 }

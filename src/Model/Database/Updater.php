@@ -74,7 +74,9 @@ class Updater extends Connection
         		SET name = ?,
                     phone = ?,
                     address = ?
-                WHERE userId = ?";
+                WHERE shipping.id = (
+                    SELECT shipId FROM user_shipping WHERE userId = ?
+                )";
         $stmt = $this->db->prepare($sql);
         return $stmt->execute([$name, $phone, $address, $userId]);
     }
@@ -157,5 +159,11 @@ class Updater extends Connection
         $sql = "UPDATE cart SET qty = ? WHERE userId = ? AND prodId = ?";
         $stmt = $this->db->prepare($sql);
         return $stmt->execute([$qty, $userId, $prodId]);
+    }
+
+    public function updateOrderStatus(int $orderId, int $statusId) {
+        $sql = "UPDATE orders SET statusId = ? WHERE id = ?";
+        $stmt = $this->db->prepare($sql);
+        return $stmt->execute([$statusId, $orderId]);
     }
 }

@@ -25,7 +25,8 @@ class BaseController
     protected $vars = [];
 
     protected $logger;
-    protected $uid;     // current session user
+    private $uid;       // current session user
+    private $cart;
 
     public function __construct()
     {
@@ -44,12 +45,22 @@ class BaseController
      * Init current session user id (using auth token)
      * No effect if noone has logged in
      */
-    public function getCurrentUser()
+    private function getCurrentUser()
     {
         $userId = Security::getUserId();
         if (!empty($userId)) {
             $this->uid = $userId;
         }
+    }
+
+    public function getUserId()
+    {
+        return $this->uid;
+    }
+
+    public function getCart()
+    {
+        return $this->cart;
     }
 
     /**
@@ -103,6 +114,7 @@ class BaseController
             $cart = $this->initCart();
 
             if (!empty($cart)) {
+                $this->cart = $cart;
                 $this->addTwigVar('cart', $cart);
             }
         }
@@ -142,7 +154,7 @@ class BaseController
         $page = $this->twig->load($this->template);
         $this->prepareFlashMessages();
         $html = $page->render($this->vars);
-        Router::sendResponse($html);
+        return Router::sendResponse($html);
     }
 
     public function setTemplate(string $template)

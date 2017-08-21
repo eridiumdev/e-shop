@@ -15,7 +15,8 @@
         <h1>Login Details</h1>
         <br>
         {% include "inc/flashes.twig" %}
-        <form class="well">
+        <form class="well" action="/account/update-details" method="post">
+            <input type="hidden" name="id" value="{{user.id}}">
             <div class="form-group">
                 <label for="username">Username</label>
                 <input type="text" class="form-control" id="username" name="username" placeholder="Username" value="{{user.username}}" readonly>
