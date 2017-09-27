@@ -55,6 +55,7 @@ class CartController extends BaseController
             Router::addCookie('cart', ['key' => $prodId, 'val' => $qty]);
         }
 
+        // $this->flash('success', "Item was added successfully");
         Router::redirect('/cart');
     }
 

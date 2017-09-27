@@ -793,12 +793,12 @@ class Router
                         }
                         break;
 
-                    // case 'view' :
-                    //     if (!isset($orderId)) {
-                    //         self::redirect('/admin/orders');
-                    //     }
-                    //     $controller->showViewOrderPage($orderId);
-                    //     break;
+                    case 'view' :
+                        if (!isset($orderId)) {
+                            self::redirect('/admin/orders');
+                        }
+                        $controller->showViewOrderPage($orderId);
+                        break;
                     //
                     // case 'update' :
                     //     if (empty($post)) {

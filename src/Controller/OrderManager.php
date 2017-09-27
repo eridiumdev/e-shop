@@ -21,7 +21,7 @@ class OrderManager extends AdminController
         } catch (\Exception $e) {
             Logger::log('db', 'error', 'Failed to get all orders', $e);
             $this->flash('danger', 'Database operation failed');
-            $this->showDashboardPage();
+            Router::redirect('/admin');
         }
 
         $this->addTwigVar('orders', $orders);
@@ -52,5 +52,23 @@ class OrderManager extends AdminController
             $this->flash('danger', 'Database operation failed');
             Router::redirect("/admin/orders");
         }
+    }
+
+    public function showViewOrderPage(int $orderId)
+    {
+        try {
+            $dbReader = new Reader();
+            $order = $dbReader->getFullOrderById($orderId);
+            $statuses = $dbReader->getAllStatuses();
+        } catch (\Exception $e) {
+            Logger::log('db', 'error', "Failed to get order '$orderId' by id", $e);
+            $this->flash('danger', 'Database operation failed');
+            Router::redirect('/admin/orders');
+        }
+
+        $this->addTwigVar('order', $order);
+        $this->addTwigVar('statuses', $statuses);
+        $this->setTemplate('admin/orders/view-order.twig');
+        $this->render();
     }
 }

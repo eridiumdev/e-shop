@@ -160,30 +160,30 @@ INSERT INTO categories VALUES
     (3, 'Accessories', 'Various accessories', 'accessories');
 
 INSERT INTO products VALUES
-    (1, 'Ergo Pro Quiet Mac Ergonomic Keyboard', '', 1, 330, '/uploads/kb1.jpg'),
-    (2, 'Full Size Ergonomic Backlit Hub Keyboard', '', 1, 160, '/uploads/kb2.jpg'),
-    (3, 'Wireless Sculpt Ergonomic Desktop', '', 1, 220, '/uploads/kb3.jpg'),
-    (4, 'Truly Ergonomic 227 Mechanical Keyboard', '', 1, 300, '/uploads/kb4.jpg'),
-    (5, 'Black Goldtouch V2 Adjustable Comfort Keyboard', '', 1, 190, '/uploads/kb5.jpg'),
-    (6, 'Maltron, Ergonomic, Single Left-Handed Keyboard, USB', '', 1, 400, '/uploads/kb6.jpg'),
-    (7, 'Fully Adjustable Split-Keyfield Ergonomic RSI Keyboard', '', 1, 210, '/uploads/kb7.jpg'),
-    (8, 'Maltron, Ergonomic Two-Handed Trackball Keyboard Black USB', '', 1, 500, '/uploads/kb8.jpg'),
-    (9, 'Wireless super mini keyboard with built-in touchpad', '', 1, 90, '/uploads/kb9.jpg'),
-    (10, 'Black Left-Handed Keypad Keyboard', '', 1, 120, '/uploads/kb10.jpg'),
-    (11, 'Evoluent Reduced Reach Right-Hand Keyboard', '', 1, 160, '/uploads/kb11.jpg'),
-    (12, 'Goldtouch Go!2 Foreign Language Mobile Keyboards', '', 1, 250, '/uploads/kb12.jpeg'),
-    (13, 'Goldtouch V2 Adjustable Comfort Keyboard ', '', 1, 230, '/uploads/kb13.jpg'),
+    (1, 'Ergo Pro Quiet Mac Ergonomic Keyboard', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.', 1, 330, '/uploads/kb1.jpg'),
+    (2, 'Full Size Ergonomic Backlit Hub Keyboard', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.', 1, 160, '/uploads/kb2.jpg'),
+    (3, 'Wireless Sculpt Ergonomic Desktop', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.', 1, 220, '/uploads/kb3.jpg'),
+    (4, 'Truly Ergonomic 227 Mechanical Keyboard', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.', 1, 300, '/uploads/kb4.jpg'),
+    (5, 'Black Goldtouch V2 Adjustable Comfort Keyboard', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.', 1, 190, '/uploads/kb5.jpg'),
+    (6, 'Maltron, Ergonomic, Single Left-Handed Keyboard, USB', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.', 1, 400, '/uploads/kb6.jpg'),
+    (7, 'Fully Adjustable Split-Keyfield Ergonomic RSI Keyboard', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.', 1, 210, '/uploads/kb7.jpg'),
+    (8, 'Maltron, Ergonomic Two-Handed Trackball Keyboard Black USB', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.', 1, 500, '/uploads/kb8.jpg'),
+    (9, 'Wireless super mini keyboard with built-in touchpad', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.', 1, 90, '/uploads/kb9.jpg'),
+    (10, 'Black Left-Handed Keypad Keyboard', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.', 1, 120, '/uploads/kb10.jpg'),
+    (11, 'Evoluent Reduced Reach Right-Hand Keyboard', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.', 1, 160, '/uploads/kb11.jpg'),
+    (12, 'Goldtouch Go!2 Foreign Language Mobile Keyboards', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.', 1, 250, '/uploads/kb12.jpeg'),
+    (13, 'Goldtouch V2 Adjustable Comfort Keyboard ', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.', 1, 230, '/uploads/kb13.jpg'),
 
-    (14, 'Evoluent Vertical Mouse Bluetooth Right Handed White', '', 2, 220, '/uploads/ms1.jpg'),
-    (15, 'OrthoMouse Orthopaedic Ergonomic and Adjustable Wireless Laser Mouse', '', 2, 250, '/uploads/ms2.jpg'),
-    (16, 'Evoluent Vertical C Mouse Right Handed Silver', '', 2, 230, '/uploads/ms3.jpg'),
-    (17, 'Handshoe Mouse Left Handed Small', '', 2, 240, '/uploads/ms4.jpg'),
-    (18, 'Handshoe Mouse Left Handed Large', '', 2, 260, '/uploads/ms5.jpg'),
-    (19, 'Logitech Wireless Trackball M570', '', 2, 160, '/uploads/ms6.jpg'),
-    (20, 'Contour Mouse, Grey Metal, Left Handed, Large', '', 2, 200, '/uploads/ms7.jpg'),
-    (21, 'E-Quill-AirO2bic Mouse, Pearl, Left Handed and Clickless Software Bundle', '', 2, 290, '/uploads/ms8.jpg'),
-    (22, 'Vertical Grip Mouse, Optical, USB', '', 2, 100, '/uploads/ms9.jpg'),
-    (23, 'Evoluent VerticalMouse 3, Right Handed, Optical, USB', '', 2, 150, '/uploads/ms10.jpg');
+    (14, 'Evoluent Vertical Mouse Bluetooth Right Handed White', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.', 2, 220, '/uploads/ms1.jpg'),
+    (15, 'OrthoMouse Orthopaedic Ergonomic and Adjustable Wireless Laser Mouse', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.', 2, 250, '/uploads/ms2.jpg'),
+    (16, 'Evoluent Vertical C Mouse Right Handed Silver', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.', 2, 230, '/uploads/ms3.jpg'),
+    (17, 'Handshoe Mouse Left Handed Small', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.', 2, 240, '/uploads/ms4.jpg'),
+    (18, 'Handshoe Mouse Left Handed Large', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.', 2, 260, '/uploads/ms5.jpg'),
+    (19, 'Logitech Wireless Trackball M570', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.', 2, 160, '/uploads/ms6.jpg'),
+    (20, 'Contour Mouse, Grey Metal, Left Handed, Large', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.', 2, 200, '/uploads/ms7.jpg'),
+    (21, 'E-Quill-AirO2bic Mouse, Pearl, Left Handed and Clickless Software Bundle', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.', 2, 290, '/uploads/ms8.jpg'),
+    (22, 'Vertical Grip Mouse, Optical, USB', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.', 2, 100, '/uploads/ms9.jpg'),
+    (23, 'Evoluent VerticalMouse 3, Right Handed, Optical, USB', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.', 2, 150, '/uploads/ms10.jpg');
 
 INSERT INTO product_discount VALUES
     (1, 0.15),
@@ -236,27 +236,93 @@ INSERT INTO product_specs VALUES
     (1, 1, 'ABC-01'),
     (1, 2, 'Ergo Pro'),
     (1, 3, 'Black'),
-    (1, 4, 'USB'),
+    (1, 4, 'Wireless'),
+    (1, 9, 'QWERTY'),
 
     (2, 1, 'CVB-21'),
-    (2, 2, 'Microsoft'),
+    (2, 2, 'Perixx'),
     (2, 3, 'Black'),
     (2, 4, 'USB'),
+    (2, 9, 'QWERTY'),
 
     (3, 1, 'ASD-42'),
     (3, 2, 'Microsoft'),
-    (3, 3, 'White'),
-    (3, 4, 'Wifi'),
+    (3, 3, 'Black'),
+    (3, 4, 'Wireless'),
+    (3, 9, 'QWERTY'),
 
     (4, 1, 'SDF-53'),
-    (4, 2, 'Evoluent'),
-    (4, 3, 'White'),
-    (4, 4, 'Wifi'),
+    (4, 2, 'Truly Ergonomic'),
+    (4, 3, 'Black'),
+    (4, 4, 'Wireless'),
+    (4, 9, 'Dvorak'),
 
     (5, 1, 'HDF-51'),
-    (5, 2, 'Perixx'),
-    (5, 3, 'Black&White'),
-    (5, 4, 'USB');
+    (5, 2, 'Goldtouch'),
+    (5, 3, 'Black'),
+    (5, 4, 'USB'),
+    (5, 9, 'QWERTY'),
+
+    (6, 1, 'HDF-52'),
+    (6, 2, 'Microsoft'),
+    (6, 3, 'Grey'),
+    (6, 4, 'USB'),
+    (6, 9, 'QWERTY'),
+
+    (7, 1, 'HDF-53'),
+    (7, 2, 'Truly Ergonomic'),
+    (7, 3, 'Grey'),
+    (7, 4, 'Wireless'),
+    (7, 9, 'QWERTY'),
+
+    (8, 1, 'HDF-54'),
+    (8, 2, 'Goldtouch'),
+    (8, 3, 'Black&White'),
+    (8, 4, 'USB'),
+    (8, 9, 'QWERTY'),
+
+    (9, 1, 'HDF-55'),
+    (9, 2, 'Perixx'),
+    (9, 3, 'Black'),
+    (9, 4, 'Wireless'),
+    (9, 9, 'Dvorak'),
+
+
+    (14, 1, 'HDF-515'),
+    (14, 2, 'Evoluent'),
+    (14, 3, 'White'),
+    (14, 4, 'Wireless'),
+    (14, 8, 'Right'),
+
+    (15, 1, 'HDF-516'),
+    (15, 2, 'OrthoMouse'),
+    (15, 3, 'Black'),
+    (15, 4, 'Wireless'),
+    (15, 8, 'Right'),
+
+    (16, 1, 'HDF-517'),
+    (16, 2, 'Evoluent'),
+    (16, 3, 'Black'),
+    (16, 4, 'USB'),
+    (16, 8, 'Right'),
+
+    (17, 1, 'HDF-518'),
+    (17, 2, 'Handshoe'),
+    (17, 3, 'Black'),
+    (17, 4, 'Wireless'),
+    (17, 8, 'Left'),
+
+    (18, 1, 'HDF-519'),
+    (18, 2, 'Handshoe'),
+    (18, 3, 'Black'),
+    (18, 4, 'USB'),
+    (18, 8, 'Left'),
+
+    (19, 1, 'HDF-520'),
+    (19, 2, 'Logitech'),
+    (19, 3, 'Black'),
+    (19, 4, 'Wireless'),
+    (19, 8, 'Right');
 
 INSERT INTO sections VALUES
     (1, 'Featured', 'featured', 'Currently featured products', 100),
@@ -275,7 +341,10 @@ INSERT INTO featured_products VALUES
     (2),
     (3),
     (4),
-    (5);
+    (5),
+    (14),
+    (15),
+    (16);
 
 -- INSERT INTO order_items VALUES
 --     (1, 1, 1),

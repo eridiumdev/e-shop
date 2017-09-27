@@ -130,3 +130,10 @@ form > div.tab-content {
 table .btn {
     min-width: 65px;
 }
+
+/* View order -> products tab */
+.order-item {
+    display: flex;
+    align-items: center;
+    min-height: 10vh;
+}
